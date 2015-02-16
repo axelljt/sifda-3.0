@@ -1,0 +1,296 @@
+
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in  %}
+    
+    
+    <div>
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
+        <center><h3>Solicitudes Rechazadas </h3></center>
+    
+    </div>
+    
+    <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+           
+            
+                <div class="span3">
+                        <table>
+                            <tr>
+                                <td>
+                                <input type="radio" name="consulta" id="Todos" value="Todos">Todos</td>
+                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="consulta" id="especifico" value="especifico" >Especifico</td>
+                                <td></td><td></td><td></td><td></td>
+                                
+                                <td><input type="submit" class="btn btn-primary" id="btnr3" value="PDF" name="GenerarPDF" onclick="window.open('/reports/solicitudes_Rechazadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
+                                <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel" name="GenerarExcel" onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
+                                
+                            </tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            
+                        </table>
+                </div>
+            
+                <div class="span4">                 
+                    <table id="combos">
+                      <tr>
+                          <td>
+                              <label>Servicio:</label>
+                          </td>
+                          <td>
+                                <div class="btn-group">
+                                    <select id="cmb1" name="ComboEstado"  class="selectpicker" style="width: 200px">
+                                        <option value="0">Tipo Servicio</option>
+                                     
+                                     {% for e in establecimiento %}
+                               
+                                        <option value="{{e.id}}">{{e.nombre}}</option>
+                                     {% endfor %}   
+                                    </select>
+                               </div>
+                          </td>
+                          
+                            <td>
+                                
+                            </td>
+                          
+                       </tr>
+                    </table>                    
+                </div>
+                <div class="span4">
+                    <table id="fechas">
+                           <tr>
+                              <td><label>FechaInicio: </label></td>
+                               <td>
+                                   <input type="text" id="fechaInicio" class="input-small" >
+                               </td>  
+                           </tr>
+                            <tr>
+                                <td><label>FechaFin: </label></td>
+                                <td>
+                                    <input type="text" id="fechaFin" class="input-small" >
+                                </td>
+                                <td></td><td></td>
+                                <td>
+                                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">    
+                                </td>
+                            </tr>        
+                    </table>                     
+                </div> 
+              </div>
+        </div>                       
+     {% if entities %}       
+                <table id="RechTabla" class="table table-bordered table-hover table-condensed">
+                 <thead>
+                     <tr>
+                         <th><center>N°</center></th>
+                         <th><center>Establecimiento</center></th>
+                         <th><center>DependenciaSolicitante</center></th>
+                         <th><center>TipoServicio</center></th>
+                         <th><center>Descripcion</center></th>
+                         <th><center>FechaRecepcion</center></th>
+                         <th><center>FechaRequiere</center></th>
+
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {%set count=1%}   
+                 {% for rechazado in entities %}
+                    {# {%if rechazado.idDependenciaEstablecimiento == usuario.idDependenciaEstablecimiento%}#}
+                         <tr>
+                             <td>{{ count }}</td>
+                                     {#<td>{{ loop.index }}</td>#}
+                             <td><justify>{{ rechazado.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
+                             <td>{{ rechazado.idDependenciaEstablecimiento.idDependencia }}</td>
+                             <td>{{ rechazado.idTipoServicio }}</td>
+                             <td>{{ rechazado.descripcion }}</td>
+                             <td>{% if rechazado.fechaRecepcion %}{{ rechazado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>
+                             <td>{% if rechazado.fechaRequiere %}{{ rechazado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+
+                         </tr>
+                         {%set count=count+1%}
+                     {#{%endif%}#}
+                 {% endfor %}
+                 </tbody>
+             </table> 
+        
+    {% else %}
+        <div id="msgRechazados">
+            <center><h4>No se encontraron solicitudes Rechazados</h4></center>
+        </div>    
+   {% endif%}
+     
+                
+                <div id="rangoRechTabla"></div>
+             
+                <div id="msgRechazados2">
+                    <center><h4>No se encontraron solicitudes en ese Rango</h4></center>
+                </div>   
+                
+    </div>
+    
+{% endblock%}  
+
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+        
+        $(document).ready(function (){
+            
+            document.getElementById("cmb1").value="0";
+            document.getElementById('Todos').checked=true; 
+            
+            document.getElementById('fechaInicio').value="";
+            document.getElementById('fechaFin').value="";
+            
+            $('#fechas').hide("slow");
+            $('#combos').hide("slow");
+            $('#msgRechazados2').hide("slow");
+            
+            
+            $('#Todos').click(function(){
+            
+           {# $("#btn1").show("slow");#}
+            $("#fechas").hide("slow");
+            $("#combos").hide("slow");
+            $('#RechTabla').show("slow");
+            $('#rangoRechTabla').hide("slow");
+            $('#msgRechazados').show("slow");
+            $('#msgRechazados2').hide("slow");
+          });
+          
+          $('#especifico').click(function(){
+
+                {#$("#btn1").hide("slow");#}
+                $("#RechTabla").hide("slow");
+                $("#fechas").show("slow");
+                $("#combos").show("slow");
+                 $('#msgRechazados').hide("slow");
+               {# $('#rangoRechTabla').show("slow");#}
+                {#$('#msgRechazados').hide("slow");#}
+                {#$('#msgIngresados').hide("slow");
+                
+                $('#msgAsignados').hide("slow");#}
+              }); 
+            
+        });//Fin del Jquery
+        
+        
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+                                
+                                
+				}); 
+        
+        //Funcion de Busqueda de Solicitudes
+     
+       $("#buscar").click(function(){
+           
+           var tipoServicio=$("#cmb1").val();
+           var fechaInicio=$("#fechaInicio").val();
+           var fechaFin=$("#fechaFin").val();
+           
+           
+           
+           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
+               
+               $.post(
+                    '{{path('sifda_solicitudservicio_buscar2_solicitudes')}}',    
+                    
+                    { 
+                      fechaInicio: fechaInicio,
+                      fechaFin   : fechaFin,
+                      tipoServicio: tipoServicio
+                    }
+                        , function( data ) {
+                           console.log( data );
+                           
+                            res=data.val;
+                           
+                           if(res=="0"){
+                               
+                                $('#msgRechazados2').show("slow");
+                            }
+                           else
+                           {
+                               $("#rangoRechTabla").html(data);
+                           }
+                         
+                
+                    }, "json");
+                    
+                   
+                }
+           
+       }); 
+       
+//Funciones para reporteria
+      function mostrarfi(){ 
+            return $("#fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#fechaFin").val();
+      }
+      
+      function mostrartipo(){ 
+            return $("#cmb1").val();
+      } 
+      
+      function mostraruserid(){ 
+            return "{{usuario.id}}";
+      }
+      
+      function mostraruseridDepEst(){ 
+            return "{{usuario.idDependenciaEstablecimiento.id}}";
+      }
+        
+    </script>
+{% endblock%}        

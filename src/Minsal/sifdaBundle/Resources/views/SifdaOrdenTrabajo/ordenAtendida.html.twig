@@ -1,0 +1,39 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}" ></script>
+{% endblock %}
+
+{%block css %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/minsalsifda/css/datepicker.css') }}" rel="stylesheet" media="all">
+{% endblock %}  
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/bootstrap-datepicker.js') }}"></script>  
+{%endblock %}
+
+
+{% block contenido_in  %}
+    <div class="page-header">
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} dependencia:{{usuario.idDependenciaEstablecimiento.idDependencia}}
+        <center><h3>Consulta de carga laboral</h3></center>
+    
+    </div>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Nombre del empleado</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for entity in entities %}
+    <tr>
+        <td>{{entity.nomEmpleado}}</td>
+        </tr>
+        </tbody>
+    {% endfor %}
+    </table>
+    
+{% endblock %}   

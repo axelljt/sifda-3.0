@@ -1,0 +1,54 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block contenido_in  %}
+    <div class="row-fluid">
+        <div class="page-header">
+            <center><h3>Informacion de solicitud de servicio</h3></center>
+        </div>
+            {#<div class="row-fluid">#}
+            <div class="span12">
+                <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento</th>
+                            <td>{{ entity.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia</th>
+                            <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de servicio</th>
+                            <td>{{ entity.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion</th>
+                            <td>{{ entity.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere</th>
+                            <td>{{ entity.fechaRequiere|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Estado de la solicitud de servicio</th>
+                            <td>{{ entity.idEstado }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+            <br><br>
+            <center><h4>El servicio solicitado no puede ser eliminado porque ya fue {{ entity.idEstado.descripcion }}</h4></center>
+            <br>
+            <center>
+
+                <table id="botones">
+                    <tr>
+                        <td><a href="{{ path('sifda_solicitudservicio')}}" class="btn">Regresar</a></td>
+                    </tr>  
+                </table>            
+            </center>
+            <br>
+    </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Mostrar tipo de servicio</h3></center>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <!--<tr>
+                            <th>Correlativo</th>
+                            <td>{#{ entity.id }#}</td>
+                        </tr>-->
+                        <tr>
+                            <th>Nombre</th>
+                            <td>{{ entity.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion</th>
+                            <td>{{ entity.descripcion }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            <div class="row-fluid">    
+                <div class="span12">
+                <br>
+                <center>
+                    <table id="botones">
+                    <tr> 
+                       <td>
+                           <a href="{{ path('sifdatiposervicio_edit', { 'id': entity.id }) }}" class = "btn btn-primary">Editar tipo de servicio</a>
+                       </td>
+                       <td>
+                           <a href="{{ path('sifda_rutaciclovida_new', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar una etapa</a>
+                       </td>
+                        <td>
+                            <a href="{{ path('sifdatiposervicio')}}" class="btn">Regresar</a>
+                        </td>
+                    </tr>    
+                    </table>
+                </center>
+                <br>
+                </div>
+            </div>
+            <br><br>
+            <div class="row-fluid">    
+                <div class="span10 offset1">
+                    {% if entities %}
+                        <center><h5>Etapas del tipo de servicio</h5></center>
+                        <table id="tabla" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Etapa No.</th>
+                                    <th>Descripcion</th>
+                                    <th>Peso</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for etapa in entities %}
+                                <tr>
+                                    <td>{{ etapa.jerarquia }}</td>
+                                    <td>{{ etapa.descripcion }}</td>
+                                    <td>{{ etapa.peso }}</td>
+                                    <td>
+                                    <ul>
+                                        <li>
+                                            <a href="{{ path('sifda_rutaciclovida_show', { 'id': etapa.id }) }}">Mostrar detalle</a>
+                                        </li>
+                                        {#{% if etapa.jerarquia > 1 %}
+                                            <li>
+                                                <a href="{{ path('sifdaetapa_subir', { 'id': etapa.id }) }}">Subir un nivel</a>
+                                            </li>
+                                        {% endif %}
+                                        {% if etapa.ignorarSig == FALSE %}
+                                            <li>
+                                                <a href="{{ path('sifdaetapa_bajar', { 'id': etapa.id }) }}">Bajar un nivel</a>
+                                            </li>
+                                        {% endif %}#}
+                                    </ul>
+                                    </td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>    
+                    {%endif%}    
+                </div>
+            </div>            
+        </div>
+    </div>                            
+{% endblock %}

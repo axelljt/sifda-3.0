@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SifdaTipoServicio" table="sifda_tipo_servicio">
+    <indexes>
+      <index name="constituye_fk" columns="id_actividad"/>
+      <index name="fki_dependencia_establecimiento_tipo_servicio" columns="id_dependencia_establecimiento"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="indx_sifda_tipo_servicio" columns="id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="nombre" type="string" column="nombre" length="75" nullable="false"/>
+    <field name="descripcion" type="text" column="descripcion" nullable="false"/>
+    <field name="activo" type="boolean" column="activo" nullable="false"/>
+    <many-to-one field="idDependenciaEstablecimiento" target-entity="CtlDependenciaEstablecimiento">
+      <join-columns>
+        <join-column name="id_dependencia_establecimiento" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idActividad" target-entity="SidplaActividad">
+      <join-columns>
+        <join-column name="id_actividad" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

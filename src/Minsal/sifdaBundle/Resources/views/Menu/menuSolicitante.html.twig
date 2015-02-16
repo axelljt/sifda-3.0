@@ -1,0 +1,50 @@
+{% spaceless %}
+<div class="nav-wrapper">
+<div class="navbar " id="menux">
+    <div class=" navbar-inner">
+        <div class="container">
+            <ul class="nav">
+                <li><a tabindex="-1" href={{path('sifda_solicitudservicio_new')}}>Registrar solicitud</a></li>
+                <li><a tabindex="-2" href={{path('sifda_solicitudservicio')}}>Consultar Solicitudes</a></li>
+                {#<li><a tabindex="-3" href="#">Consultar estado de una solicitud seleccionada</a></li>#}
+                    {#<div class="btn-group">
+                    <a tabindex="-1" class="btn dropdown-toggle" data-toggle="dropdown" href={{path('sifda_solicitudservicio_new')}}>
+                    Registrar Solicitud
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a tabindex="-1" href={{path('sifda_solicitudservicio')}}>Mostrar solicitud</a></li>
+                        <li><a tabindex="-2" href={{path('sifda_solicitudservicio_new')}}>Crear solicitud</a></li>
+                        
+                         <li><a tabindex="-1" href="#">Another action</a></li>
+                         <li><a tabindex="-1" href="#">Something else here</a></li>
+                    </ul>#}
+                    
+     
+            </ul>
+                            <ul class="nav navbar-nav pull-right">
+                <li ><a href="{{ path('fos_user_security_logout') }}" >Cerrar Sesion</a></li>
+             </ul>
+	</div>
+    </div>
+</div>
+</div>
+<style>
+    #menux.affix{
+        top: 0;
+        width: 100%;
+    }
+    .nav-wrapper
+{
+    min-height:70px;
+}
+    
+</style>
+<script>
+    $('#menux').affix({
+      offset: {
+        top: 95
+      }      
+});
+</script>
+{% endspaceless %}
+

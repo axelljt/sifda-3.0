@@ -1,0 +1,113 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+    {{form_start(edit_form)}}
+    {{form_errors(edit_form)}}
+    <div class="row-fluid">
+        <div class="page-header">
+            <center><h3>Modificar orden de trabajo</h3></center>
+        </div>  
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento</th>
+                            <td>{{ entity.idSolicitudServicio.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia</th>
+                            <td>{{ entity.idSolicitudServicio.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de servicio</th>
+                            <td>{{ entity.idSolicitudServicio.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion de solicitud de servicio</th>
+                            <td>{{ entity.idSolicitudServicio.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere el servicio</th>
+                            <td>{{ entity.idSolicitudServicio.fechaRequiere|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Codigo de la orden de trabajo</th>
+                            <td>{{ entity.codigo }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        <div class="span12">
+            <br>
+            <div class="row-fluid">
+                <div class="span4 offset2">
+                    {{form_row(edit_form.establecimiento)}}
+                    {{form_row(edit_form.dependencia)}}
+                    {{form_row(edit_form.descripcion)}}
+                    {{form_row(edit_form.fechaFinalizacion)}}
+                </div>                   
+                <div class="span5 offset1">
+                    {{form_row(edit_form.idEtapa)}}
+                    {{form_row(edit_form.idPrioridad)}}
+                    {{form_row(edit_form.observacion)}}    
+                </div>
+            </div>           
+            <br>
+        <center>
+            <table id="botones">
+                <tr>
+                    <td>{{form_row(edit_form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                    {#<td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td>#}
+                    <td><a href="{{ path('sifda_ordentrabajo_gestion')}}" class="btn">Regresar</a></td>
+                </tr>  
+            </table>            
+        </center>
+            
+      </div> 
+   </div>                    
+                    
+  {{form_end(edit_form)}}                  
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+   
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+//                         minDate: new Date(1980, 11, 1), 
+//                         maxDate: "+0D",
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 yearSuffix: ''
+			 
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#minsal_sifdabundle_sifdaordentrabajo_fechaCreacion" ).datepicker(
+					
+					);
+                                
+                                $( "#minsal_sifdabundle_sifdaordentrabajo_fechaFinalizacion" ).datepicker(
+					
+					);
+				});
+     
+    </script>
+    {% endblock%}

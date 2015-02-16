@@ -1,0 +1,35 @@
+security:
+    encoders:
+        FOS\UserBundle\Model\UserInterface: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_USER:        [ROLE_TECNICO,ROLE_SOLICITANTE,ROLE_RESPONSABLE]
+
+    providers:
+#        administrators:
+#            entity: { class: MinsalsifdaBundle:User, property: username }
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        main:
+            pattern:    ^/
+            form_login:
+                check_path: /login_check
+                login_path: /login
+                provider: fos_userbundle
+                csrf_provider: form.csrf_provider
+                default_target_path: authentication_handler
+            logout:
+                path:   /logout
+                target: /login
+            anonymous: ~
+            #http_basic:
+            #    realm: "Secured Demo Area"
+
+    access_control:
+        - { path: ^/sifda/*, roles: ROLE_TECNICO }
+        - { path: ^/sifda/*, roles: ROLE_SOLICITANTE }
+        - { path: ^/sifda/*, roles: ROLE_RESPONSABLE }

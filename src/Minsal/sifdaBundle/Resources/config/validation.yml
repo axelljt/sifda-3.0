@@ -1,0 +1,22 @@
+#Validacion de entidades
+Minsal\sifdaBundle\Entity\SifdaSolicitudServicio:
+    properties:
+        descripcion:
+            - NotBlank:
+                message: La descripcion no puede quedar en blanco
+            - Length:
+                min: 5
+                minMessage: "Debe ingresar como minimo 5 caracteres"
+                
+Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo:
+    properties:
+        descripcion:
+            - NotBlank:
+                message: La descripcion no puede quedar en blanco
+            - Length:
+                min: 5
+                minMessage: "Debe ingresar como minimo 5 caracteres"
+        fechaFinalizacion:
+            - Date:
+                message: Esta no es una fecha valida
+                

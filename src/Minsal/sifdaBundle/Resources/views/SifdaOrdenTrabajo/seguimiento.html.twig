@@ -1,0 +1,334 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+     <div class="page-header">
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} dependencia:{{usuario.idDependenciaEstablecimiento.idDependencia}}
+        <center><h3>Seguimiento de solicitudes de servicio aprobadas</h3></center>
+    
+    </div>
+    <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+                <div class="span3">
+                    <table>
+                        <tr>
+                            <td>
+                                <input type="radio" name="consulta" id="Todos" value="Todos">Todos
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="radio" name="consulta" id="especifico" value="especifico" >Especifico
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            
+                            <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF " name="GenerarPDF " onclick="window.open('/reports/solicitudes_Asignadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
+                            <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel " name="GenerarExcel "></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="span5">
+                    <table id="combos">
+                        <tr>
+                            <td>
+                                <label>Establecimiento:</label>
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <select id="cmb1" name="ComboEstado"  class="selectpicker span10">
+                                        <option value="0">Seleccione Establecimiento</option>
+                                        {% for e in establecimiento %}
+                                            <option value="{{e.id}}">{{e.nombre}}</option>
+                                        {% endfor %}   
+                                    </select>
+                                </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                           <td>
+                              <label>Dependencia:</label>
+                          </td>
+                          
+                            <td>
+                                <div class="btn-group">
+                                    <select id="cmb2" name="ComboEstado"  class="selectpicker span12">
+                                    <option value="0">Seleccione Dependencia</option> 
+                                    {#{% for estado in estados%}#}
+                               
+                                        <option value="0">Seleccione una dependencia</option>
+                                     {#{% endfor %}   #}
+                                    </select>
+                               </div>
+                            </td>
+                      </tr>
+                      </table>
+                    <table id="cmbTipoServicio">
+                      <tr>
+                            <br><br>
+                            <td>
+                                <label>Tipo de servicio:</label>
+                            </td>
+                            <td>
+                                <div >
+                            
+                                    <select id="cmb3" name="ComboTipoServicio"  class="selectpicker span10">
+                                     <option value="0">Seleccione tipo de servicio</option>
+                                     
+                                     {% for t in tiposervicio %}
+                               
+                                        <option value="{{t.id}}">{{t.nombre}}</option>
+                                     {% endfor %}   
+                                    </select>
+                               </div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </table>        
+                </div>
+                <div class="span3">
+                    <table id="fechas">
+                        <tr>
+                            <td><label>FechaInicio: </label></td>
+                            <td>
+                                <input type="text" id="fechaInicio" class="input-small" >
+                            </td>  
+                        </tr>
+                        <tr>
+                            <td><label>FechaFin: </label></td>
+                            <td>
+                                <input type="text" id="fechaFin" class="input-small" >
+                            </td>
+                            <td></td><td></td>
+                            <td>
+                                <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+                            </td>
+                        </tr>
+                    </table>            
+                </div>                   
+                {#<div id="seleccion">
+                
+                </div>#}
+            </div>    
+        </div>
+    </div> 
+    <div id="rangoTabla"></div>        
+    <br><br>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th><center>Correlativo</center></th>
+                <th><center>Descripcion</center></th>
+                <th><center>Fecha que se requiere</center></th>
+                <th><center>Estado</center></th>
+                <th><center>Acciones</center></th>
+            </tr>
+        </thead>
+        <tbody>
+	{% set corr = 1 %}    
+        {% for entity in solicitudesAprobadas %}
+            <tr>
+                <td><center>{{ corr }}</center></td>
+                <td>{{ entity.descripcion }}</td>
+                <td><center>{% if entity.fechaRequiere %}{{ entity.fechaRequiere|date('d/m/Y') }}{% endif %}</center></td>
+                <td>{{ entity.idEstado }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_ordentrabajo_new', { 'id': entity.id }) }}">Crear orden de trabajo</a>
+                    </li>
+                    {#<li>
+                       <a href="{{ path('sifda_ordentrabajo_edit', { 'id': entity.id }) }}">Modificar orden de trabajo</a>
+                    </li>#}
+                    <li>
+                        <a href="{{ path('sifda_vwetapassolicitud', { 'idSS': entity.id }) }}">Mostrar grado de avance</a>
+                    </li>
+                    <li>
+                        <a  href="{{ path('sifda_solicitudservicio_finalizar', { 'id': entity.id }) }} ">Finalizar solicitud de servicio</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+	    {% set corr = corr + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>                               
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        $('#combos').hide("slow");
+        $('#cmbTipoServicio').hide("slow");
+        $('#fechas').hide("slow");
+        
+        
+        $('#todos').click(function(){
+            $('#combos').hide("slow");
+            $('#tabla').show("slow");
+            $('#rangoTabla').hide("slow");
+        });
+        
+        $('#especifico').click(function(){ 
+        $('#combos').show("slow"); 
+         $('#cmbTipoServicio').show("slow");
+        $('#tabla').hide("slow");  
+        $('#fechas').show("slow");
+        });
+        
+        $("#cmb1").change(function(){ 
+
+            var IdEstablecimiento = $("#cmb1").val();
+            alert($("#cmb1").val());
+            if(IdEstablecimiento !="")
+            {
+                $.post(
+                '{{path('sifda_solicitudservicio_find_dependencia')}}', 
+                  { 
+                    idEstablecimiento:IdEstablecimiento
+                  }
+                  , function( data ) {
+                    console.log( data );
+                        $("#cmb2").html(data);
+
+                 }, "json");
+            }
+            else 
+            {
+                $.post(
+                '{{path('sifda_solicitudservicio_select_dependencia')}}', 
+                    function( data ) {
+                    console.log( data );
+                        $("#cmb2").html(data);
+
+                 }, "json");
+                  
+            }
+        });
+        
+        $("#buscar").click(function(){
+            //alert($("#fechaInicio").val());
+            $.post(
+            '{{path('sifda_seguimiento_buscar_solicitud')}}', 
+              { 
+                fechaInicio:     $("#fechaInicio").val(),
+                fechaFin   :     $("#fechaFin").val(),
+                establecimiento: $("#cmb1").val(),
+                dependencia:     $("#cmb2").val(),
+                tipoServicio:    $("#cmb3").val()
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#rangoTabla").html(data);
+                
+             }, "json");
+            
+        });
+    });
+    
+$.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+				}); 
+    
+   function mostrarfi(){ 
+      return $("#fechaInicio").val();
+    }
+    
+      function mostrarff(){ 
+       return $("#fechaFin").val();
+    }
+   
+   function LimpiarCamposFecha(){
+        document.getElementById('fechaInicio').value="";
+        document.getElementById('fechaFin').value="";   
+    }
+    
+    $("#cmb1").change(function(){ 
+
+            var IdEstablecimiento = $("#cmb1").val();
+
+             
+            if(IdEstablecimiento !="")
+            {
+                $.post(
+                '{{path('sifda_solicitudservicio_find_dependencia')}}', 
+                  { 
+                    idEstablecimiento:IdEstablecimiento
+                  }
+                  , function( data ) {
+                    console.log( data );
+                        $("#cmb2").html(data);
+
+                 }, "json");
+            }
+            else 
+            {
+                $.post(
+                '{{path('sifda_solicitudservicio_select_dependencia')}}', 
+                    function( data ) {
+                    console.log( data );
+                        $("#cmb2").html(data);
+
+                 }, "json");
+            }
+        });
+        
+        //Funciones para reporteria
+      function mostrarfi(){ 
+            return $("#fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#fechaFin").val();
+      }
+      
+      function mostrartipo(){ 
+            return $("#cmb1").val();
+      } 
+      
+      function mostraruserid(){ 
+            return "{{usuario.id}}";
+      }
+    </script>
+    {% endblock%}  

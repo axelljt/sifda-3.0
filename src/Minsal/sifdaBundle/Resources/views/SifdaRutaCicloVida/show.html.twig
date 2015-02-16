@@ -1,0 +1,94 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Mostrar etapa del tipo servicio</h3></center>
+    </div>
+    <div class="row-fluid">
+        <div class="span9 offset1">
+            <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+                    <tbody>
+                        <!--<tr>
+                            <th>Id</th>
+                            <td>{#{ entity.id }#}</td>
+                        </tr>-->
+                        <tr>
+                            <th>Etapa No.</th>
+                            <td>{{ entity.jerarquia }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion</th>
+                            <td>{{ entity.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Referencias</th>
+                            <td>{{ entity.referencia }}</td>
+                        </tr>
+
+                        <!--<tr>
+                            <th>Ignorarsig</th>
+                            <td>{#{ entity.ignorarSig }#}</td>
+                        </tr>-->
+                        <tr>
+                            <th>Porcentaje de la etapa</th>
+                            <td>{{ entity.peso }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row-fluid">    
+                <div class="span12">
+                <br>
+                <center>
+                    <table id="botones">
+                    <tr> 
+                       <td>
+                           <a href="{{ path('sifda_rutaciclovida_edit', { 'id': entity.id }) }}" class = "btn btn-primary">Editar etapa</a>
+                       </td>
+                       <td>
+                           <a href="{{ path('sifda_rutaciclovida_new_subetapa', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar una subetapa</a>
+                       </td>
+                        <td>
+                            <a href="{#{ path('sifda_rutaciclovida', { 'id': tipo.id })}#}" class="btn">Regresar</a>
+                        </td>
+                    </tr>    
+                    </table>
+                </center>
+                <br>
+                </div>
+            </div>        
+            <br><br>
+            <!--<ul class="record_actions">
+                <li>{#{ form(delete_form) }#}</li>
+            </ul>-->
+            <div class="row-fluid">    
+                <div class="span12">
+                    {% if subetapas %}
+                        <center><h5>Subetapas del tipo de servicio</h5></center>
+                        <table id="tabla" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
+                            <thead>
+                                <tr>
+                                    <th>Subetapa No.</th>
+                                    <th>Descripcion</th>
+                                    <th>Referencias</th>
+                                    <th>Porcentaje (%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subetapa in subetapas %}
+                                <tr>
+                                    <td>{{ subetapa.jerarquia }}</td>
+                                    <td>{{ subetapa.descripcion }}</td>
+                                    <td>{{ subetapa.referencia }}</td>
+                                    <td>{{ subetapa.peso }}</td>
+                                </tr>
+                                {%endfor%}
+                            </tbody>
+                        </table>    
+                    {%endif%}    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

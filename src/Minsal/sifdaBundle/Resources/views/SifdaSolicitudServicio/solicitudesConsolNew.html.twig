@@ -1,0 +1,114 @@
+{# empty Twig template #}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in  %}
+<div>
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
+        <center><h3>Solicitudes Consolidadas </h3></center>
+        
+        <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+           
+            
+                <div class="span4">
+                        <table>
+                            <tr>
+                                <td>
+                                <input type="radio" name="consulta" id="Todos" value="Todos">Todos</td>
+                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="consulta" id="especifico" value="especifico" >Especifico</td>
+                                <td></td><td></td><td></td><td></td>
+                                
+                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF" name="GenerarPDF" onclick="window.open('/reports/solicitudesCantidadesGrafico.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
+                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="Excel" name="GenerarPDF" onclick="window.open('/reports/phpexcel/solicitudesCantidadesGraficoExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
+                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="Gráfico" name="GenerarPDF" onclick="window.open('/reports/graficoPastel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
+                            </tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            
+                        </table>
+                </div>
+            
+                <div class="span4">
+                    <table id="fechas">
+                           <tr>
+                               <td class="span1"><label>FechaInicio: </label></td>
+                              <td class="span11">
+                                   <input type="text" id="fechaInicio" class="input-small" readonly="true" >
+                               </td>  
+                               <td class="span1"><label>FechaFin: </label></td>
+                               <td class="span1">
+                                   <input type="text" id="fechaFin" class="input-small" readonly="true" >
+                                </td>
+                                <td class="span2">
+                                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">    
+                                </td>
+                           </tr>
+                              
+                    </table>                     
+                </div> 
+                
+               
+              </div>
+        </div> 
+        
+    
+    </div>
+
+{%endblock%}
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>   
+        
+        
+         $(document).ready(function (){
+             
+            document.getElementById('Todos').checked=true; 
+            document.getElementById('fechaInicio').value="";
+            document.getElementById('fechaFin').value="";
+            
+            $('#fechas').hide("slow");
+            
+            $('#Todos').click(function(){
+            
+           {# $("#btn1").show("slow");#}
+            $("#fechas").hide("slow");
+            
+          });
+            
+           $('#especifico').click(function(){
+               
+                $("#fechas").show("slow");
+           });      
+
+         });
+
+//Funciones para reporteria
+      function mostrarfi(){ 
+            return $("#fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#fechaFin").val();
+      }
+      
+      function mostrartipo(){ 
+            return $("#cmb1").val();
+      } 
+      
+      function mostraruserid(){ 
+            return "{{usuario.id}}";
+      }
+      
+      function mostraruseridDepEst(){ 
+            return "{{usuario.idDependenciaEstablecimiento.id}}";
+      }
+      
+  </script>    
+{% endblock%}     

@@ -1,0 +1,43 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>SifdaReprogramacionServicio list</h1>
+
+    <table class="records_list">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fechareprogramacion</th>
+                <th>Justificacion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('sifda_reprogramacion_servicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{% if entity.fechaReprogramacion %}{{ entity.fechaReprogramacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.justificacion }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_reprogramacion_servicio_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifda_reprogramacion_servicio_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('sifda_reprogramacion_servicio_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

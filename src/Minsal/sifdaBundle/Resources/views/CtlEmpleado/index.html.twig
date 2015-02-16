@@ -1,0 +1,48 @@
+{#{% extends '::base.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layout.html.twig' %}
+
+{% block bodycontenido -%}
+    <h1>CtlEmpleado list</h1>
+
+    <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Fechanacimiento</th>
+                <th>Correoelectronico</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('ctlempleado_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.nombre }}</td>
+                <td>{{ entity.apellido }}</td>
+                <td>{% if entity.fechaNacimiento %}{{ entity.fechaNacimiento|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ entity.correoElectronico }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('ctlempleado_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('ctlempleado_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('ctlempleado_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

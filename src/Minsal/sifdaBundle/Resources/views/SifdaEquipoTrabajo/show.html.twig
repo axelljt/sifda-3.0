@@ -1,0 +1,126 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+        <div class="page-header">
+            <center><h3>Mostrar equipo de trabajo</h3></center>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de servicio</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion de solicitud de servicio</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Codigo de orden de trabajo</th>
+                            <td>{{ ordenTrabajo.codigo }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion de orden de trabajo</th>
+                            <td>{{ ordenTrabajo.descripcion }}</td>
+                        </tr>
+                        {% if entity %}
+                            <tr>
+                                <th>Responsable de orden de trabajo</th>
+                                <td>{{ entity.idEmpleado }}</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+            <br>
+            
+            {% if personal and entity %}
+                <div class="row-fluid">
+                    <div class="span8 offset2">
+                        <center><h4>Personal asignado a orden de trabajo</h4></center>
+                        <table id="tabla" class="table table-bordered table-hover table-condensed">
+                            <thead>
+                                <tr>
+                                    <th><center>Correlativo</center></th>
+                                    <th><center>Nombre del empleado</center></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% set corr = 1 %}    
+                            {% for empleado in personal %}
+                                <tr>
+                                    <td><center>{{ corr }}</center></td>
+                                    <td>{{ empleado.idEmpleado }}</td>
+                                </tr>
+                                {% set corr = corr + 1 %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row-fluid">    
+                    <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                                <tr> 
+                                    <td>
+                                        <a href="{{ path('sifda_equipotrabajo_edit', { 'id': ordenTrabajo.id }) }}" class = "btn btn-primary">Modificar equipo de trabajo</a>
+                                    </td>    
+                                    <td>
+                                        <a href="{{ path('sifda_ordentrabajo_gestion') }}" class="btn">Regresar</a>
+                                    </td>
+                                </tr>    
+                            </table>
+                        </center>
+                        <br>
+                    </div>
+                </div>      
+            {% elseif entity %}    
+                <div class="row-fluid">    
+                    <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                                <tr> 
+                                    <td>
+                                        <a href="{{ path('sifda_equipotrabajo_edit', { 'id': ordenTrabajo.id }) }}" class = "btn btn-primary">Modificar equipo de trabajo</a>
+                                    </td>    
+                                    <td>
+                                        <a href="{{ path('sifda_ordentrabajo_gestion') }}" class="btn">Regresar</a>
+                                    </td>
+                                </tr>    
+                            </table>
+                        </center>
+                        <br>
+                    </div>
+                </div>
+            {% else %}
+                <center><h4>No se le ha asignado equipo de trabajo a la orden de trabajo</h4></center>
+                <div class="row-fluid">    
+                    <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                                <tr> 
+                                    <td>
+                                        <a href="{{ path('sifda_ordentrabajo_gestion') }}" class="btn">Regresar</a>
+                                    </td>
+                                </tr>    
+                            </table>
+                        </center>
+                        <br>
+                    </div>
+                </div>
+            {% endif %}
+{% endblock %}

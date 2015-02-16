@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% block head %}
+   {% block meta %}
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   {% endblock %}
+   <title>{% block title %}:: Sifda ::{% endblock %}</title>
+   {% block cssDefault %}
+    <link href="{{ asset('bundles/minsalsifda/css/estilos.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('bundles/minsalsifda/css/bootstrap.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('bundles/minsalsifda/css/bootstrap-responsive.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('bundles/minsalsifda/css/styles.css') }}" rel="stylesheet" media="all">
+    <link href="{{ asset('bundles/minsalsifda/css/redmond/jquery-ui-1.10.4.custom.css') }}" rel="stylesheet" media="all">
+   
+   {% endblock %}
+   {% block css %}{% endblock %}
+   
+   {% block jsDefault %}
+    <script src="{{ asset('bundles/minsalsifda/js/jquery.js') }}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/jquery-ui-1.10.4.custom.js') }}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/bootstrap.js') }}"></script>  
+    <script src="{{ asset('bundles/minsalsifda/js/bootstrap-alert.js') }}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/bootstrap-tooltip.js') }}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/bootstrap-popover.js') }}"></script>
+   {% endblock %}
+   
+   {% block js %}{% endblock %}
+   <style type="text/css">
+       body { 
+            background-color: transparent;
+            
+        }
+        div {
+          //border: 1px solid #DEDEDE;
+        }
+   {% block stylesheets %}{% endblock %}
+    </style>
+{% endblock %}
+</head>
+
+<body>
+{% block body %}
+<div>
+    {% block banner %}
+        <header><center><img src="{{ asset('bundles/minsalsifda/images/banner.png') }}"/></center>
+    {% block menu %}  
+        {% include "MinsalsifdaBundle:Menu:menuSolicitante.html.twig" %}
+    {% endblock %}        
+    {% endblock %}    
+    </header>
+</div>
+ {# BLOCK CONTENIDO#}        
+ <div class="container-fluid">
+ <div class="row-fluid">
+ {% block bodycontenido %}     
+   {# <div class="span3 offset1">
+    {% block sidebar %}
+        
+    {% endblock %}
+    </div> 
+    #}
+    <div class="span10 offset1">
+    {#MENSAJES DE ERROR#}
+     <div class="block-app">
+     {% block content_error %} 
+     {% block alert_step %}
+     
+     {% endblock %}
+     {% block contenido_in %}
+     {% endblock %}
+     {% endblock %}
+     </div>
+     </div>
+ {% endblock %} 
+ </div>
+ </div>  
+ {# BLOCK PARA FOOTER #}
+ <div class="row-fluid">
+ <div class="span12"> 
+ {% block footer %}
+    <hr>
+    <center></center>
+ {% endblock %}
+ </div>
+ </div>        
+{% endblock %}
+
+{% block javascripts %}
+<script>
+function mensajeAlerta(op){
+    $('#mensajePopop').popover('show');
+}
+</script>
+{% endblock %}   
+{% block javascripts_step %}
+<script>
+$(document).ready(function(){ 
+        //Tooltip que muestra mensaje de errores
+    $("[rel=tooltip]").tooltip({ 
+        placement: 'right',
+        html:true,
+        trigger: 'hover' 
+    });
+    
+ });
+ </script>
+{% endblock %}
+ 
+</body>
+</html>

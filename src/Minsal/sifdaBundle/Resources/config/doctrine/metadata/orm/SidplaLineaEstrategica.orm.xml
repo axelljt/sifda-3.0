@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SidplaLineaEstrategica" table="sidpla_linea_estrategica">
+    <indexes>
+      <index name="posee_fk" columns="id_dependencia_establecimiento"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="idx_sidpla_linea_estrategica" columns="id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="descripcion" type="text" column="descripcion" nullable="false"/>
+    <field name="codigo" type="string" column="codigo" length="15" nullable="false"/>
+    <field name="activo" type="boolean" column="activo" nullable="false"/>
+    <field name="anio" type="integer" column="anio" nullable="false"/>
+    <field name="recurrente" type="boolean" column="recurrente" nullable="false"/>
+    <many-to-one field="idDependenciaEstablecimiento" target-entity="CtlDependenciaEstablecimiento">
+      <join-columns>
+        <join-column name="id_dependencia_establecimiento" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

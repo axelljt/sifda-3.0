@@ -1,0 +1,92 @@
+{#{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}" ></script>
+{% endblock %}
+
+{%block css %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/minsalsifda/css/datepicker.css') }}" rel="stylesheet" media="all">
+{% endblock %}  
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/bootstrap-datepicker.js') }}"></script>  
+{%endblock %}
+
+
+{% block contenido_in  %}
+
+    <h2><center>Informacion SifdaSolicitudServicio a ser Rechazada</center></h2>
+    
+    <table id="tabla_show" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ entity.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Fecharecepcion</th>
+                <td>{{ entity.fechaRecepcion|date('Y-m-d') }}</td>
+            </tr>
+            <tr>
+                <th>Fecharequiere</th>
+                <td>{{ entity.fechaRequiere|date('Y-m-d') }}</td>
+            </tr>
+            
+            <tr>
+                <th>Estado</th>
+                <td>{{ entity.idEstado}}</td>
+            </tr>
+        </tbody>
+        
+        
+    </table>
+            <div>
+                  <table>
+                      <tr>
+                     
+                          <td><a href="{{ path('sifda_ordentrabajo_edit', { 'id': entity.id },{'idEstado': entity.idEstado})}}" class="btn">Rechazar</a></td>
+                          <td><a href="{{ path('sifda_ordentrabajo')}}" class="btn">Cancelar</a></td></td>
+                      </tr>
+                  </table>
+                    
+            </div>
+                      
+    <div id="dialog">
+        
+    </div>
+                    
+    
+{#Hola{{entity.id}},{{entity.idEstado}}#}
+
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    
+    <script>
+        
+              $(document).ready(function (){
+                  
+                  var estado= "{{val}}";
+                  
+                    if(estado==1){
+                        
+                        $('#dialog').attr('title','Information').text('Solicitud Rechazada Exitosamente').dialog(); 
+                    }
+                    
+                    else
+                        $('#dialog').attr('title','Information').text('Solicitud no puede ser Rechazada').dialog(); 
+                  
+              });  
+        
+        
+    </script>
+    
+    
+{% endblock %}    

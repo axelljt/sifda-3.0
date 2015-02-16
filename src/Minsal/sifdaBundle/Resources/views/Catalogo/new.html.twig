@@ -1,0 +1,15 @@
+{#{% extends '::base.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layoutAdministrador.html.twig' %}
+{% block contenido_in -%}
+    <h1>Catalogo creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_catalogo') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

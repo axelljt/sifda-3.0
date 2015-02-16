@@ -1,0 +1,90 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block stylesheets %}
+        {{parent()}}
+      {#<link href="{{ asset('bundles/minsalsifda/css/style.css') }}" type="text/css" rel="stylesheet" />#}
+       {#<img src="{{ asset('bundles/minsalsolicitante/images/calendar.gif') }}" alt="" />#}
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}" ></script>
+{% endblock %}
+
+{%block css %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/minsalsifda/css/datepicker.css') }}" rel="stylesheet" media="all">
+{% endblock %}  
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/bootstrap-datepicker.js') }}"></script>  
+{%endblock %}
+{% block contenido_in  %}
+    <center>
+    <h3>Consulta de los Estados de la Solicitud de Servicio</h3>
+    <h4>La solicitud de servicio se encuentra en el estado</h4><br>
+    
+    
+    </center>
+    <div class="row-fluid">
+        <div class="span2">
+            <div id="sidebar">
+                <center>
+                <strong>
+                <span class="label"> PENDIENTE </span><br>
+                <span class="label label-warning"> EN PROCESO </span><br>
+                <span class="label label-important"> RECHAZADA </span><br>
+                <span class="label label-success"> FINALIZADA </span>
+                </strong>
+                </center>
+            </div> 
+        </div>
+        <div class="span10">
+            <table id="tabla_show" class="table table-bordered table-hover table-condensed">
+                
+                <tr>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados/registrado.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados/aprobacion.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados/proceso.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados/entregado.png') }}"/></center></td>
+                     <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados/finalizado.png') }}"/></center></td>
+                </tr>
+                <tr>
+                    <td><center><strong>Registro</strong></center></td>
+                    <td><center><strong>Aprobación</strong></center></td>
+                    <td><center><strong>En proceso</strong></center></td>
+                    <td><center><strong>Recepción</strong></center></td>
+                    <td><center><strong>Finalizado</strong></center></td>
+                </tr>
+  
+            </table>
+                
+                {{entity.descripcion}}
+                {{entity.id}}
+                {{entity.idEstado}}
+                
+
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        $('#1').click(function(){
+            $('#contenido').show("slow");
+        });
+        
+        $('#2').click(function(){
+            $('#contenido').hide("slow");
+        });
+    });
+    
+    
+    
+    
+    
+    
+    </script>
+{% endblock %}   

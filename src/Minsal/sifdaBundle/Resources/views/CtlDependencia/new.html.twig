@@ -1,0 +1,31 @@
+{#{% extends '::base.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+{% block contenido_in -%}
+    <h1>CtlDependencia creation</h1>
+
+    {{ form(form) }}
+   {# <div id="minsal_sifdabundle_ctldependencia_nombre">
+        dfds
+    </div>#}
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        $("#minsal_sifdabundle_ctldependencia_idTipoDependencia").change(function(){
+            var idTipoDependencia = $("#minsal_sifdabundle_ctldependencia_idTipoDependencia").val();
+            $.post(
+            '{{path('sifda_ctldependencia_listar_dependencia')}}', 
+              { 
+                idTipoDependencia:idTipoDependencia
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#minsal_sifdabundle_ctldependencia_nombre").html(data);
+                
+             }, "json");
+        });
+    });
+    
+    </script>
+{% endblock %}

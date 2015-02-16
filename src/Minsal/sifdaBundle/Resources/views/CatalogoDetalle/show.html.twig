@@ -1,0 +1,39 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    <h1>CatalogoDetalle</h1>
+
+    <table class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ entity.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Ref1</th>
+                <td>{{ entity.ref1 }}</td>
+            </tr>
+            <tr>
+                <th>Estatus</th>
+                <td>{{ entity.estatus }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_catalogodetalle') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('sifda_catalogodetalle_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}

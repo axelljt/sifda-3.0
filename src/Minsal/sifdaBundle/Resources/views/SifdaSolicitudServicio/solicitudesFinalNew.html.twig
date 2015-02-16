@@ -1,0 +1,118 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in  %}
+    
+    
+    <div>
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
+        <center><h3>Solicitudes Finalizadas </h3></center>
+        
+        <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+           
+            
+                <div class="span3">
+                        <table>
+                            <tr>
+                                <td>
+                                <input type="radio" name="consulta" id="Todos" value="Todos">Todos</td>
+                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><input type="radio" name="consulta" id="especifico" value="especifico" >Especifico</td>
+                                <td></td><td></td><td></td><td></td>
+                                
+                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF" name="GenerarPDF" onclick="window.open('/reports/solicitudes_Finalizadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
+                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="Excel" name="GenerarExcel" onclick="window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
+                                
+                            </tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            <tr><td></td></tr>
+                            
+                        </table>
+                </div>
+            
+                <div class="span4">                 
+                    <table id="combos">
+                      <tr>
+                          <td>
+                              <label>Servicio:</label>
+                          </td>
+                          <td>
+                                <div class="btn-group">
+                                    <select id="cmb1" name="ComboEstado"  class="selectpicker" style="width: 200px">
+                                        <option value="0">Tipo Servicio</option>
+                                     
+                                     {% for e in establecimiento %}
+                               
+                                        <option value="{{e.id}}">{{e.nombre}}</option>
+                                     {% endfor %}   
+                                    </select>
+                               </div>
+                          </td>
+                          
+                            <td>
+                                
+                            </td>
+                          
+                       </tr>
+                    </table>                    
+                </div>
+                <div class="span4">
+                    <table id="fechas">
+                           <tr>
+                              <td><label>FechaInicio: </label></td>
+                               <td>
+                                   <input type="text" id="fechaInicio" class="input-small" >
+                               </td>  
+                           </tr>
+                            <tr>
+                                <td><label>FechaFin: </label></td>
+                                <td>
+                                    <input type="text" id="fechaFin" class="input-small" >
+                                </td>
+                                <td></td><td></td>
+                                <td>
+                                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">    
+                                </td>
+                            </tr>        
+                    </table>                     
+                </div> 
+              </div>
+        </div> 
+        
+    
+    </div>    
+        
+ {% endblock%}       
+{% block javascripts_step %}
+    {{ parent() }}
+    
+    <script>
+        //Funciones para reporteria
+      function mostrarfi(){ 
+            return $("#fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#fechaFin").val();
+      }
+      
+      function mostrartipo(){ 
+            return $("#cmb1").val();
+      } 
+      
+      function mostraruserid(){ 
+            return "{{usuario.id}}";
+      }
+      
+      function mostraruseridDepEst(){ 
+            return "{{usuario.idDependenciaEstablecimiento.id}}";
+      }
+        
+        
+    </script>
+{%endblock%}

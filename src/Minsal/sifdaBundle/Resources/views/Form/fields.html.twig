@@ -1,0 +1,56 @@
+{% block form_row %}
+{% spaceless %}
+    <div class="form_row">
+        {{ form_label(form) }}
+        {#{{ form_errors(form) }}#}
+        {#{%if form_errors(form) %}
+        {{ form_widget(form, {'attr': {'title': form_errors(form),'rel':'tooltip'}}) }}
+        {{form_errors(form)}}
+        {% else %}
+        {{ form_widget(form, {'attr': {'title': form_label(form),'rel':'tooltip'}}) }}}
+        {% endif %}#}
+        {{ form_widget(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    <ol style="text-align: left;">
+        {% for error in errors %}
+            <li>{{ error.message }}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}
+
+{% block form_label %}
+{% spaceless %}
+    {%if form_errors(form) %}
+        {% set er = 'text-error' %}
+    {% else %}
+        {% set er = '' %}
+    {% endif %}
+    {% if label is not sameas(false) %}
+        {% if not compound %}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {% endif %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required '~ er)|trim}) %}
+        {% else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ er)|trim}) %}
+        {% endif %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        {%if form_errors(form) %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %} >{{ label|trans({}, translation_domain) }}&nbsp;<i class="icon-question-sign" rel="tooltip" title='{{ form_errors(form) }}'></i></label>
+        {% else %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        {% endif %}
+    {% endif %}
+{% endspaceless %}
+{% endblock form_label %}       

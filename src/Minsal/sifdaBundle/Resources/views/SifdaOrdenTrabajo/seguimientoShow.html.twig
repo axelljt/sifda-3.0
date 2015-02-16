@@ -1,0 +1,45 @@
+{% spaceless %}
+<div id="show_solicitudes">   
+    <div class="bs-example">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th><center>Correlativo</center></th>
+                    <th><center>Descripcion</center></th>
+                    <th><center>Fecha que se requiere</center></th>
+                    <th><center>Estado</center></th>
+                    <th><center>Acciones</center></th>
+                </tr>
+            </thead>
+            
+            <tbody>
+                {% set corr = 1 %}
+                {%for s in solicitudes%}
+                <tr>
+                    <td><center>{{ corr }}</center></td>
+                    <td>{{ entity.descripcion }}</td>
+                    <td><center>{% if s.fechaRequiere %}{{ s.fechaRequiere|date('d/m/Y') }}{% endif %}</center></td>
+                    <td>{{ s.idEstado }}</td>
+                    
+                    <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_ordentrabajo_new', { 'id': entity.id }) }}">Crear orden de trabajo</a>
+                    </li>
+                    {#<li>
+                       <a href="{{ path('sifda_ordentrabajo_edit', { 'id': entity.id }) }}">Modificar orden de trabajo</a>
+                    </li>#}
+                    <li>
+                        <a href="{{ path('sifda_vwetapassolicitud', { 'idSS': entity.id }) }}">Mostrar grado de avance</a>
+                    </li>
+                    
+                  </ul>
+                </td>
+                </tr>
+                {% set corr = corr + 1 %}   
+                {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>        
+{% endspaceless %}

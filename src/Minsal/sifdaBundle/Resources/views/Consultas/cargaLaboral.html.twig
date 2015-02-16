@@ -1,0 +1,126 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+
+                    <table id="fechas" >
+                                    <tr>
+                                        <td><label>FechaInicio: </label></td>
+                                        <td>
+                                            <input type="text" id="fechaInicio" class="input-small" >
+                                        </td>  
+                                    
+                                        <td><label>FechaFin: </label></td>
+                                        <td>
+                                            <input type="text" id="fechaFin" class="input-small" >
+                                        </td>
+                                        <td></td><td></td>
+                                        <td>
+                                            <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+                                        </td>
+                                    </tr>
+                                    
+                    </table>     
+    <div id="divtabla"></div>
+                    <table  class="table table-bordered table-hover table-condensed">
+                       <thead>
+            <tr>
+                <th><center>Id</center></th>
+                <th><center>Tecnico</center></th>
+                <th><center>Asignadas</center></th>
+                <th><center>Terminadas</center></th>
+                <th><center>Atendidas</center></th>
+            </tr>
+            <tbody id="tabla">
+                
+            </tbody>    
+        </thead>             
+                                    
+                    </table>
+    
+    <script>
+   $(document).ready(function(){
+         
+        $("#buscar").click(function(){
+            var fechaInicio=$("#fechaInicio").val();
+              var fechaFin=$("#fechaFin").val();
+            $.post(
+                '{{path('buscar_carga_laboral')}}', 
+                  { 
+                    fechaInicio:fechaInicio,
+                    fechaFin:fechaFin
+                  }
+                  , function( data ) {
+                    console.log( data );
+                    drawTable(data.query);
+                         
+                 }, "json");
+         
+        });
+});
+
+function drawTable(data) {
+var rows = '';
+    for (var i = 0; i < data.length; i++) {
+        rows+=drawRow(data[i],i+1);
+    }
+    document.getElementById('tabla').innerHTML = rows;
+    
+}
+
+function drawRow(rowData,id) {
+    var row = '<tr>';
+    row+='<td><center>' + id + '</center></td>';
+    row+='<td><center>' + rowData.tecnico + '</center></td>';
+    row+='<td><center>' + rowData.pendientes + '</center></td>';
+    row+='<td><center>' + rowData.finalizadas + '</center></td>';
+    row+='<td><center>' + rowData.atendidas + '</center></td>';
+    row+='</tr>';
+    
+    return row;
+}
+
+$.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+                                
+                                
+				});
+    </script>
+{% endblock %}

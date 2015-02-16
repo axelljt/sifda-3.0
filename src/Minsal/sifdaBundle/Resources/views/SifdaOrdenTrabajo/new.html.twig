@@ -1,0 +1,237 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block alert_step %}
+{% if errors is not null %}
+    {% include "MinsalsifdaBundle:Errors:errors.html.twig" with {'errors':errors} %}
+{% else %}
+    <div class="alert alert-info" id="alert_step">
+    <button type="button" class="close" data-dismiss="alert">&times;</button>
+    <strong>Nota: </strong> Campos requeridos (*).
+    </div>    
+{% endif %}
+{% endblock %}
+
+{% block contenido_in -%}
+            
+        <div class="page-header">
+            <center><h3>Crear la orden de trabajo</h3></center>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento</th>
+                            <td>{{ solicitud.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia solicitante</th>
+                            <td>{{ solicitud.user.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de servicio</th>
+                            <td>{{ solicitud.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion</th>
+                            <td>{{ solicitud.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere</th>
+                            <td>{{ solicitud.fechaRequiere|date('d/m/Y') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+                        
+                <br>
+                {# Si la solicitud de servicio tiene ordenes de trabajo generadas #}
+                {% if solicitudOrden %}
+                    
+                    {# Si la orden de trabajo actual ha finalizado #}
+                    {% if ordenActual.dscestado == 'Finalizado' %}
+                        {{form_start(form)}}
+                        {{form_errors(form)}} 
+                        <div class="row-fluid">
+                            <div class="span4 offset2">
+                                {{form_row(form.idEtapa, {'attr': {'class':'span8'} })}}
+                                {% if subetapaEtapa %}
+                                    {{form_row(form.idSubEtapa, {'attr': {'class':'span8'} })}}
+                                {% endif %}
+                                {#{{form_row(form.establecimiento, {'attr': {'class':'span10'} })}}
+                                {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}#}
+                                {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la orden de trabajo'} })}}
+                                
+                            </div>
+                            <div class="span5 offset1"> 
+                                {{form_row(form.idPrioridad)}}
+                                {{form_row(form.observacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
+                                {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes'} })}}
+                            </div>
+                        </div>
+                        <br><br>
+                        <div class="row-fluid">    
+                            <div class="span12">
+                            <br>
+                            <center>
+                                <table id="botones">
+                                <tr> 
+                                   <td>{{form_row(form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                                   <td><a href="{{ path('sifda_gestionSolicitudes') }}" class="btn">Regresar</a>
+                                    </td>
+                                </tr>    
+                                </table>
+                            </center>
+                            <br>
+                            </div>
+                        </div>
+                        {{form_end(form)}}      
+                        
+                     {# Si la orden de trabajo actual no ha finalizado #}   
+                    {% else%}  
+                        <center><h4>No se puede generar una nueva orden de trabajo porque la actividad {{ ordenActual.dscciclovida }} no ha finalizado</h4></center>
+                    {% endif %}          
+                    
+                {# Si la solicitud de servicio no tiene ordenes de trabajo generadas #}    
+                {% else%}  
+                    {{form_start(form)}}
+                    {{form_errors(form)}} 
+                    <div class="row-fluid">
+                        <div class="span4 offset2">
+                            {{form_row(form.idEtapa, {'attr': {'class':'span8'} })}}
+                            {% if servicioSubetapa %}
+                                {{form_row(form.idSubEtapa, {'attr': {'class':'span8'} })}}
+                            {% endif %}
+                            {#{{form_row(form.establecimiento, {'attr': {'class':'span10'} })}}
+                            {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}#}
+                            {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la orden de trabajo'} })}}
+                            
+                        </div>
+                        <div class="span5 offset1"> 
+                            {{form_row(form.idPrioridad)}}
+                            {{form_row(form.observacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
+                            {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes'} })}}
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="row-fluid">    
+                        <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                            <tr> 
+                               <td>{{form_row(form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                               <td><a href="{{ path('sifda_gestionSolicitudes') }}" class="btn">Regresar</a>
+                                </td>
+                            </tr>    
+                            </table>
+                        </center>
+                        <br>
+                        </div>
+                    </div>
+                    {{form_end(form)}}
+                {% endif %}                
+            </div>
+        </div> 
+                {{ ordenActualId }}
+{% endblock %}
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        
+        document.getElementById("minsal_sifdabundle_sifdaordentrabajo_idEtapa").value="";
+                
+        $("#minsal_sifdabundle_sifdaordentrabajo_idEtapa").change(function(){ 
+
+            var idEtapa = $("#minsal_sifdabundle_sifdaordentrabajo_idEtapa").val();
+            var ordenActualId = "{{ ordenActualId }}";
+           // idEtapa = idEtapa;
+            //alert(idEtapa);
+;            if(idEtapa !="")
+            {
+                //alert(idEtapa);
+                $.post(
+                '{{path('sifda_sifdaordentrabajo_find_subetapa')}}', 
+                  { 
+                    idEtapa:idEtapa,
+                    ordenActualId:ordenActualId
+                  }
+                  //alert(ordenActualId);
+                  , function( data ) {
+                    console.log( data );
+                    alert(ordenActualId);
+                        $("#minsal_sifdabundle_sifdaordentrabajo_idSubEtapa").html(data);
+
+                 }, "json");
+            }
+            else 
+            {
+                $.post(
+                '{{path('sifda_sifdaordentrabajo_select_subetapa')}}', 
+                    function( data ) {
+                    console.log( data );
+                        $("#minsal_sifdabundle_sifdaordentrabajo_idSubEtapa").html(data);
+
+                 }, "json");
+            }
+        });
+    });
+    
+    $(document).ready(function(){
+    
+        $("#minsal_sifdabundle_sifdaordentrabajo_establecimiento").change(function(){
+            
+            var IdEstablecimiento = $("#minsal_sifdabundle_sifdaordentrabajo_establecimiento").val();
+            $.post(
+            '{{path('sifda_ordentrabajo_find_dependencia')}}', 
+              { 
+                idEstablecimiento:IdEstablecimiento
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#minsal_sifdabundle_sifdaordentrabajo_dependencia").html(data);
+                
+             }, "json");
+        });
+    });    
+
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         minDate: new Date(2015, 0  , 1), 
+//                         maxDate: "+0D",
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 yearSuffix: ''
+			 
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#minsal_sifdabundle_sifdaordentrabajo_fechaCreacion" ).datepicker(
+					
+					);
+                                
+                                $( "#minsal_sifdabundle_sifdaordentrabajo_fechaFinalizacion" ).datepicker(
+					
+					);
+				});
+     
+    </script>
+    {% endblock%}

@@ -1,0 +1,43 @@
+{#{% extends '::base.html.twig' %}#}
+
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block body -%}
+    <h1>CtlTipoDependencia list</h1>
+
+    <table class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                <td><a href="{{ path('sifda_ctltipodependencia_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.nombre }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_ctltipodependencia_show', { 'id': entity.id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifda_ctltipodependencia_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path('sifda_ctltipodependencia_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

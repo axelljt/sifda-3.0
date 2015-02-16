@@ -1,0 +1,49 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Mostrar informe de la orden de trabajo</h3></center>
+    </div>
+    
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>C&oacute;digo de orden de trabajo</th>
+                <td>{{ entity.idOrdenTrabajo.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Descripci&oacute;n de la orden de trabajo</th>
+                <td>{{ entity.idOrdenTrabajo.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Prioridad de la orden de trabajo</th>
+                <td>{{ entity.idOrdenTrabajo.idPrioridad }}</td>
+            </tr>
+            <tr>
+                <th>Detalle del informe</th>
+                <td>{{ entity.detalle }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de realizaci&oacute;n del informe</th>
+                <td>{{ entity.fechaRealizacion|date('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de registro del informe</th>
+                <td>{{ entity.fechaRegistro|date('d/m/Y H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Orden de trabajo finalizada</th>
+                <td>{% if entity.terminado == 1%}Si{%else%}No{%endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+    <center>
+            <table id="botones">
+            <tr>
+                <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                <td><a href="{{ path('sifdainformeordentrabajo_edit', { 'id': entity.id }) }}" class="btn">Modificar</a></td>
+                <td><a href="{{ path('sifdainformeordentrabajo', { 'idOrd': entity.idOrdenTrabajo.id }) }}" class="btn">Regresar</a></td>
+            </tr>    
+            </table>
+    </center><br>
+{% endblock %}

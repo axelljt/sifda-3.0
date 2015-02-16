@@ -1,0 +1,25 @@
+{% spaceless %}
+<div id="school-previous">
+    <div class="bs-example">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Descripcion</th>
+                    <th>Fecha de recepcion</th>
+                    <th>Codigo</th>
+                </tr>
+            </thead>
+            <tbody>{%for o in ordenes%}
+                <tr>
+                    <td>{{o.descripcion}}</td>
+                    <td>{{o.fechaCreacion|date('Y-m-d H:i:s')}}</td>
+                    <td>{{o.codigo}}</td>
+                    <td><a href="{{ path('sifda_ordentrabajo_show', { 'id': o.id }) }}">show</a>
+                    <a href="{{ path('sifdainformeordentrabajo_new', { 'id': o.id }) }}">nuevo Informe</a></td>
+                </tr>
+                   {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>        
+{% endspaceless %}

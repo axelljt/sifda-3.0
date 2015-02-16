@@ -1,0 +1,103 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+{{form_start(form)}}
+{{form_errors(form)}}
+<div class="row-fluid">
+    <div class="page-header">
+        <center><h3>Registrar un informe a la orden de trabajo</h3></center>
+    </div>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>C&oacute;digo</th>
+                <td>{{ orden.codigo }}</td>
+            </tr>
+            <br>
+            <tr>
+                <th>Descripci&oacute;n</th>
+                <td>{{ orden.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de finalizaci&oacute;n</th>
+                <td>{{ orden.fechaFinalizacion|date('d/m/Y') }}</td>
+            </tr>
+            <tr>
+                <th>Prioridad</th>
+                <td>{{ orden.idPrioridad }}</td>
+            </tr>
+            <tr>
+                <th>Observaci&oacute;n</th>
+                <td>{% if orden.observacion %}{{ orden.observacion }}{%else%}No tiene{%endif %}</td>
+            </tr>
+            
+        </tbody>
+    </table>
+            <br>
+    <div class="span12">
+        <div class="row-fluid">
+            <div class="span4 offset1">
+                {{form_row(form.detalle, {'attr': {'class':'span12'} })}}
+                 {{form_row(form.terminado, {'attr': {'class':'radio'} })}}         
+            </div>          
+            <div class="span4 offset1">
+                {{form_row(form.fechaRealizacion,{'attr': {'readonly':'yes'} })}}
+                
+            </div>
+        </div>
+        <br>
+        <center>
+            <table id="botones">
+            <tr>
+                <td>{{form_row(form.submit,{'attr':{'class':'btn'}})}}</td> 
+                <td><a href="{{ path('sifda_ordentrabajo')}}" class="btn">Regresar</a></td>
+            </tr>    
+            </table>
+        </center>    
+    </div>
+    <br>    
+</div>
+{{form_end(form)}}                 
+{% endblock %}
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+   
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+//                         minDate: new Date(1980, 11, 1), 
+//                         maxDate: "+0D",
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 yearSuffix: ''
+			 
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#minsal_sifdabundle_sifdainformeordentrabajo_fechaRealizacion" ).datepicker(
+					
+					);
+                                
+                                $( "#minsal_sifdabundle_sifdasolicitudservicio_fechaRequiere" ).datepicker(
+					
+					);
+				});
+     
+    </script>
+    {% endblock%}

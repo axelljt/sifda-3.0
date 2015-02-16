@@ -1,0 +1,39 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    {{form_start(form)}}
+    {{form_errors(form)}}    
+        <div class="page-header">
+            <center><h3>Registro de la etapa del tipo de servicio</h3></center>
+            <center><h4>{{tipo.nombre}}</h4></center>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                    <div class="span4 offset2">
+                        {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la etapa'} })}}
+                        {#{{form_row(form.ignorarSig)}}#}
+                        {{form_row(form.jerarquia)}}
+
+                    </div>
+                    <div class="span5 offset1">
+                        {{form_row(form.referencia, {'attr': {'class':'input-xlarge', 'placeholder': 'Referencia de la etapa'} })}}
+                        {{form_row(form.peso)}}
+                        {#{{form_row(form.idTipoServicio)}}
+                        {{form_row(form.idEtapa)}}#}
+                    </div>
+                </div>
+                <br><br>
+                <center>
+                    <table id="botones">
+                    <tr> 
+
+                        <td>{{form_row(form.submit_and_add,{'attr':{'class':'btn btn-primary'}})}}</td> 
+                        <td>{{form_row(form.submit,{'attr':{'class':'btn btn-inverse'}})}}</td> 
+                        <td><a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Regresar</a></td>
+                    </tr>    
+                    </table>
+                </center>    
+            </div>
+        </div>        
+    {{form_end(form)}}
+{% endblock %}

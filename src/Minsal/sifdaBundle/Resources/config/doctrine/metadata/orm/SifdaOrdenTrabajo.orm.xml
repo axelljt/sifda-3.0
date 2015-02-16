@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SifdaOrdenTrabajo" table="sifda_orden_trabajo">
+    <indexes>
+      <index name="crea_fk" columns="id_solicitud_servicio"/>
+      <index name="define_etapa_fk" columns="id_etapa"/>
+      <index name="atiende_fk" columns="id_dependencia_establecimiento"/>
+      <index name="define_estado_fk" columns="id_estado"/>
+      <index name="define_prioridad_fk" columns="id_prioridad"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="idEtapa" type="integer" column="id_etapa" nullable="true"/>
+    <field name="descripcion" type="text" column="descripcion" nullable="false"/>
+    <field name="codigo" type="string" column="codigo" length="15" nullable="false"/>
+    <field name="fechaCreacion" type="datetime" column="fecha_creacion" nullable="false"/>
+    <field name="fechaFinalizacion" type="datetime" column="fecha_finalizacion" nullable="true"/>
+    <field name="observacion" type="text" column="observacion" nullable="true"/>
+    <many-to-one field="idSolicitudServicio" target-entity="SifdaSolicitudServicio">
+      <join-columns>
+        <join-column name="id_solicitud_servicio" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idDependenciaEstablecimiento" target-entity="CtlDependenciaEstablecimiento">
+      <join-columns>
+        <join-column name="id_dependencia_establecimiento" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idEstado" target-entity="CatalogoDetalle">
+      <join-columns>
+        <join-column name="id_estado" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idPrioridad" target-entity="CatalogoDetalle">
+      <join-columns>
+        <join-column name="id_prioridad" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

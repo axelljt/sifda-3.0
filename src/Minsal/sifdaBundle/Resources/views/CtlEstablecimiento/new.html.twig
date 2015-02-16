@@ -1,0 +1,16 @@
+{#{% extends '::base.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layout.html.twig' %}
+
+{% block body -%}
+    <h1>CtlEstablecimiento creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_ctlestablecimiento') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

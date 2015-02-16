@@ -1,0 +1,61 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in %}
+    <center><h3>Grado de Avance de una solicitud de servicio</h3></center>
+<table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ solicitud.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Fecharecepcion</th>
+                <td>{{ solicitud.fechaRecepcion is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s") }}</td>
+            </tr>
+            <tr>
+                <th>Fecharequiere</th>
+                <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s")}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>Etapa</th>
+                <th>Subetapa</th>
+                <th>Estado</th>
+                
+                <th>Empleado asignado</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set subetapa = 0%}
+        {% for entity in entities %}
+            <tr>
+                
+                <td>
+                    {% if entity.jerarciclovida != subetapa %}
+                        {{ entity.dscciclovida }}
+                        {%set subetapa = subetapa + 1%}
+                    {%endif%}
+                </td>
+                
+                <td>{{ entity.dscsubetapa }}</td>
+                <td>{{ entity.dscestado }}</td>
+                
+                <td>{{ entity.nomempleado }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_vwetapassolicitud_show', { 'id': entity.id }) }}">Mostrar</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}

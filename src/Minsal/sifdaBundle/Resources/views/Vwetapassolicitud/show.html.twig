@@ -1,0 +1,98 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Vwetapassolicitud</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Id_solicitud</th>
+                <td>{{ entity.idsolicitud }}</td>
+            </tr>
+            <tr>
+                <th>Dsc_solicitud</th>
+                <td>{{ entity.dscsolicitud }}</td>
+            </tr>
+            <tr>
+                <th>Fchrecep_solicitud</th>
+                <td>{{ entity.fchrecepsolicitud|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fchreq_solicitud</th>
+                <td>{{ entity.fchreqsolicitud|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Id_tipo_servicio</th>
+                <td>{{ entity.idtiposervicio }}</td>
+            </tr>
+            <tr>
+                <th>Nombre_tipo_servicio</th>
+                <td>{{ entity.nombretiposervicio }}</td>
+            </tr>
+            <tr>
+                <th>Dsc_tipo_servicio</th>
+                <td>{{ entity.dsctiposervicio }}</td>
+            </tr>
+            <tr>
+                <th>Id_ciclo_vida</th>
+                <td>{{ entity.idciclovida }}</td>
+            </tr>
+            <tr>
+                <th>Jerar_ciclo_vida</th>
+                <td>{{ entity.jerarciclovida }}</td>
+            </tr>
+            <tr>
+                <th>Dsc_ciclo_vida</th>
+                <td>{{ entity.dscciclovida }}</td>
+            </tr>
+            <tr>
+                <th>Peso</th>
+                <td>{{ entity.peso }}</td>
+            </tr>
+            <tr>
+                <th>Id_orden</th>
+                <td>{{ entity.idorden }}</td>
+            </tr>
+            <tr>
+                <th>Dsc_orden</th>
+                <td>{{ entity.dscorden }}</td>
+            </tr>
+            <tr>
+                <th>Fchcrea_orden</th>
+                <td>{{ entity.fchcreaorden|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fchfin_orden</th>
+                <td>{{ entity.fchfinorden|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Id_estado</th>
+                <td>{{ entity.idestado }}</td>
+            </tr>
+            <tr>
+                <th>Dsc_estado</th>
+                <td>{{ entity.dscestado }}</td>
+            </tr>
+            <tr>
+                <th>Id_empleado</th>
+                <td>{{ entity.idempleado }}</td>
+            </tr>
+            <tr>
+                <th>Nom_empleado</th>
+                <td>{{ entity.nomempleado }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_vwetapassolicitud') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

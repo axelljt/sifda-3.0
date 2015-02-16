@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SifdaEquipoTrabajo" table="sifda_equipo_trabajo">
+    <indexes>
+      <index name="es_atendida_fk" columns="id_orden_trabajo"/>
+      <index name="forma_parte_fk" columns="id_empleado"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="responsableEquipo" type="boolean" column="responsable_equipo" nullable="false"/>
+    <many-to-one field="idOrdenTrabajo" target-entity="SifdaOrdenTrabajo">
+      <join-columns>
+        <join-column name="id_orden_trabajo" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idEmpleado" target-entity="CtlEmpleado">
+      <join-columns>
+        <join-column name="id_empleado" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

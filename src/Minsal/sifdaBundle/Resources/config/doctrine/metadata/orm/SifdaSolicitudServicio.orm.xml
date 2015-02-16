@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SifdaSolicitudServicio" table="sifda_solicitud_servicio">
+    <indexes>
+      <index name="establece_estado_fk" columns="id_estado"/>
+      <index name="solicita_fk" columns="id_dependencia_establecimiento"/>
+      <index name="define_fk" columns="id_tipo_servicio"/>
+      <index name="define_medio_fk" columns="id_medio_solicita"/>
+      <index name="ingresa_fk" columns="user_id"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="idx_sifda_solicitud_servicio" columns="id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="descripcion" type="text" column="descripcion" nullable="false"/>
+    <field name="fechaRecepcion" type="datetime" column="fecha_recepcion" nullable="false"/>
+    <field name="fechaRequiere" type="datetime" column="fecha_requiere" nullable="true"/>
+    <many-to-one field="idTipoServicio" target-entity="SifdaTipoServicio">
+      <join-columns>
+        <join-column name="id_tipo_servicio" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="user" target-entity="FosUserUser">
+      <join-columns>
+        <join-column name="user_id" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idDependenciaEstablecimiento" target-entity="CtlDependenciaEstablecimiento">
+      <join-columns>
+        <join-column name="id_dependencia_establecimiento" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idMedioSolicita" target-entity="CatalogoDetalle">
+      <join-columns>
+        <join-column name="id_medio_solicita" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idEstado" target-entity="CatalogoDetalle">
+      <join-columns>
+        <join-column name="id_estado" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

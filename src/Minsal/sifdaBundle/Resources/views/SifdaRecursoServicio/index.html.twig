@@ -1,0 +1,55 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+{% block contenido_in -%}
+    
+<center><h3>Recursos de Orden de Trabajo</h3></center>
+<table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ informe.id }}</td>
+            </tr>
+            <tr>
+                <th>Detalle</th>
+                <td>{{ informe.detalle }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                {#<th>Id</th>#}
+                <th>Cantidad</th>
+                <th>Costo total</th>
+                <th>Descripcion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                {#<td><a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                <td>{{ entity.cantidad }}</td>
+                <td>{{ entity.costoTotal }}</td>
+                <td>{{ entity.idTipoRecursoDependencia.idTipoRecurso.nombre }}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">Mostrar recurso</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifdarecursoservicio_edit', { 'id': entity.id }) }}">Editar recurso</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+<center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{path('sifdainformeordentrabajo', { 'idOrd': informe.idOrdenTrabajo.id }) }}" class="btn">Regresar</a></td>
+            </tr>    
+            </table>
+        </center>
+    {% endblock %}

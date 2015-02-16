@@ -1,0 +1,44 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+    <center><h3>Mostrar Orden Trabajo</h3></center>
+
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ entity.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Codigo</th>
+                <td>{{ entity.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Fechacreacion</th>
+                <td>{{ entity.fechaCreacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fechafinalizacion</th>
+                <td>{{ entity.fechaFinalizacion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Observacion</th>
+                <td>{{ entity.observacion }}</td>
+            </tr>
+        </tbody>
+    </table>
+<center>
+            <table id="botones">
+            <tr>
+                <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                <td><a href="{{ path('sifda_ordentrabajo_edit', { 'id': entity.id })}}" class="btn">Modificar</a></td>
+                <td><a href="{{ path('sifda_ordentrabajo')}}" class="btn">Regresar</a></td>
+            </tr>    
+            </table>
+        </center>
+        
+{% endblock %}

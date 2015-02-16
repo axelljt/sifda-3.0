@@ -1,0 +1,8 @@
+{% spaceless %}
+<select id="subetapa">
+<option value="0" selected>Seleccione una subactividad</option>    
+    {% for sub in subetapas %}
+        <option value="{{sub.id}}">{{sub.descripcion}}</option>
+    {% endfor %}     
+</select>        
+{% endspaceless %}

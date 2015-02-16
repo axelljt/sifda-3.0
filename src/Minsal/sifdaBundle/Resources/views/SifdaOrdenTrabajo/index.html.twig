@@ -1,0 +1,161 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Mostrar &oacute;rdenes de trabajo asignadas</h3></center>
+    </div>
+    <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+            <table>
+                <tr>
+                    <td>
+                    <input type="radio" name="consulta" id="todos" value="todos" checked>Todos<br>
+                    <input type="radio" name="consulta" id="especifico" value="especifico">Especifico
+                    </td>
+                    <td></td>
+                </tr>
+            </table>    
+                {#<div>#}
+                    <table id="fechas">
+                        <tr>
+                            <td><label>Fecha Inicio: </label></td><td><input type="text" id="fechaInicio" value=""></td>
+                            <td><label>Fecha Fin: </label></td><td><input type="text" id="fechaFin" value=""></td>
+                            <td><input type="submit" class="btn btn-primary" id="b1" onclick="mostrarvalores()" value="Buscar" name="Buscar"></td>
+                        </tr>    
+                    </table>    
+                    <div id="rangoTabla"></div>
+                {#</div>#}              
+            </div>
+        </div>    
+    </div>
+        
+    <br>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th><center>No.</center></th>
+                <th><center>Descripci&oacute;n</center></th>
+                <th>C&oacute;digo</th>
+                <th>Fecha de creaci&oacute;n</th>
+                <th>Fecha de finalizaci&oacute;n</th>
+                <th><center>Observaci&oacute;n</center></th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set corr = 1 %}
+            {% for entity in entities %}
+            <tr>
+                <td> {{ corr }} </td>
+                <td>{{ entity.descripcion }}</td>
+                <td>{{ entity.codigo }}</td>
+                <td>{% if entity.fechacreacion %}{{ entity.fechacreacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td><center>{% if entity.fechafinalizacion %}{{ entity.fechafinalizacion|date('Y-m-d') }}{% endif %}</center></td>
+                <td>{% if entity.observacion %}{{ entity.observacion }}{%else%}No tiene{%endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_ordentrabajo_show', { 'id': entity.id }) }}">Mostrar detalle</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifdainformeordentrabajo_new', { 'id': entity.id }) }}">Nuevo informe</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifdainformeordentrabajo', { 'idOrd': entity.id }) }}">Listar informes</a>
+                    </li>
+                </ul>
+                </td>
+            </tr>
+            {% set corr = corr + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}
+    
+    {% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+
+        $('#fechas').hide("slow");
+        //alert($('#todos').val());
+        $('#todos').click(function(){
+            $('#fechas').hide("slow");
+            $('#tabla').show("slow");
+            $('#rangoTabla').hide("slow");
+        });
+        
+        $('#especifico').click(function(){ 
+        $('#fechas').show("slow");    
+        $('#tabla').hide("slow");          
+        });
+        
+        $("#b1").click(function(){
+            
+            var fi = $("#fechaInicio").val();
+            var ff = $("#fechaFin").val();
+            $.post(
+            '{{path('sifda_ordentrabajo_buscar_ordenes')}}', 
+              { 
+                fechaInicio:$("#fechaInicio").val(),
+                fechaFin   :$("#fechaFin").val()
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#rangoTabla").html(data);
+                
+             }, "json");
+            
+        });
+    });
+    
+    
+    
+    $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+//                         minDate: new Date(1980, 11, 1), 
+//                         maxDate: "+0D",
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 yearSuffix: ''
+			 
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+				}); 
+    
+    function mostrarvalores(){ 
+              var fi = $("#fechaInicio").val();
+        
+             var ff = $("#fechaFin").val();
+             //alert(fi);   
+             //alert(ff);
+    }
+    
+    
+    </script>
+    {% endblock%}

@@ -1,0 +1,14 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_driver: pdo_pgsql
+    database_host: 127.0.0.1
+    database_port: 5432
+    database_name: sifda12022015
+    database_user: sifda
+    database_password: sifda
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: es
+    secret: k4231lkñ4l123kl4ñk321lk5ñlk12lñ5k4lk5lñ4k31ñlk5ñl31kk1kñl23klk12ñlk5l2ñk13kkñl352kñ135k5ñ3kñ1k531ñ2kñl

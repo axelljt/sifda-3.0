@@ -1,0 +1,38 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in  %}
+
+    
+    <h3><center>Informacion Solicitud Servicio</center></h3>
+    
+    <table id="tabla_show" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            
+            <tr>
+                <th>Dependencia Atiende</th>
+                <td>{{ solicitud.idDependenciaEstablecimiento}}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ solicitud.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Fecharecepcion</th>
+                <td>{{ solicitud.fechaRecepcion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fecharequiere</th>
+                {#<td>{{ solicitud.fechaRecepcion is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s") }}</td>#}
+                <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s")}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <table>
+        <tr>
+            <td>
+                <td><a href="{{ path('sifda_solicitudes_ingresadas2')}}" class="btn">Regresar</a></td>  
+            </td>
+        </tr>
+    </table>
+
+
+{% endblock  %}    

@@ -1,0 +1,36 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    {{form_start(edit_form)}}
+    {{form_errors(edit_form)}}     
+        <div class="page-header">
+            <center><h3>Reasignacion de personal a la orden de trabajo</h3></center>
+        </div>
+        <br>
+        <div class="row-fluid">
+        <div class="span12">
+            <div class="row-fluid">
+                <div class="span4 offset2">
+                    {{form_row(edit_form.idEmpleado)}}                    
+                </div>                   
+                <div class="span5 offset1">
+                    {{form_row(edit_form.equipoTrabajo)}}
+                </div>
+            </div>
+            <br><br>
+            <center>
+
+                <table id="botones">
+                    <tr>
+                        <td>{{form_row(edit_form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                        <td><a href="{{ path('sifda_equipotrabajo_show', { 'id': ordenTrabajo.id })}}" class="btn">Regresar</a></td>
+                    </tr>  
+                </table>            
+            </center>
+            
+      </div></div> 
+   {#{{ form(edit_form) }}#}
+
+        
+    {{form_end(edit_form)}} 
+{% endblock %}

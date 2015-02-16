@@ -1,0 +1,116 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+
+<div class="page-header">
+            <center><h3>Rechazo de la solicitud</h3></center>
+        </div>
+        <div class="row-fluid">
+            <div class="span10 offset1">
+                <div class="row-fluid">
+                    <input type="hidden" id="txt_id" value="{{entity.id}}">
+                    
+                <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento</th>
+                            <td>{{ entity.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia</th>
+                            <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                        </tr>
+                        <tr>
+                            <th>Tipo de servicio</th>
+                            <td>{{ entity.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion</th>
+                            <td>{{ entity.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere</th>
+                            <td>{{ entity.fechaRequiere|date('d/m/Y') }}</td>
+                        </tr>
+                        
+                        <tr>
+                            <th>Motivo de Rechazo</th>
+                            <td><textarea id="txta1" name="comment" rows="3" class="span10" text=""></textarea></td>
+                        </tr>
+                    </tbody>
+                </table>
+                        
+                        <table id="Btns" style="margin-left:43%">
+                      
+                     <tr>
+                         <td><input type="submit" class="btn btn-primary" id="Rechazar" value="Rechazar" name="Rechazar" onclick="ShowDialogRechazar()"></td>
+                         <td><input type="submit"  id="Cancelar" value="Cancelar" name="Cancelar"></td>
+                     </tr>    
+                 
+                  </table>               
+            </div>
+
+     <div id="dialogConfirm">
+            <span id="spanMessage"></span>
+
+        </div>                       
+{% endblock %}   
+
+
+
+{% block javascripts_step %}
+    {{ parent() }}
+    
+    <script>
+        $(document).ready(function(){
+            
+            document.getElementById('txta1').value=""; 
+                 
+        }); //Fin Jquery
+        
+     
+ function ShowDialogRechazar() {
+      
+    var x = document.getElementById("txta1").value;
+    if(x!=""){
+        
+   $('#spanMessage').html('¿Está seguro(a) de Rechazar la Solicitud?');
+   $("#dialogConfirm").dialog({
+      resizable: false,
+      height: 160,
+      width: 300,
+      modal: true,
+      title: 'Confirmacion',
+      buttons: {
+              'Aceptar': function () {
+                   LlamarControlador('{{path('sifda_solicitudservicio_rechazar')}}',document.getElementById("txta1").value,document.getElementById("txt_id").value);
+                   $(this).dialog("close");
+                },
+               'Cancelar': function () {
+                  $(this).dialog("close");
+                }
+            }
+        });
+      } //Fin de ShowDialogRechazar
+        
+    } //Fin del If
+    
+   
+    
+    function LlamarControlador(url,valor,id)
+    {
+      $.post(
+        url,
+        {
+            id:id,
+            texto:valor
+        }).done(function(){
+          window.location='{{path('sifda_gestionSolicitudes')}}';   
+          {#('#dialog').attr('title','Confirmacion').text('Solicitud Rechazada Correctamente').dialog();               #}
+        });
+    } //Fin de LlamarControlador   
+        
+        
+    </script>
+    
+{% endblock%}    

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CatalogoDetalle" table="catalogo_detalle">
+    <indexes>
+      <index name="especifica_fk" columns="id_catalogo"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="descripcion" type="string" column="descripcion" length="100" nullable="false"/>
+    <field name="ref1" type="string" column="ref1" length="20" nullable="false"/>
+    <field name="estatus" type="boolean" column="estatus" nullable="false"/>
+    <many-to-one field="idCatalogo" target-entity="Catalogo">
+      <join-columns>
+        <join-column name="id_catalogo" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

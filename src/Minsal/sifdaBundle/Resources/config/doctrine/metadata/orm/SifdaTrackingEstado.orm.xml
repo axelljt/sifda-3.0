@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="SifdaTrackingEstado" table="sifda_tracking_estado">
+    <indexes>
+      <index name="almacena_fk" columns="id_estado"/>
+      <index name="se_registra_fk" columns="id_orden_trabajo"/>
+      <index name="registra_etapa_fk" columns="id_etapa"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="idx_sifda_tracking_estado" columns="id"/>
+    </unique-constraints>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="fechaInicio" type="datetime" column="fecha_inicio" nullable="false"/>
+    <field name="fechaFin" type="datetime" column="fecha_fin" nullable="true"/>
+    <field name="progActividad" type="string" column="prog_actividad" length="40" nullable="false"/>
+    <field name="observacion" type="text" column="observacion" nullable="false"/>
+    <many-to-one field="idEtapa" target-entity="SifdaRutaCicloVida">
+      <join-columns>
+        <join-column name="id_etapa" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idOrdenTrabajo" target-entity="SifdaOrdenTrabajo">
+      <join-columns>
+        <join-column name="id_orden_trabajo" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idEstado" target-entity="CatalogoDetalle">
+      <join-columns>
+        <join-column name="id_estado" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

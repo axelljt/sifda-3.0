@@ -1,0 +1,111 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    {{form_start(form)}}
+    {{form_errors(form)}}     
+        <div class="page-header">
+            <center><h3>Reprogramar la solicitud de servicio</h3></center>
+        </div>
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="row-fluid">
+                    <table id="tabla" class="table table-bordered table-hover table-condensed">
+                        <tbody>
+                            <tr>
+                                <th>Establecimiento solicitante</th>
+                                <td>{{ solicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>Dependencia solicitante</th>
+                                <td>{{ solicitudServicio.user.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>Tipo de servicio</th>
+                                <td>{{ solicitudServicio.idTipoServicio }}</td>
+                            </tr>
+                            <tr>
+                                <th>Descripcion de la solicitud de servicio</th>
+                                <td>{{ solicitudServicio.descripcion }}</td>
+                            </tr>
+                            <tr>
+                                <th>Fecha que se requiere</th>
+                                <td>{{ solicitudServicio.fechaRequiere|date('d/m/Y') }}</td>
+                                <td><input type="hidden" id="txtfechaRequiere"  value="{{ solicitudServicio.fechaRequiere|date('Y-m-d') }}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div class="row-fluid">
+                    <div class="span4 offset2">
+                        {{form_row(form.justificacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
+                    </div>
+                    <div class="span5 offset1"> 
+                        {{form_row(form.fechaReprogramacion, {'attr': {'min': "solicitudServicio.fechaRequiere|date('Y-m-d')"} })}}
+                    </div>
+                </div>
+                <br><br>
+		<div class="row-fluid">    
+                        <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                            <tr> 
+                               <td>{{form_row(form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                               <td><a href="{{ path('sifda_gestionSolicitudes') }}" class="btn">Regresar</a>
+                                </td>
+                            </tr>    
+                            </table>
+                        </center>
+                        <br>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+    {{form_end(form)}}        
+{% endblock %}
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+   
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+//                         minDate: new Date(1980, 11, 1), 
+//                         maxDate: "+0D",
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+                         
+//                         $('#minsal_sifdabundle_sifdareprogramacionservicio_fechaReprogramacion').datepicker(
+//                            'option', 'minDate', new Date($("#txtfechaRequiere").val())
+//                            );
+                         
+			 yearSuffix: ''
+			 
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#minsal_sifdabundle_sifdareprogramacionservicio_fechaReprogramacion" ).datepicker(
+					
+					);
+                                
+				});
+     
+    </script>
+    {% endblock%}

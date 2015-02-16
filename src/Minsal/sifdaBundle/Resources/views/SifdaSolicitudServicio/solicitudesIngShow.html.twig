@@ -1,0 +1,52 @@
+{% spaceless %}
+<div id="show_solicitudes">   
+    <div class="bs-example">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Descripcion</th>
+                    <th>Fecha de recepcion</th>
+                    <th>Fecha requerida</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            
+            {%if solicitudes%}
+            <tbody>{%for s in solicitudes%}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{s.descripcion}}</td>
+                    <td>{{s.fechaRecepcion|date('d-m-Y H:i:s')}}</td>
+                    <td>{{s.fechaRequiere|date('d-m-Y')}}</td>
+                    
+                    <td>
+                <ul>
+                    <li>                        
+                        <a  href="{{ path('sifda_solicitudservicio_buscar_informacion', { 'id': s.id }) }}">Mostrar Detalles</a>
+                    </li>
+                    {#<li>                        
+                        <a  href="javascript:ShowDialog({{ loop.index }});">Rechazar solicitud de servicio</a>
+                        <input type="hidden" id="txt{{ loop.index }}"  value="{{s.id}}">
+                                               
+                    </li>
+                    <li>                        
+                        <a  href="{{ path('sifda_solicitudservicio_delete2', { 'id': s.id }) }} ">Reprogramar solicitud de servicio</a>    
+                    </li>
+                    #}
+                  </ul>
+                </td>
+                </tr>
+                   {%endfor%}
+            </tbody>
+            
+            {%else%}
+                
+                 <div id="msgIngresados2">
+                     <center><h4>No se encontraron solicitudes Ingresadas en este Rango</h4></center>
+                </div> 
+            {% endif%}
+        </table>
+    </div>
+</div>        
+{% endspaceless %}

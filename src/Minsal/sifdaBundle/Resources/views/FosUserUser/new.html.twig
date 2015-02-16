@@ -1,0 +1,17 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block contenido_in %}
+
+
+    <h1>FosUserUser creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_fos_user_user') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

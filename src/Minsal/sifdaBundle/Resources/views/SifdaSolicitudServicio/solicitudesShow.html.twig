@@ -1,0 +1,41 @@
+{% spaceless %}
+<div id="show_solicitudes">   
+    <div class="bs-example">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Descripcion</th>
+                    <th>Fecha de recepcion</th>
+                    <th>Fecha que se requiere</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            
+            <tbody>{%for s in solicitudes%}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{s.descripcion}}</td>
+                    <td>{{s.fechaRecepcion|date('Y-m-d H:i:s')}}</td>
+                    <td>{{s.fechaRequiere|date('Y-m-d')}}</td>
+                    
+                    <td>
+                        <ul>
+                    <li>
+                        <a href="{{ path('sifda_solicitudservicio_buscar_estado', { 'id': s.id }) }}">Mostrar</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifda_solicitudservicio_edit', { 'id': s.id }) }}">Modificar</a>
+                    </li>
+                    <li>
+                        <a  href="{{ path('sifda_solicitudservicio_delete2', { 'id': s.id }) }}">Eliminar</a>
+                    </li>
+                </ul>
+                    </td>
+                </tr>
+                   {%endfor%}
+            </tbody>
+        </table>
+    </div>
+</div>        
+{% endspaceless %}

@@ -1,0 +1,284 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+ {% block jsDefault %}
+     {{parent()}}
+     <script src="{{ asset('bundles/minsalsifda/js/bootstrap-modal.js') }}"></script>
+     
+     
+   {% endblock %}
+
+{% block contenido_in %}
+    {# cuadro Modal#}
+     Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}}
+    <input type="hidden" id="exito" value="{{exito}}">  
+    <div class="page-header">
+        <center><h3>Mostrar las solicitudes de servicio</h3></center>
+    </div>
+    <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+                
+                <div class="span3">
+                    
+                </div>
+                <div class="span2">
+                  <table>
+                      <tr>
+                        <td>
+                            <input type="radio" name="consulta" id="todos" value="todos" checked>Todos<br>
+                            <input type="radio" name="consulta" id="especifico" value="especifico">Especifico
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>   
+                
+                </div>
+                <div class="span5">
+                    
+                    <table id="fechas">
+                        <tr>
+                            <td><label>Fecha Inicio: </label></td><td><input type="text" id="fechaInicio" readonly="true" class="input-small"></td>
+                            
+                        </tr>
+                        <tr>
+                            <td><label>Fecha Fin: </label></td><td><input type="text" id="fechaFin" readonly="true" class="input-small"></td>
+                            <td></td><td></td>
+                            <td><input type="submit" class="btn btn-primary" id="b1" onclick="mostrarvalores()" value="Buscar" name="Buscar"></td>
+                        </tr>
+                    </table>    
+                    
+                    
+                </div>                             
+            </div>
+        </div>    
+    </div>
+    <div id="rangoTabla"></div>    
+    <div id="dialog">
+        
+    </div>
+    <br>
+    <br>
+    
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th><center>Descripcion</center></th>
+                <th>Fecha de recepcion</th>
+                <th>Fecha que se requiere</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            {%if entity.idDependenciaEstablecimiento==usuario.idDependenciaEstablecimiento%}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ entity.descripcion }}</td>
+                <td>{% if entity.fechaRecepcion %}{{ entity.fechaRecepcion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>{% if entity.fechaRequiere %}{{ entity.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+                <td>
+                <ul>
+                    <li>
+                        <a href="{{ path('sifda_solicitudservicio_buscar_estado', { 'id': entity.id }) }}">Mostrar</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifda_solicitudservicio_edit', { 'id': entity.id }) }}">Modificar</a>
+                    </li>
+                    <li>
+                        <a  href="javascript:ShowDialogEliminar({{ loop.index }});">Eliminar</a>
+                            <input type="hidden" id="txt_{{ loop.index }}"  value="{{entity.id}}">
+                            
+                        {#<a  href="{{ path('sifda_solicitudservicio_delete2', { 'id': entity.id }) }}">Eliminar</a>#}
+                    </li>
+                    
+                    
+                    
+                </ul>
+                </td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        
+      </tbody>
+    </table>
+        <div id="dialogConfirm">
+            <span id="spanMessage"></span>
+
+        </div>
+        <div id="dialog">
+            
+        </div>
+        
+    {% endblock %}
+
+    
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+         
+            
+        var resultado=$("#exito").val();
+        
+        
+        if(resultado === "1"){
+            
+            $('#dialog').attr('title','saved').text('Los Datos se guardaron Exitosamente').dialog();
+            
+            document.getElementById('exito').value=0; ;
+        }
+               
+        {#var estado= {{dependencias}};
+                
+            if(estado!=0)
+                $('#dialog').attr('title','saved').text('Hay {{dependencias}} solicitudes Nuevas').dialog(); #}
+
+        document.getElementById('todos').checked=true;
+        document.getElementById('fechaInicio').value="";
+        document.getElementById('fechaFin').value="";
+        
+        $('#fechas').hide("slow");
+        //alert($('#todos').val());
+        $('#todos').click(function(){
+            $('#fechas').hide("slow");
+            $('#tabla').show("slow");
+            $('#rangoTabla').hide("slow");
+        });
+        
+        $('#especifico').click(function(){ 
+        $('#fechas').show("slow");    
+        $('#tabla').hide("slow");
+        $('#rangoTabla').show("slow");
+        });
+        
+        
+     
+        
+        
+        $("#b1").click(function(){
+           
+        //cuadro dialogo
+        
+        {# $('#dialog').attr('title','saved').text('Los Datos se guardaron Exitosamente').dialog(); #}
+         
+         
+         //$('#dialog').dialog();  
+       
+        
+          {#$('#dialog').attr('title','saved').text('Los Datos se guardaron Exitosamente').dialog({
+              
+              buttons: {'Ok': function (){
+                      $(this).dialog('close');
+              }},draggable:false,resizable:false,show:'fade',modal:true
+          }); #}
+        
+        
+            var fi = $("#fechaInicio").val();
+            var ff = $("#fechaFin").val();
+            $.post(
+            '{{path('sifda_solicitudservicio_buscar_solicitudes')}}', 
+              { 
+                fechaInicio:$("#fechaInicio").val(),
+                fechaFin   :$("#fechaFin").val()
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#rangoTabla").html(data);
+                
+             }, "json");
+            
+        });
+    });
+    
+    
+    
+    $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+				}); 
+    
+    function mostrarvalores(){ 
+              var fi = $("#fechaInicio").val();  
+              var ff = $("#fechaFin").val();
+             
+    }
+    
+    function ShowDialogEliminar(valor2) {
+             
+             
+             
+             $('#spanMessage').html('¿Desea Emilinar la solictud?');
+             $("#dialogConfirm").dialog({
+                resizable: false,
+                height: 160,
+                width: 300,
+                modal: true,
+                title: 'Confirmacion',
+                buttons:{
+                    'Aceptar': function () {
+                        eliminarSolicitud('{{path('sifda_solicitudservicio_delete2')}}',$("#txt_"+valor2).val());
+                        $(this).dialog("close");
+                        
+                },
+                    'Cancelar': function () {
+                    $(this).dialog("close");
+                }
+                }
+             });
+         }
+    
+    function eliminarSolicitud(url,valor2)
+    {
+        
+        $.post(
+            url,
+            {
+                id:valor2    
+            }).done(function(){
+                               
+                 window.location='{{path('sifda_solicitudservicio')}}';   
+                
+                
+            });
+    }
+    </script>
+    {% endblock%}

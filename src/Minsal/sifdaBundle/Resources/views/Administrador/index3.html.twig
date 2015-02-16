@@ -1,0 +1,213 @@
+{% extends 'MinsalsifdaBundle::layoutAdministrador.html.twig' %}
+
+ {% block jsDefault %}
+     {{parent()}}
+     {#<script src="{{ asset('bundles/minsalsifda/js/bootstrap-modal.js') }}"></script>#}
+     
+     
+   {% endblock %}
+
+{% block contenido_in %}
+    
+    {# cuadro Modal#}
+    
+   
+    
+    
+    <center><h3>Mostrar solicitudes ingresadas</h3></center>
+    <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+            <table>
+                <tr>
+                    <td>
+                    <input type="radio" name="consulta" id="todos" value="todos" checked>Todos<br>
+                    <input type="radio" name="consulta" id="especifico" value="especifico">Especifico
+                    </td>
+                    <td></td>
+                </tr>
+            </table>    
+                <div>
+                    <table id="fechas">
+                        <tr>
+                            <td><label>Fecha Inicio: </label></td><td><input type="text" id="fechaInicio" value=""></td>
+                            <td><label>Fecha Fin: </label></td><td><input type="text" id="fechaFin" value=""></td>
+                            <td><input type="submit" class="btn btn-primary" id="b1" onclick="mostrarvalores()" value="Buscar" name="Buscar"></td>
+                        </tr>    
+                    </table>    
+                    <div id="rangoTabla"></div>
+                </div>              
+            </div>
+        </div>    
+    </div>
+        
+    <div id="dialog">
+        
+    </div>
+    
+    <br>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Descripcion</th>
+                <th>Fecharecepcion</th>
+                <th>Fecharequiere</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                {#<td><a href="{{ path('sifda_solicitudservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#} 
+                <td>{{ loop.index }}</td>
+                <td>{{ entity.descripcion }}</td>
+                <td>{% if entity.fechaRecepcion %}{{ entity.fechaRecepcion|date('d-m-Y H:i:s') }}{% endif %}</td>
+                <td>{% if entity.fechaRequiere %}{{ entity.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+                <td>
+                <ul>
+                    
+                    <li>
+                        {#<a href="{{ path('sifda_solicitudservicio_show', { 'id': entity.id }) }}">show</a>#}
+                        
+                        <a  href="{{ path('sifda_solicitudservicio_delete2', { 'id': entity.id }) }}">delete</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('sifda_solicitudservicio_edit', { 'id': entity.id }) }}">edit</a>
+                    </li>
+                    
+                    
+                    
+                </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        
+     {# {{dependencias}}#}
+        </tbody>
+    </table>
+    {% endblock %}
+
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        
+       var estado= {{dependencias}};
+       {#alert('{{dependencias}}');#}
+                
+            if(estado!=0)
+                $('#dialog').attr('title','saved').text('Hay {{dependencias}} solicitudes Nuevas').dialog(); 
+
+        document.getElementById('todos').checked=true;
+        
+        $('#fechas').hide("slow");
+        //alert($('#todos').val());
+        $('#todos').click(function(){
+            $('#fechas').hide("slow");
+            $('#tabla').show("slow");
+            $('#rangoTabla').hide("slow");
+        });
+        
+        $('#especifico').click(function(){ 
+        $('#fechas').show("slow");    
+        $('#tabla').hide("slow");          
+        });
+        
+        
+     
+        
+        
+        $("#b1").click(function(){
+           
+        //cuadro dialogo
+        
+        {# $('#dialog').attr('title','saved').text('Los Datos se guardaron Exitosamente').dialog(); #}
+         
+         
+         //$('#dialog').dialog();  
+       
+        
+          {#$('#dialog').attr('title','saved').text('Los Datos se guardaron Exitosamente').dialog({
+              
+              buttons: {'Ok': function (){
+                      $(this).dialog('close');
+              }},draggable:false,resizable:false,show:'fade',modal:true
+          }); #}
+        
+        
+            var fi = $("#fechaInicio").val();
+            var ff = $("#fechaFin").val();
+            $.post(
+            '{{path('sifda_solicitudservicio_buscar_solicitudes')}}', 
+              { 
+                fechaInicio:$("#fechaInicio").val(),
+                fechaFin   :$("#fechaFin").val()
+              }
+              , function( data ) {
+                console.log( data );
+                    $("#rangoTabla").html(data);
+                
+             }, "json");
+            
+        });
+    });
+    
+    
+    
+    $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+				}); 
+    
+    function mostrarvalores(){ 
+              var fi = $("#fechaInicio").val();
+        
+             var ff = $("#fechaFin").val();
+             //alert(fi);   
+             //alert(ff);
+    }
+    
+    
+    
+    
+    </script>
+    {% endblock%}

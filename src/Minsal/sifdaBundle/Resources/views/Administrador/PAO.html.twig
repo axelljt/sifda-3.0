@@ -1,0 +1,137 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in %}
+   <div id="seleccion">
+        <div class="row-fluid">
+            <div class="span11 offset1">
+                
+                <div class="span2">
+                    
+                </div>
+                
+                <div class="span7">
+                    
+                    <table id="pao" border1>
+                        <tr><td colspan="4" ><label><strong><center>Usuario: {{ user.username  }}</center></strong></label></td>
+                        <tr><td colspan="4"><label><strong><center>Dependencia: {{ user.idDependenciaEstablecimiento}}</center></strong></label></td>
+                        <tr><td id="solucion" colspan="4"><label><strong><center id="solucion"></center></strong></label></td>
+                        </tr>
+                        <tr>
+                            <td><label><strong>A&ntildeo PAO:</strong></label></td>
+                            
+                            
+                            <td>
+                                <div class="btn-group">
+                                      <select id="cmb1" name="ComboEstado"  class="btn dropdown-toggle" style="width: 200px">
+                                         <option value="0">Seleccione A&ntildeo</option>
+
+                                           {% for anio in resultados %}
+
+                                            <option value="{{anio.resultado}}">{{anio.resultado}}</option>
+                                           {% endfor %}   
+                                     </select>
+                                 </div>
+                            </td>
+                            
+                            <td><a id="cargar" {#href="{{ path('sifdainformeordentrabajo', { 'anio': entity.idOrdenTrabajo.id }) }}"#} class="btn">Cargar</a></td>
+                            <td><a id="generarSolic" {#href="{{ path('sifdainformeordentrabajo', { 'anio': entity.idOrdenTrabajo.id }) }}"#} class="btn">Generar</a></td>
+                        </tr>
+                    </table>
+                    
+                    
+                    
+                </div>
+                
+                <div class="span2">
+                    
+                </div>
+                
+            </div>
+    <div id="dialog">
+        
+    </div>
+    <div id="dialogConfirm">
+            <span id="spanMessage"></span>
+
+        </div>
+    
+{% endblock %}
+{% block javascripts_step %}
+    {{parent()}}
+    <script>
+        $(document).ready(function(){
+         document.getElementById("cmb1").value="0";
+        $("#cargar").click(function(){
+            var valor = $("#cmb1").val();
+        {#            alert(valor);#}
+            $.post(
+                '{{path('sifda_cargar_pao')}}', 
+                  { 
+                    anio:valor
+                  }
+                  , function( data ) {
+                    console.log( data );
+                        $("#solicion").html(data);
+                        
+                    if(data==0){
+                        
+                        $('#dialog').attr('title','Information').text('Seleccione un año').dialog(); 
+                    }
+                    if(data==1){
+                        $('#dialog').attr('title','Information').text('Se realizo la carga de la PAO satisfactoriamente').dialog();
+                    }
+                        if(data==2){
+                        $('#dialog').attr('title','Information').text('No se ejecuto la carga de la PAO').dialog();    
+                        } 
+                 }, "json");
+                 
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        $("#generarSolic").click(function(){
+            
+            $('#spanMessage').html('¿Está seguro(a) que desea cargar la Solicitud?');
+   $("#dialogConfirm").dialog({
+      resizable: false,
+      height: 160,
+      width: 300,
+      modal: true,
+      title: 'Confirmacion',
+      buttons: {
+              'Aceptar': function () {
+                  $(this).dialog("close");
+         $.post(
+                '{{path('cargar_solicitudes_pao')}}', 
+                  { 
+                    idDependenciaEstablecimiento:{{user.idDependenciaEstablecimiento.id}}
+                  }
+                  , function( data ) {
+                    console.log( data );
+                    $('#mensaje').innerHTML = (data.msg); 
+                    document.getElementById('dialog').innerHTML = data.msg;
+                    $('#dialog').attr('title','Information').dialog();
+                 }, "json");     
+    
+    },
+               'Cancelar': function () {
+                  $(this).dialog("close");
+                }
+            }
+        });
+        
+                 
+        });
+        
+        
+        
+        
+        });
+        
+    </script>
+{% endblock %} 

@@ -1,0 +1,29 @@
+{% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
+
+{% block contenido_in -%}
+    {% block encabezado %}
+        Fecha del sistema: {{ "now"|date("d/m/Y") }}
+        <center><h3>Bienvenido T&eacute;cnico</h3></center>
+    {% endblock %}
+    
+    
+    <div id="dialog">
+        
+    </div>
+    
+{% endblock %}
+{% block javascripts_step %}
+    <script>
+        $(document).ready(function(){
+             var cantidad= {{ numOrdenAsignada }};
+                
+             if(cantidad>1) {
+                $('#dialog').attr('title','Informacion').text('Hay {{numOrdenAsignada}} nuevas ordenes asignadas').dialog(); 
+            }
+            else if(cantidad>0){
+                $('#dialog').attr('title','Informacion').text('Hay {{numOrdenAsignada}} nueva orden asignada').dialog(); 
+            }
+    
+        });
+    </script>
+{% endblock %} 

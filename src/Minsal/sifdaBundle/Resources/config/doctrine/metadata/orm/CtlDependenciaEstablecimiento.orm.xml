@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="CtlDependenciaEstablecimiento" table="ctl_dependencia_establecimiento">
+    <indexes>
+      <index name="idx_id_dep_establecimiento" columns="id_establecimiento"/>
+      <index name="idx_id_dependencia_padre" columns="id_dependencia_padre"/>
+      <index name="idx_id_dependencia_est" columns="id_dependencia"/>
+    </indexes>
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="abreviatura" type="string" column="abreviatura" length="255" nullable="true"/>
+    <field name="habilitado" type="boolean" column="habilitado" nullable="false"/>
+    <many-to-one field="idEstablecimiento" target-entity="CtlEstablecimiento">
+      <join-columns>
+        <join-column name="id_establecimiento" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idDependenciaPadre" target-entity="CtlDependenciaEstablecimiento">
+      <join-columns>
+        <join-column name="id_dependencia_padre" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="idDependencia" target-entity="CtlDependencia">
+      <join-columns>
+        <join-column name="id_dependencia" referenced-column-name="id"/>
+      </join-columns>
+    </many-to-one>
+  </entity>
+</doctrine-mapping>

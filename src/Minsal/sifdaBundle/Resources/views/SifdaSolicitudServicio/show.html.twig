@@ -1,0 +1,79 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block stylesheets %}
+        {{parent()}}
+      {#<link href="{{ asset('bundles/minsalsifda/css/style.css') }}" type="text/css" rel="stylesheet" />#}
+       {#<img src="{{ asset('bundles/minsalsolicitante/images/calendar.gif') }}" alt="" />#}
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}" ></script>
+{% endblock %}
+
+{%block css %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/minsalsifda/css/datepicker.css') }}" rel="stylesheet" media="all">
+{% endblock %}  
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/bootstrap-datepicker.js') }}"></script>  
+{%endblock %}
+{% block contenido_in  %}
+    <h1>SifdaSolicitudServicio</h1>
+    
+    <table id="tabla_show" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ entity.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Fecharecepcion</th>
+                <td>{{ entity.fechaRecepcion|date('Y-m-d H:i:s') }}</td>
+            </tr>
+            <tr>
+                <th>Fecharequiere</th>
+                <td>{{ entity.fechaRequiere|date('Y-m-d H:i:s') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_solicitudservicio') }}">
+            Back to the list
+        </a>
+    </li>
+    <li>
+        <a href="{{ path('sifda_solicitudservicio_edit', { 'id': entity.id }) }}">
+            Edit
+        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        $('#1').click(function(){
+            $('#contenido').show("slow");
+        });
+        
+        $('#2').click(function(){
+            $('#contenido').hide("slow");
+        });
+    });
+    
+    
+    
+    
+    
+    
+    </script>
+{% endblock %}   

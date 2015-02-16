@@ -1,0 +1,17 @@
+{#{% extends '::base.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block body -%}
+    <h1>CtlTipoDependencia creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+               
+    <li>
+        <a href="{{ path('sifda_ctltipodependencia') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

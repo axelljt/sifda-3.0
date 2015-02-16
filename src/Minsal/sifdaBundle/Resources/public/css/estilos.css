@@ -1,0 +1,117 @@
+
+.body {
+    background-color: #F6F4F0;
+    color: #404040;
+    font-size: 13px;
+    margin: 0;
+}
+
+.fheader {
+    color: #0E1E2B;
+    font-family: 'PT Sans Narrow',Arial,sans-serif;
+    text-shadow: 0 0 0.2em #BBBBBB, 0 0 0.2em #BBBBBB, 0 0 0.2em #BBBBBB;
+    text-transform: uppercase;
+}
+
+
+.fheader_small {
+    color: #0E1E2B;
+    font-family: 'PT Sans Narrow',Arial,sans-serif;
+    text-shadow: 0 0 0.2em #BBBBBB, 0 0 0.2em #BBBBBB, 0 0 0.2em #BBBBBB;
+    text-transform: uppercase;
+    font-size: 17px;
+
+}
+.body-content {
+    background-color: #FFFFFF;
+    border-radius: 4px 4px 4px 4px;
+    box-shadow: 0 0 20px 3px #D3D3D3;
+    margin-top: 10px; 
+    margin-bottom: 10px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+
+}
+.block-app-content {
+    background-color: #F5F5F5;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px 0 4px 0;
+    color: #9DA0A4;
+    content: "Example";
+    font-size: 12px;
+    font-weight: bold;
+    left: -1px;
+    padding: 3px 7px;
+    position: absolute;
+    top: -1px;
+}
+
+
+.block-app {
+	border: 1px solid #ccc;
+	background: white;
+	margin: 0em 0em;
+	border-radius: 6px 6px 6px 6px;
+        padding: 5px 5px;
+        /*box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);*/
+}
+
+.block-app-right {
+	border: 1px solid #ccc;
+	background: white;
+	margin: 0em 0em;
+        border-top: none;
+        border-left: none;
+        border-bottom: none;
+        padding: 5px 5px;
+}
+
+.block-address {
+	border: 1px solid #ccc;
+	
+	margin: 0em 0em;
+border-radius: 6px 6px 6px 6px;
+        padding: 5px 5px;
+       
+}
+
+
+#breadcrumb .breadcrumb {
+    background-color: #4B4B4B;
+    background-image: none;
+    border: medium none;
+    box-shadow: none;
+    filter: none;
+    margin-bottom: 0.5em;
+    padding-left: 2em;
+}
+#breadcrumb .breadcrumb li {
+    text-shadow: none;
+}
+#breadcrumb .breadcrumb li a {
+    color: #A3CA5F;
+}
+#breadcrumb .breadcrumb li:after {
+    color: #CCCCCC;
+    content: " /";
+}
+#breadcrumb .breadcrumb li:last-child:after {
+    content: none;
+}
+
+
+.view-login {
+    background-color: #142849;
+    background-image: radial-gradient(circle, #165387, #142849);
+    background-repeat: no-repeat;
+    padding-top: 0;
+}
+
+.user-resume{
+    padding: 20px;
+    margin: 10px;
+    width: 310px;
+    
+}
