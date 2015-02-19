@@ -18,7 +18,7 @@
                             <td>{{ entity.nombre }}</td>
                         </tr>
                         <tr>
-                            <th>Descripcion</th>
+                            <th>Descripci&oacute;n</th>
                             <td>{{ entity.descripcion }}</td>
                         </tr>
                     </tbody>
@@ -54,18 +54,18 @@
                         <table id="tabla" class="table table-bordered table-hover table-condensed" cellspacing="0" width="100%">
                             <thead>
                                 <tr>
-                                    <th>Etapa No.</th>
-                                    <th>Descripcion</th>
-                                    <th>Peso</th>
-                                    <th>Acciones</th>
+                                    <th><center>Etapa No.</center></th>
+                                    <th><center>Descripci&oacute;n</center></th>
+                                    <th><center>Porcentaje (%)</center></th>
+                                    <th><center>Acciones</center></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {% for etapa in entities %}
                                 <tr>
-                                    <td>{{ etapa.jerarquia }}</td>
+                                    <td><center>{{ etapa.jerarquia }}</center></td>
                                     <td>{{ etapa.descripcion }}</td>
-                                    <td>{{ etapa.peso }}</td>
+                                    <td><center>{{ etapa.peso }}</center></td>
                                     <td>
                                     <ul>
                                         <li>

@@ -1,20 +1,32 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
 {% block contenido_in %}
-    <center><h3>Grado de Avance de una solicitud de servicio</h3></center>
-<table id="tabla" class="table table-bordered table-hover table-condensed">
+    <div class="page-header">
+        <center><h3>Grado de avance de una solicitud de servicio</h3></center>
+    </div>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
-                <th>Descripcion</th>
+                <th>Descripci&oacute;n</th>
                 <td>{{ solicitud.descripcion }}</td>
             </tr>
             <tr>
-                <th>Fecharecepcion</th>
-                <td>{{ solicitud.fechaRecepcion is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s") }}</td>
+                <th>Fecha de recepci&oacute;n</th>
+                <td>{{ solicitud.fechaRecepcion is empty ? "No tiene fecha asignada." : solicitud.fechaRecepcion|date("d/m/Y H:i:s") }}</td>
             </tr>
             <tr>
-                <th>Fecharequiere</th>
-                <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s")}}</td>
+                <th>Fecha que se requiere</th>
+                <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("d/m/Y")}}</td>
+            </tr>
+            {% set porcentaje = 0 %}
+            {% for entity in entities %}
+                {% if entity.dscestado == 'Finalizado' %}
+                    {% set porcentaje = porcentaje + entity.etapaPeso %}
+                {% endif %}
+            {% endfor %}   
+            <tr>
+                <th>Grado de avance del servicio solicitado</th>
+                <td>{{ porcentaje }}%</td>
             </tr>
         </tbody>
     </table>
@@ -22,12 +34,12 @@
     <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Etapa</th>
-                <th>Subetapa</th>
-                <th>Estado</th>
+                <th><center>Etapa</center></th>
+                <th><center>Subetapa</center></th>
+                <th><center>Estado</center></th>
                 
-                <th>Empleado asignado</th>
-                <th>Opciones</th>
+                <th><center>Empleado responsable</center></th>
+                {#<th>Opciones</th>#}
             </tr>
         </thead>
         <tbody>
@@ -43,19 +55,35 @@
                 </td>
                 
                 <td>{{ entity.dscsubetapa }}</td>
-                <td>{{ entity.dscestado }}</td>
-                
-                <td>{{ entity.nomempleado }}</td>
+                <td><center>{{ entity.dscestado }}</center></td>
                 <td>
+                    {% if entity.dscestado != 'Sin Asignar' %}
+                        {{ entity.nomempleado is empty ? "Empleado sin asignar." : entity.nomempleado}}
+                    {% endif %}
+                </td>
+                {#<td>
                 <ul>
                     <li>
                         <a href="{{ path('sifda_vwetapassolicitud_show', { 'id': entity.id }) }}">Mostrar</a>
                     </li>
                 </ul>
-                </td>
+                </td>#}
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
+    <br>
+            <div class="row-fluid">    
+                <div class="span12">
+                <center>
+                    <table id="botones">
+                    <tr> 
+                        <td>
+                            <a href="{{ path('sifda_seguimiento')}}" class="btn">Regresar</a>
+                        </td>
+                    </tr>    
+                    </table>
+                </center>
+                <br>
+                </div>
     {% endblock %}

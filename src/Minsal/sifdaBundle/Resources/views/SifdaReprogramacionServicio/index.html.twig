@@ -1,43 +1,34 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaReprogramacionServicio list</h1>
-
-    <table class="records_list">
+{% block contenido_in %}
+    <div class="page-header">
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} dependencia:{{usuario.idDependenciaEstablecimiento.idDependencia}}
+        <center><h3>Mostrar solicitudes de servicio reprogramadas</h3></center>
+    </div>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Fechareprogramacion</th>
-                <th>Justificacion</th>
-                <th>Actions</th>
+                <th><center>Correlativo</center></th>
+                <th><center>Descripci&oacute;n</center></th>
+                <th><center>Justificaci&oacute;n</center></th>
+                <th><center>Fecha de reprogramaci&oacute;n</center></th>
+                <th><center>Fecha de finalizaci&oacute;n anterior</center></th>
             </tr>
         </thead>
         <tbody>
+        {% set corr = 1 %}        
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('sifda_reprogramacion_servicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{% if entity.fechaReprogramacion %}{{ entity.fechaReprogramacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td><center>{{ corr }}</center></td>
+                <td>{{ entity.idSolicitudServicio.descripcion }}</td>
                 <td>{{ entity.justificacion }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('sifda_reprogramacion_servicio_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('sifda_reprogramacion_servicio_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
+                <td><center>{% if entity.fechaReprogramacion %}{{ entity.fechaReprogramacion|date('d-m-Y') }}{% endif %}</center></td>
+                <td><center>{% if entity.fechaAnterior %}{{ entity.fechaAnterior|date('d-m-Y') }}{% endif %}</center></td>
             </tr>
+            {% set corr = corr + 1 %}
         {% endfor %}
         </tbody>
     </table>
 
-        <ul>
-        <li>
-            <a href="{{ path('sifda_reprogramacion_servicio_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+        
     {% endblock %}

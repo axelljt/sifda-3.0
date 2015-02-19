@@ -27,12 +27,16 @@ class SifdaReprogramacionServicioController extends Controller
      */
     public function indexAction()
     {
+        $id_usuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
-
+        
+        $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
+        
         $entities = $em->getRepository('MinsalsifdaBundle:SifdaReprogramacionServicio')->findAll();
 
         return array(
             'entities' => $entities,
+            'usuario'  => $usuario,
         );
     }
     /**
