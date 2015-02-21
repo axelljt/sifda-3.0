@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Minsal\sifdaBundle\Entity\SifdaEquipoTrabajo;
+use Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo;
 use Minsal\sifdaBundle\Form\SifdaEquipoTrabajoType;
 
 /**
@@ -112,7 +113,7 @@ class SifdaEquipoTrabajoController extends Controller
             'method' => 'POST',
         ));
         
-        $userId = 9;
+        $userId = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
         
@@ -167,21 +168,33 @@ class SifdaEquipoTrabajoController extends Controller
             }
         }
         
-        $userId = 9;
+        $userId = $this->getUser()->getId();
         $rsm = new ResultSetMapping();
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
         
-        $sql = "select distinct(e.id),e.nombre|| ' ' ||e.apellido as nombre,count(distinct id_orden) as atendidas,
-                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
-                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
-                from ctl_empleado e left outer join vwetapassolicitud vw on e.id = vw.id_empleado
+        $sql = "select distinct e.nombre|| ' ' ||e.apellido nombre, count(distinct eq.id_orden_trabajo) as atendidas,
+                (select count(distinct eqp.id_orden_trabajo) 
+                   from  sifda_equipo_trabajo eqp 
+                   left outer join sifda_orden_trabajo ot on ot.id = eqp.id_orden_trabajo
+                   where ot.id_estado = 2 and eqp.id_empleado = eq.id_empleado) as pendientes,
+                (select count(distinct eqp.id_orden_trabajo) 
+                   from  sifda_equipo_trabajo eqp 
+                   left outer join sifda_orden_trabajo ot on ot.id = eqp.id_orden_trabajo
+                  where ot.id_estado = 4 and eqp.id_empleado = eq.id_empleado) as finalizadas         
+                from sifda_equipo_trabajo eq 
+                full outer join ctl_empleado e on e.id = eq.id_empleado
                 where e.id_dependencia_establecimiento = ?
-                group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
-                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado)
-                order by count(distinct id_orden) desc,
-                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc,
-                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) desc";
+                group by eq.id_empleado, e.nombre|| ' ' ||e.apellido
+                order by count(distinct eq.id_orden_trabajo) desc,
+                (select count(distinct eqp.id_orden_trabajo) 
+                   from  sifda_equipo_trabajo eqp 
+                   left outer join sifda_orden_trabajo ot on ot.id = eqp.id_orden_trabajo
+                   where ot.id_estado = 2 and eqp.id_empleado = eq.id_empleado) desc,
+                (select count(distinct eqp.id_orden_trabajo) 
+                   from  sifda_equipo_trabajo eqp 
+                   left outer join sifda_orden_trabajo ot on ot.id = eqp.id_orden_trabajo
+                   where ot.id_estado = 4 and eqp.id_empleado = eq.id_empleado) desc;";
         
         $rsm->addScalarResult('id','id');
         $rsm->addScalarResult('nombre','nombre');
@@ -235,7 +248,6 @@ class SifdaEquipoTrabajoController extends Controller
             'entity'       => $responsable,
             'personal'     => $personal,
             'ordenTrabajo' => $ordenTrabajo,
-        //    'delete_form'  => $deleteForm->createView(),
         );
     }
 
@@ -249,7 +261,6 @@ class SifdaEquipoTrabajoController extends Controller
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
         $ordenTrabajo = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($id);
         
         if (!$ordenTrabajo) {
@@ -260,8 +271,12 @@ class SifdaEquipoTrabajoController extends Controller
                                                                                 'idOrdenTrabajo' => $ordenTrabajo,
                                                                                 'responsableEquipo' => 'TRUE'        
                                                                                 ));
-             
-        $editForm = $this->createEditForm($responsable, $ordenTrabajo);
+        
+        if (!$responsable) {
+            throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
+        }
+        
+        $editForm = $this->createEditForm($responsable);
         
         return array(
             'ordenTrabajo' => $ordenTrabajo,
@@ -277,13 +292,57 @@ class SifdaEquipoTrabajoController extends Controller
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm(SifdaEquipoTrabajo $entity, Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo $ordenTrabajo)
+    private function createEditForm(SifdaEquipoTrabajo $entity)
     {
         $form = $this->createForm(new SifdaEquipoTrabajoType(), $entity, array(
             'action' => $this->generateUrl('sifda_equipotrabajo_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
+        $userId = $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
+        
+        $form->add('idEmpleado', 'entity', array(
+                'label'     => 'Responsable',
+                'class'     => 'MinsalsifdaBundle:CtlEmpleado',
+                'query_builder' =>  function(EntityRepository $repositorio) use ($usuario) {
+                    return $repositorio
+                        ->createQueryBuilder('emp')
+                        ->where('emp.idDependenciaEstablecimiento = :de')
+                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
+            }
+                ));
+        
+        $equipo = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->findBy(array(
+                                                                            'idOrdenTrabajo' => $entity->getIdOrdenTrabajo(),
+                                                                            'responsableEquipo' => 'FALSE'
+                                                                                ));        
+        if (!$equipo) {
+            throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
+        }        
+        $form->add('equipoTrabajo', 'entity', array(
+                    'label'         =>  'Seleccione equipo de trabajo',
+                    'class'         =>  'MinsalsifdaBundle:CtlEmpleado',
+                    'multiple'  => true,
+                    'expanded'  => true,
+                    'required'  => false,
+                    'mapped' => false,
+                    'query_builder' =>  function(EntityRepository $repositorio) use ($usuario, $em) {
+                    return $repositorio
+                        ->createQueryBuilder('emp')
+                        ->where('emp.idDependenciaEstablecimiento = :de')
+                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
+                    },
+                    //'property_path' => $equipo
+                ));
+        
+         
+        //$emp = $em->getRepository('MinsalsifdaBundle:CtlEmpleado')->findBy($equipo->getIdEmpleado()->getId());                                                                        //ladybug_dump($equipo);
+//        if (!$emp) {
+//            throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
+//        } 
+        $form->get('equipoTrabajo')->setData( $equipo );
         $form->add('submit', 'submit', array('label' => 'Reasignar orden de trabajo'));
 
         return $form;
@@ -305,7 +364,6 @@ class SifdaEquipoTrabajoController extends Controller
             throw $this->createNotFoundException('Unable to find SifdaOrdenTrabajo entity.');
         }
 
-        //$deleteForm = $this->createDeleteForm($id);
         ladybug_dump($entity);
         $editForm = $this->createEditForm($entity, $entity->getIdOrdenTrabajo());
         $editForm->handleRequest($request);

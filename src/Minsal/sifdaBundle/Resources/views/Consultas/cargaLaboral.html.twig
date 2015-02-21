@@ -1,33 +1,36 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 {% block contenido_in -%}
-
-                    <table id="fechas" >
-                                    <tr>
-                                        <td><label>FechaInicio: </label></td>
-                                        <td>
-                                            <input type="text" id="fechaInicio" class="input-small" >
-                                        </td>  
-                                    
-                                        <td><label>FechaFin: </label></td>
-                                        <td>
-                                            <input type="text" id="fechaFin" class="input-small" >
-                                        </td>
-                                        <td></td><td></td>
-                                        <td>
-                                            <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
-                                        </td>
-                                    </tr>
-                                    
-                    </table>     
+    <div class="page-header">
+        <center><h3>Mostrar carga laboral por t&eacutecnico</h3></center>
+    </div>
+    <center><table id="fechas" >
+        <tr>
+            <td><label>Fecha de inicio: </label></td>
+            <td>
+                <input type="text" id="fechaInicio" class="input-small" >
+            </td>  
+            <td></td>
+            <td><label> Fecha de fin: </label></td>
+            <td>
+                <input type="text" id="fechaFin" class="input-small" >
+            </td>
+            <td></td><td></td>
+            <td>
+                <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+            </td>
+        </tr>
+    </table></center>     
+    <br>
     <div id="divtabla"></div>
                     <table  class="table table-bordered table-hover table-condensed">
                        <thead>
             <tr>
-                <th><center>Id</center></th>
-                <th><center>Tecnico</center></th>
+                <th><center>Correlativo</center></th>
+                <th><center>T&eacute;cnico</center></th>
                 <th><center>Asignadas</center></th>
                 <th><center>Terminadas</center></th>
                 <th><center>Atendidas</center></th>
+                <th><center>Acciones</center></th>
             </tr>
             <tbody id="tabla">
                 
@@ -73,7 +76,13 @@ function drawRow(rowData,id) {
     row+='<td><center>' + rowData.pendientes + '</center></td>';
     row+='<td><center>' + rowData.finalizadas + '</center></td>';
     row+='<td><center>' + rowData.atendidas + '</center></td>';
-    row+='</tr>';
+    row+='<td><center>\n\
+          <ul>\n\
+              <li>\n\
+                  {#<a href='+{{ path('sifdatiposervicio_show', { 'id':+rowData.id+ }) }}+'>Mostrar detalle</a>\n\#}
+              </li>\n\
+          </center></td>';
+        row+='</tr>';
     
     return row;
 }

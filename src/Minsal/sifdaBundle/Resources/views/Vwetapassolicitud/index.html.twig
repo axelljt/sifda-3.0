@@ -7,7 +7,7 @@
     <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
-                <th>Descripci&oacute;n</th>
+                <th>Descripci&oacute;n de solicitud de servicio</th>
                 <td>{{ solicitud.descripcion }}</td>
             </tr>
             <tr>
@@ -17,6 +17,10 @@
             <tr>
                 <th>Fecha que se requiere</th>
                 <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("d/m/Y")}}</td>
+            </tr>
+            <tr>
+                <th>Persona solicitante</th>
+                <td>{{ solicitud.user.idEmpleado }}</td>
             </tr>
             {% set porcentaje = 0 %}
             {% for entity in entities %}

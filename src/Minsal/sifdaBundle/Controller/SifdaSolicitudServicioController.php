@@ -94,7 +94,7 @@ class SifdaSolicitudServicioController extends Controller
      */
     public function indexAction($exito)
     {
-        $idusuario=1;
+        $idusuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
 
         $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
@@ -200,7 +200,7 @@ class SifdaSolicitudServicioController extends Controller
     public function solicitudesIngNewAction()
     {
             
-        $id_usuario=2;
+        $id_usuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
          $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
@@ -232,7 +232,7 @@ class SifdaSolicitudServicioController extends Controller
     public function solicitudesRechNewAction()
     {
             
-        $id_usuario=1;
+        $id_usuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
          $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
@@ -285,7 +285,7 @@ class SifdaSolicitudServicioController extends Controller
     public function solicitudesFinalNewAction()
     {
             
-        $id_usuario=1;
+        $id_usuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
          $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
