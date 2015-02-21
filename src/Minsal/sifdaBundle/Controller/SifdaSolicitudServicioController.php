@@ -375,12 +375,14 @@ class SifdaSolicitudServicioController extends Controller
     public function buscarSolicitudesIngresadasAction()
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
+        $estado=1;
         if($isAjax){
              $fechaInicio = $this->get('request')->request->get('fechaInicio');
              $fechaFin = $this->get('request')->request->get('fechaFin');
              $tipoServicio = $this->get('request')->request->get('tipoServicio');
              $em = $this->getDoctrine()->getManager();
-             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->FechaSolicitudIngresada($fechaInicio, $fechaFin,$tipoServicio);
+//             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->FechaSolicitudIngresada($fechaInicio, $fechaFin,$tipoServicio);
+             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);   
             $tam= Count($solicitudes);
             if($tam>0)
                 {
@@ -410,12 +412,13 @@ class SifdaSolicitudServicioController extends Controller
     public function buscarSolicitudesRechazadasAction()
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
+        $estado=3;
         if($isAjax){
              $fechaInicio = $this->get('request')->request->get('fechaInicio');
              $fechaFin = $this->get('request')->request->get('fechaFin');
              $tipoServicio=$this->get('request')->request->get('tipoServicio');
              $em = $this->getDoctrine()->getManager();
-             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->FechaSolicitudRechazadas($fechaInicio, $fechaFin,$tipoServicio);
+             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
             
               $tam= Count($solicitudes);
              if($tam>0)
@@ -436,6 +439,48 @@ class SifdaSolicitudServicioController extends Controller
                 
             }  
     }    
+    
+    
+    /**
+    * Ajax utilizado para buscar rango de fechas
+    *  
+    * @Route("/buscarSolicitudesFinalizadas2", name="sifda_solicitudservicio_buscar_finalizadas2")
+    */
+    public function buscarSolicitudesFinalNewAction()
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        $estado=4;
+        if($isAjax){
+             $fechaInicio = $this->get('request')->request->get('fechaInicio');
+             $fechaFin = $this->get('request')->request->get('fechaFin');
+             $tipoServicio=$this->get('request')->request->get('tipoServicio');
+             $em = $this->getDoctrine()->getManager();
+             
+             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
+            
+              $tam= Count($solicitudes);
+             if($tam>0)
+                 {
+                     $mensaje = $this->renderView('MinsalsifdaBundle:SifdaSolicitudServicio:solicitudesRechShow.html.twig' , array('solicitudes' =>$solicitudes));
+                     $response = new JsonResponse();
+                     return $response->setData($mensaje);
+                 }
+             else{
+                    $response = new JsonResponse();
+                    return $response->setData(array('val'=>0));
+                 
+                 }
+           } 
+       else
+            {    $response = new JsonResponse();
+                 return $response->setData(array('val'=>0));
+                
+            }  
+    }
+    
+    
+    
+    
     
     /**
     * Ajax utilizado para buscar rango de fechas

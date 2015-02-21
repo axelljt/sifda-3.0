@@ -123,7 +123,16 @@
         <div id="Finalizados">
             <center><h4>No se encontraron solicitudes Finaizadas</h4></center>
         </div>    
-   {% endif%}   
+   {% endif%} 
+   
+   
+   <div id="rangoFinTabla"></div>
+             
+                <div id="msgFinalizado">
+                    <center><h4>No se encontraron solicitudes en ese Rango</h4></center>
+                </div>  
+   
+   
     </div>    
         
  {% endblock%}       
@@ -135,6 +144,7 @@
         $(document).ready(function(){
             
             document.getElementById('Todos').checked=true;
+            document.getElementById('cmb1').value=0;
             
             document.getElementById('fechaInicio').value="";
             document.getElementById('fechaFin').value="";
@@ -144,12 +154,16 @@
             
              $('#fechas').hide("slow");
              $('#combos').hide("slow");
+             $('#msgFinalizado').hide("slow");
              
              $('#Todos').click(function (){
                  
                  $("#FinTabla").show("slow");
                  $("#fechas").hide("slow");
                  $("#combos").hide("slow");
+                 $('#rangoFinTabla').hide("slow");
+                 $('#msgFinalizado').hide("slow"); 
+                 $('#Finalizado').show("slow"); 
                  
              });//Fin de Todos
              
@@ -158,9 +172,54 @@
                  $("#FinTabla").hide("slow");
                  $("#fechas").show("slow");
                  $("#combos").show("slow");
-                 
+                 $('#rangoFinTabla').show("slow");
+                 $('#msgFinalizado').hide("slow"); 
+                 $('#Finalizado').hide("slow");
              });//Fin de Especifico
              
+             
+             
+             
+        $("#buscar").click(function(){
+           
+           var tipoServicio=$("#cmb1").val();
+           var fechaInicio=$("#fechaInicio").val();
+           var fechaFin=$("#fechaFin").val();
+           
+           
+           
+           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
+               
+               $.post(
+                    '{{path('sifda_solicitudservicio_buscar_finalizadas2')}}',    
+                    
+                    { 
+                      fechaInicio: fechaInicio,
+                      fechaFin   : fechaFin,
+                      tipoServicio: tipoServicio
+                    }
+                        , function( data ) {
+                           console.log( data );
+                           
+                            res=data.val;
+                           
+                           if(res=="0"){
+                               
+                                $('#msgFinalizado').show("slow");
+                                $("#rangoFinTabla").hide("slow");
+                            }
+                           else
+                           {
+                               $("#rangoFinTabla").html(data);
+                           }
+                         
+                
+                    }, "json");
+                    
+                   
+                }
+           
+       }); 
              
         
         }); //Fin Jquery
@@ -219,45 +278,6 @@
      //Funcion de Busqueda de Solicitudes   
         
         
-        $("#buscar").click(function(){
-           
-           var tipoServicio=$("#combo").val();
-           var fechaInicio=$("#fechaInicio").val();
-           var fechaFin=$("#fechaFin").val();
-           
-           
-           
-           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
-               
-               $.post(
-                    '{{path('sifda_solicitudservicio_buscar2_solicitudes')}}',    
-                    
-                    { 
-                      fechaInicio: fechaInicio,
-                      fechaFin   : fechaFin,
-                      tipoServicio: tipoServicio
-                    }
-                        , function( data ) {
-                           console.log( data );
-                           
-                            res=data.val;
-                           
-                           if(res=="0"){
-                               
-                                $('#msgRechazados2').show("slow");
-                            }
-                           else
-                           {
-                               $("#rangoRechTabla").html(data);
-                           }
-                         
-                
-                    }, "json");
-                    
-                   
-                }
-           
-       }); 
        
      //Fin funcion de Busqueda   
         

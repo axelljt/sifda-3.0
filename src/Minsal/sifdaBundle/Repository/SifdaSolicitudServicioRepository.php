@@ -30,6 +30,19 @@ class SifdaSolicitudServicioRepository extends EntityRepository
        return $repositorio->getResult();	
     }
     
+    /*Repositorio Generico que consulta las solicitudes por rango de Fechas*/
+    
+    public  function buscarFechasSolicitudGenerico($fechaInicio,$fechaFin,$tipoServicio,$estado){
+        $fechaFinFormato = $fechaFin.' 23:59:59';
+        
+        $dql = "SELECT s FROM MinsalsifdaBundle:SifdaSolicitudServicio s WHERE s.fechaRecepcion >= '$fechaInicio' AND s.fechaRecepcion<='$fechaFinFormato' AND s.idTipoServicio='$tipoServicio' AND s.idEstado='$estado' ORDER BY s.fechaRecepcion DESC";	     
+        $repositorio = $this->getEntityManager()->createQuery($dql);      
+        return $repositorio->getResult();	
+    }
+
+
+
+
     /* Se obtiene la dependencia a la que se le hace la solicitud de servicio */
     public function ObtenerDependencia($id)
     {

@@ -335,7 +335,10 @@
     {% endif %}  
                 
             </div>
-            
+               
+             <div id="msgIngresados2">
+              <center><h4>No se encontraron solicitudes en este Rango</h4></center>
+             </div>   
    </div>              
     <div id="dialog">
         
@@ -459,6 +462,7 @@
       document.getElementById('fechaFin').readOnly=true;
       $('#fechas').hide("slow");
       $('#cmb1').hide("slow");
+      $('#msgIngresados2').hide("slow");
       
       
       
@@ -550,6 +554,7 @@
             $("#cmb1").hide("slow");
             $('#tabla').show("slow");
             $('#rangoTabla').hide("slow");
+            $('#msgIngresados2').hide("slow");
           });
           
             $('#especifico').click(function(){
@@ -559,8 +564,8 @@
                 $("#fechas").show("slow");
                 $("#cmb1").show("slow");
                 $('#rangoTabla').show("slow");
-                {#$('#msgIngresados').hide("slow");
-                $('#msgRechazados').hide("slow");
+                $('#msgIngresados2').hide("slow");
+                {#$('#msgRechazados').hide("slow");
                 $('#msgAsignados').hide("slow");#}
               });   
           
@@ -585,11 +590,23 @@
                     }
                         , function( data ) {
                            console.log( data );
-                         $("#rangoTabla").html(data);
-                
+                           
+                           res=data.val;
+                           
+                           if(res=="0"){
+                               
+                               $('#msgIngresados2').show("slow");
+                               $("#rangoTabla").hide("slow");
+                            }            
+                            else
+                           {
+                              $("#rangoTabla").html(data);
+                           }
+                           
+                                         
                     }, "json");
             
-                    $('#msgIngresados').show("slow");
+                    
               }
           });
           
