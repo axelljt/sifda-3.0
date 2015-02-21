@@ -116,9 +116,16 @@
 {% block javascripts_step %}
     {{ parent() }}
     <script>
+    {#setTimeout('document.location.reload()',5000);#} 
+        
     $(document).ready(function(){
          
-            
+         
+        var estado= {{dependencias}};
+        if(estado!=0)
+                $('#dialog').attr('title','Solicitudes Rechazadas').text('Hay {{dependencias}}').dialog();
+        
+        
         var resultado=$("#exito").val();
         
         
@@ -280,5 +287,9 @@
                 
             });
     }
+    
+    
+        
+    
     </script>
     {% endblock%}

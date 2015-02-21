@@ -28,6 +28,8 @@ class SifdaSolicitudServicio
      * @ORM\Column(name="descripcion", type="text", nullable=false)
      */
     private $descripcion;
+    
+    
 
     /**
      * @var \DateTime
@@ -127,6 +129,9 @@ class SifdaSolicitudServicio
     {
         return $this->descripcion;
     }
+    
+    
+    
 
     /**
      * Set fechaRecepcion

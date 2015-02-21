@@ -84,7 +84,46 @@
               </div>
         </div> 
         
-    
+           {% if entities %}       
+                <table id="FinTabla" class="table table-bordered table-hover table-condensed">
+                 <thead>
+                     <tr>
+                         <th><center>N°</center></th>
+                         <th><center>Establecimiento</center></th>
+                         <th><center>DependenciaSolicitante</center></th>
+                         <th><center>TipoServicio</center></th>
+                         <th><center>Descripcion</center></th>
+                         <th><center>FechaRecepcion</center></th>
+                         <th><center>FechaRequiere</center></th>
+
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {%set count=1%}   
+                 {% for finalizado in entities %}
+                    {# {%if rechazado.idDependenciaEstablecimiento == usuario.idDependenciaEstablecmiento%}#}
+                         <tr>
+                             <td>{{ count }}</td>
+                                     {#<td>{{ loop.index }}</td>#}
+                             <td><justify>{{ finalizado.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
+                             <td>{{ finalizado.idDependenciaEstablecimiento.idDependencia }}</td>
+                             <td>{{ finalizado.idTipoServicio }}</td>
+                             <td>{{ finalizado.descripcion }}</td>
+                             <td>{% if finalizado.fechaRecepcion %}{{ finalizado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>
+                             <td>{% if finalizado.fechaRequiere %}{{ finalizado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+
+                         </tr>
+                         {%set count=count+1%}
+                     {#{%endif%}#}
+                 {% endfor %}
+                 </tbody>
+             </table> 
+        
+    {% else %}
+        <div id="Finalizados">
+            <center><h4>No se encontraron solicitudes Finaizadas</h4></center>
+        </div>    
+   {% endif%}   
     </div>    
         
  {% endblock%}       
@@ -92,6 +131,137 @@
     {{ parent() }}
     
     <script>
+        
+        $(document).ready(function(){
+            
+            document.getElementById('Todos').checked=true;
+            
+            document.getElementById('fechaInicio').value="";
+            document.getElementById('fechaFin').value="";
+            
+            document.getElementById('fechaInicio').readOnly=true;
+            document.getElementById('fechaFin').readOnly=true;
+            
+             $('#fechas').hide("slow");
+             $('#combos').hide("slow");
+             
+             $('#Todos').click(function (){
+                 
+                 $("#FinTabla").show("slow");
+                 $("#fechas").hide("slow");
+                 $("#combos").hide("slow");
+                 
+             });//Fin de Todos
+             
+             $('#especifico').click(function(){
+                 
+                 $("#FinTabla").hide("slow");
+                 $("#fechas").show("slow");
+                 $("#combos").show("slow");
+                 
+             });//Fin de Especifico
+             
+             
+        
+        }); //Fin Jquery
+        
+        
+        //Funcion para Calendarios
+        
+        $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+                                
+                                
+				}); 
+        
+        //Fin de funcion Calendario
+        
+        
+     //Funcion de Busqueda de Solicitudes   
+        
+        
+        $("#buscar").click(function(){
+           
+           var tipoServicio=$("#combo").val();
+           var fechaInicio=$("#fechaInicio").val();
+           var fechaFin=$("#fechaFin").val();
+           
+           
+           
+           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
+               
+               $.post(
+                    '{{path('sifda_solicitudservicio_buscar2_solicitudes')}}',    
+                    
+                    { 
+                      fechaInicio: fechaInicio,
+                      fechaFin   : fechaFin,
+                      tipoServicio: tipoServicio
+                    }
+                        , function( data ) {
+                           console.log( data );
+                           
+                            res=data.val;
+                           
+                           if(res=="0"){
+                               
+                                $('#msgRechazados2').show("slow");
+                            }
+                           else
+                           {
+                               $("#rangoRechTabla").html(data);
+                           }
+                         
+                
+                    }, "json");
+                    
+                   
+                }
+           
+       }); 
+       
+     //Fin funcion de Busqueda   
+        
+        
         //Funciones para reporteria
       function mostrarfi(){ 
             return $("#fechaInicio").val();

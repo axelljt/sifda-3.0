@@ -26,16 +26,64 @@
     </center>
     <div class="row-fluid">
         <div class="span2">
-            <div id="sidebar">
-                <center>
+            {#<div id="sidebar">#}
+                {#<center>
                 <strong>
                 <span class="label"> PENDIENTE </span><br>
                 <span class="label label-warning"> EN PROCESO </span><br>
                 <span class="label label-important"> RECHAZADA </span><br>
                 <span class="label label-success"> FINALIZADA </span>
                 </strong>
-                </center>
-            </div> 
+                </center>#}
+                <table id="leyenda">
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroGris3.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                  PENDIENTE
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroRojo.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 RECHAZADO
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroNaranja2.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 PROCESO 
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroVerde.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 FINALIZADO
+                              </strong>  
+                        </td>
+                    </tr>
+                    
+                </table>
+                              
+          {#  </div> #}
         </div>
         <div class="span10">
             
@@ -57,7 +105,7 @@
                                                               
             </table>
             <br>
-                <h4>La solicitud de servicio se encuentra en el estado</h4><br>
+            <h4><center>La solicitud de servicio se encuentra en el estado</center></h4><br>
             <table id="tabla_show" class="table table-bordered table-hover table-condensed">
                 
                 <tr>

@@ -28,7 +28,56 @@
     </center>
     <div class="row-fluid">
         <div class="span2">
-            <div id="sidebar">
+            
+            <table id="leyenda">
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroGris3.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                  PENDIENTE
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroRojo.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 RECHAZADO
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroNaranja2.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 PROCESO 
+                              </strong>  
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroVerde.PNG') }}"/>
+                        </td>
+                        
+                        <td>
+                              <strong>
+                                 FINALIZADO
+                              </strong>  
+                        </td>
+                    </tr>
+                    
+                </table>
+            
+            {#<div id="sidebar">
                 <center>
                 <strong>
                 <span class="label"> PENDIENTE </span><br>
@@ -37,7 +86,7 @@
                 <span class="label label-success"> FINALIZADA </span>
                 </strong>
                 </center>
-            </div> 
+            </div> #}
         </div>
         <div class="span10">
             

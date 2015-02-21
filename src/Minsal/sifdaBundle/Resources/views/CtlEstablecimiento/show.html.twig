@@ -1,9 +1,12 @@
 {#{% extends '::base.html.twig' %}#}
-{% extends 'MinsalsifdaBundle::layout.html.twig' %}
-{% block body -%}
-    <h1>CtlEstablecimiento</h1>
+{#{% extends 'MinsalsifdaBundle::layout.html.twig' %}#}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-    <table class="table table-bordered table-hover table-condensed">
+{% block contenido_in %}
+    
+    <h1>Informacion Establecimiento</h1>
+
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
                 <th>Id</th>
