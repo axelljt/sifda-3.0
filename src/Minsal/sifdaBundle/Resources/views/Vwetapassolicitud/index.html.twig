@@ -19,8 +19,14 @@
                 <td>{{ solicitud.fechaRequiere is empty ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("d/m/Y")}}</td>
             </tr>
             <tr>
-                <th>Persona solicitante</th>
-                <td>{{ solicitud.user.idEmpleado }}</td>
+                {% if solicitud.idMedioSolicita.id == 6 %}
+                    <th>Medio Solicitud</th>
+                <td>Generado PAO</td>
+                {% else %}
+                    <th>Persona solicitante</th>
+                <td>{{ solicitud.user?solicitud.user.idEmpleado:"" }}</td>
+                {%endif %}
+                
             </tr>
             {% set porcentaje = 0 %}
             {% for entity in entities %}

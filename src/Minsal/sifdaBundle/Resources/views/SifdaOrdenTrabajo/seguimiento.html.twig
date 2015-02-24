@@ -131,7 +131,11 @@
         {% for entity in solicitudesAprobadas %}
             <tr>
                 <td><center>{{ corr }}</center></td>
-                <td>{{ entity.user.idDependenciaEstablecimiento.idDependencia.nombre }}, {{ entity.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+        {%if entity.idMedioSolicita.id == 6%}
+        <td>Generado PAO</td>
+        {%else %}
+                <td>{{ entity.user?entity.user.idDependenciaEstablecimiento.idDependencia.nombre:"" }}, {{ entity.user?entity.user.idDependenciaEstablecimiento.idEstablecimiento.nombre:"" }}</td>
+                {%endif %}
                 <td>{{ entity.descripcion }}</td>
                 <td><center>{% if entity.fechaRequiere %}{{ entity.fechaRequiere|date('d/m/Y') }}{% endif %}</center></td>
                 <td>
