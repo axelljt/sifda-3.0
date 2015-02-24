@@ -32,7 +32,7 @@ class AdministradorController extends Controller
      */
     public function indexAction()
     {
-        $idusuario=1;
+        $idusuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
 
         $entities = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->findAll();
@@ -331,7 +331,7 @@ class AdministradorController extends Controller
      */
     public function tecnicoAction()
     {
-        $idusuario=  9;
+        $idusuario=  $this->getUser()->getId();
         $rsm = new ResultSetMapping();
         $em = $this->getDoctrine()->getManager();
         $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);

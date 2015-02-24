@@ -390,19 +390,27 @@ class SifdaEquipoTrabajoController extends Controller
             if($data){
                 $em = $this->getDoctrine()->getManager();
                 $entity = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->findBy(array('idOrdenTrabajo' => $orden));
-                $emp=array(); 
-                foreach ($data as $empleado){
-                    foreach ($entity as $ord) {
-                        if($ord->getIdEmpleado()->getId() != $empleado->getId()){
 
-                            $ord->setIdOrdenTrabajo($orden);
-                            $ord->setResponsableEquipo(FALSE);
-                            $ord->setIdEmpleado($empleado);
-                            $em->persist($ord);
-                            $em->flush(); 
-                        }
-                    }
-                }
+                
+
+
+
+
+
+
+//                $emp=array(); 
+//                foreach ($data as $empleado){
+//                    foreach ($entity as $ord) {
+//                        if($ord->getIdEmpleado()->getId() != $empleado->getId()){
+//
+//                            $ord->setIdOrdenTrabajo($orden);
+//                            $ord->setResponsableEquipo(FALSE);
+//                            $ord->setIdEmpleado($empleado);
+//                            $em->persist($ord);
+//                            $em->flush(); 
+//                        }
+//                    }
+//                }
         
                 //Se obtienen todas las ordenes de trabajo que tiene una determinada solicitud
 //                foreach ($entity->getIdEmpleado() as $empleado) {
@@ -416,7 +424,6 @@ class SifdaEquipoTrabajoController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'orden'       => $ordenTrabajo
         );
     }
     /**

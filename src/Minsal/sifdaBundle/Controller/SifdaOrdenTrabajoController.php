@@ -31,7 +31,7 @@ class SifdaOrdenTrabajoController extends Controller
      */
     public function indexAction()
     {
-        $userId = 7;
+        $userId = $this->getUser()->getId();
         $rsm = new ResultSetMapping();
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
@@ -93,7 +93,7 @@ class SifdaOrdenTrabajoController extends Controller
      */
     public function seguimientoAction()
     {
-        $idusuario=1;
+        $idusuario = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
 
         $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
@@ -136,7 +136,7 @@ class SifdaOrdenTrabajoController extends Controller
     public function ordenAtendidaAction()
     {
         $em = $this->getDoctrine()->getManager();
-        $idusuario=3;
+        $idusuario = $this->getUser()->getId();
         
         $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
         
@@ -163,7 +163,7 @@ class SifdaOrdenTrabajoController extends Controller
     {
         $entity = new SifdaOrdenTrabajo();
         $form = $this->createCreateForm($entity, $id);
-        $user = 3;
+        $user = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user);

@@ -32,7 +32,7 @@ class SifdaTipoServicioController extends Controller
 
         $entities = $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->findAll();
         
-        $user_id = 1;
+        $user_id = $this->getUser()->getId();
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user_id);
 
 
@@ -54,7 +54,7 @@ class SifdaTipoServicioController extends Controller
         $form = $this->createCreateForm($tiposervicio);
         $form->handleRequest($request);
         
-        $user_id = 1;
+        $user_id = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user_id);
         $tiposervicio->setIdDependenciaEstablecimiento($usuario->getIdDependenciaEstablecimiento());
@@ -174,7 +174,7 @@ class SifdaTipoServicioController extends Controller
     */
     private function createEditForm(SifdaTipoServicio $entity)
     {
-        $userid = 3;
+        $userid = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userid);
         

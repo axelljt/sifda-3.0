@@ -53,7 +53,7 @@ class SifdaInformeOrdenTrabajoController extends Controller
         $entity = new SifdaInformeOrdenTrabajo();
         $form = $this->createCreateForm($entity, $id);
         
-        $user = 7;
+        $user = $this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user);
