@@ -261,8 +261,7 @@ class SifdaEquipoTrabajoController extends Controller
     public function editAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $ordenTrabajo = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($id);
-        
+        $ordenTrabajo = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($id);        
         if (!$ordenTrabajo) {
             throw $this->createNotFoundException('Unable to find SifdaOrdenTrabajo entity.');
         }
@@ -311,16 +310,23 @@ class SifdaEquipoTrabajoController extends Controller
                         ->createQueryBuilder('emp')
                         ->where('emp.idDependenciaEstablecimiento = :de')
                         ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
-            }
-                ));
+                }
+        ));
         
         $equipo = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->findBy(array(
                                                                             'idOrdenTrabajo' => $entity->getIdOrdenTrabajo(),
                                                                             'responsableEquipo' => 'FALSE'
                                                                                 ));        
+        
         if (!$equipo) {
             throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
-        }        
+        }
+        
+        $choices = array();
+        foreach ($equipo as $empleado) {
+            $choices[$empleado->getIdEmpleado()->getId()] = $empleado->getIdEmpleado();
+        }
+                
         $form->add('equipoTrabajo', 'entity', array(
                     'label'         =>  'Seleccione equipo de trabajo',
                     'class'         =>  'MinsalsifdaBundle:CtlEmpleado',
@@ -328,20 +334,15 @@ class SifdaEquipoTrabajoController extends Controller
                     'expanded'  => true,
                     'required'  => false,
                     'mapped' => false,
-                    'query_builder' =>  function(EntityRepository $repositorio) use ($usuario, $em) {
+                    'query_builder' =>  function(EntityRepository $repositorio) use ($usuario) {
                     return $repositorio
                         ->createQueryBuilder('emp')
                         ->where('emp.idDependenciaEstablecimiento = :de')
                         ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
                     },
-                    //'property_path' => $equipo
+                    'data' => $choices
                 ));
-        
-         
-        //$emp = $em->getRepository('MinsalsifdaBundle:CtlEmpleado')->findBy($equipo->getIdEmpleado()->getId());                                                                        //ladybug_dump($equipo);
-//        if (!$emp) {
-//            throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
-//        } 
+
         $form->get('equipoTrabajo')->setData( $equipo );
         $form->add('submit', 'submit', array('label' => 'Reasignar orden de trabajo'));
 
@@ -359,30 +360,62 @@ class SifdaEquipoTrabajoController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->find($id);
-
+        $orden = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($entity->getIdOrdenTrabajo());
         if (!$entity) {
-            throw $this->createNotFoundException('Unable to find SifdaOrdenTrabajo entity.');
+            throw $this->createNotFoundException('Unable to find SifdaEquipoTrabajo entity.');
         }
 
-        ladybug_dump($entity);
-        $editForm = $this->createEditForm($entity, $entity->getIdOrdenTrabajo());
+        $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
-
+        
+        $parameters = $request->request->all();
+        
+//        foreach($parameters as $p){
+        $responsable = $parameters['minsal_sifdabundle_sifdaequipotrabajo']['idEmpleado'];
+//        }
+        $idEmpleado = $em->getRepository('MinsalsifdaBundle:CtlEmpleado')->find($responsable);
+       // ladybug_dump($responsable);
+        $responsableEquipo = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->findOneBy(array(
+                                                                            'idOrdenTrabajo' => $orden,
+                                                                            'responsableEquipo' => 'TRUE'
+                                                                                ));        
+        $responsableEquipo->setIdOrdenTrabajo($orden);
+        $responsableEquipo->setResponsableEquipo(TRUE);
+        $responsableEquipo->setIdEmpleado($idEmpleado);
+        
         if ($editForm->isValid()) {
+            $em->merge($responsableEquipo);
             $em->flush();
-            
             $data = $editForm->get('equipoTrabajo')->getData();
             if($data){
-                $this->reasignarEquipoTrabajo($entity->getIdOrdenTrabajo(), $data);
+                $em = $this->getDoctrine()->getManager();
+                $entity = $em->getRepository('MinsalsifdaBundle:SifdaEquipoTrabajo')->findBy(array('idOrdenTrabajo' => $orden));
+                $emp=array(); 
+                foreach ($data as $empleado){
+                    foreach ($entity as $ord) {
+                        if($ord->getIdEmpleado()->getId() != $empleado->getId()){
+
+                            $ord->setIdOrdenTrabajo($orden);
+                            $ord->setResponsableEquipo(FALSE);
+                            $ord->setIdEmpleado($empleado);
+                            $em->persist($ord);
+                            $em->flush(); 
+                        }
+                    }
+                }
+        
+                //Se obtienen todas las ordenes de trabajo que tiene una determinada solicitud
+//                foreach ($entity->getIdEmpleado() as $empleado) {
+//                    $emp[] = $empleado->getId();
+//                }
             }
             
-            return $this->redirect($this->generateUrl('sifda_equipotrabajo_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('sifda_equipotrabajo_show', array('id' => $orden->getId())));
         }
 
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
-            //'delete_form' => $deleteForm->createView(),
         );
     }
     /**
@@ -450,13 +483,13 @@ class SifdaEquipoTrabajoController extends Controller
         }    
     }
 
-     /** Metodo que sirve para reasignar al equipo de trabajo de la orden de trabajo.
+    /** Metodo que sirve para reasignar al equipo de trabajo de la orden de trabajo.
      *
-     * @param \Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo $idOrdenTrabajo
+     * @param SifdaOrdenTrabajo $idOrdenTrabajo
      * @param \Doctrine\Common\Collections\ArrayCollection $personal
      *
      */
-    private function reasignarEquipoTrabajo(\Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo $idOrdenTrabajo,
+    private function reasignarEquipoTrabajo(SifdaOrdenTrabajo $idOrdenTrabajo,
                                              \Doctrine\Common\Collections\ArrayCollection $personal)
     {
         foreach ($personal as $idEmpleado)
@@ -466,7 +499,7 @@ class SifdaEquipoTrabajoController extends Controller
             $entity->setResponsableEquipo(FALSE);
             $entity->setIdEmpleado($idEmpleado);
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+            $em->merge($entity);
             $em->flush();
         }    
     }    
