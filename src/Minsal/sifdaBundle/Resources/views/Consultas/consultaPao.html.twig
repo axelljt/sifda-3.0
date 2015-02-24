@@ -1,0 +1,179 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+<center><h3>Consulta de Pao</h3></center>
+                    
+<center><table id="pao" border1>
+                        <tr><td colspan="4" ><label><strong><center>Usuario: {{ user.username  }}</center></strong></label></td>
+                        <tr><td colspan="4"><label><strong><center>Dependencia: {{ user.idDependenciaEstablecimiento}}</center></strong></label></td>
+                        <tr><td id="solucion" colspan="4"><label><strong><center id="solucion"></center></strong></label></td>
+                        </tr>
+                        <tr>
+                            <td><label><strong>A&ntildeo PAO:</strong></label></td>
+                            
+                            
+                            <td>
+                                <div class="btn-group">
+                                      <select id="cmb1" name="ComboEstado"  class="btn dropdown-toggle" style="width: 200px">
+                                         <option value="0">Seleccione A&ntildeo</option>
+
+                                           {% for anio in resultados %}
+
+                                            <option value="{{anio.resultado}}">{{anio.resultado}}</option>
+                                           {% endfor %}   
+                                     </select>
+                                 </div>
+                            </td>
+                            
+                            <td><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar"></td>
+                            
+                        </tr>
+                    </table></center>
+    <div id="divtabla"></div>
+                    <table  class="table table-bordered table-hover table-condensed" id="tablita">
+                       <thead>
+            <tr class="info">
+                <th><center>Descripcion</center></th>
+                <th><center>Codigo</center></th>
+                <th><center>Activo</center></th>
+                <th><center>Recurrente</center></th>
+            </tr>
+            </thead>
+            <tbody id="tabla">
+                
+            
+            </tbody>    
+        </thead>             
+                                    
+                    </table>
+    
+    <script>
+        
+   $(document).ready(function(){
+         document.getElementById("cmb1").value="0";
+        $("#buscar").click(function(){
+            $.blockUI({ message: null }); 
+            var valor = $("#cmb1").val();
+            $.post(
+                '{{path('buscar_lineas_estrategicas')}}', 
+                  { 
+                    anio:valor
+                  }
+                  , function( data ) {
+                    console.log( data );
+                   drawTable(data.query);
+                }, "json");
+         
+        });
+});
+
+$(document).ajaxStop(function(){
+$.unblockUI();
+});
+
+
+function drawTable(data) {
+var rows = '';
+document.getElementById('tabla').innerHTML = '' ;
+    for (var i = 0; i < data.length; i++) {
+        rows=drawRow(data[i]);
+    }
+    //document.getElementById('tabla').innerHTML = rows;
+    return rows;
+}
+function drawSubTable(data) {
+var rows2 = '';
+    for (var i = 0; i < data.length; i++) {
+        rows2=drawRowA(data[i]);
+    }
+    return rows2;
+}
+
+function drawRow(rowData) {
+    var row = '<tr class="info">';
+    row+='<td colspan="4"><strong> Linea Estrategica: </strong>' + rowData.descripcion  ;
+    row+='<strong> Codigo:</strong>' + rowData.codigo  ;
+    row+= rowData.activo ? '<strong> Estado: </strong>' +' Activo ':' <strong>Estado:</strong>' +' Inactivo ' ;
+    row+='</td></tr>';
+    $(row).appendTo("#tablita tbody");
+    {#$.post(
+                '{{path('buscar_actividades')}}', 
+                  { 
+                    idln:rowData.id
+                  }
+                  , function( data ) {
+                    console.log( data );
+                    row=drawSubTable(data.query);
+                    
+                }, "json");#}
+     $.ajax({
+         type: "POST", 
+         dataType: "json",
+         async:false,
+         data: { idln:rowData.id },
+         url: '{{path('buscar_actividades')}}',
+       success:  function( data ) {
+                    console.log( data );
+                    drawSubTable(data.query);
+                }
+});                   
+                        
+    return row;
+}
+function drawRowA(rowData2) {
+    var row2 = '<tr>';
+    row2+='<td><center>' + rowData2.descripcion + '</center></td>';
+    row2+='<td><center>' + rowData2.meta_anual + '</center></td>';
+    row2+='<td><center>' + rowData2.indicador + '</center></td>';
+    row2+='<td><center>' + rowData2.generado + '</center></td>';
+    row2+='</tr>';
+    $(row2).appendTo("#tablita tbody");
+    return row2;
+    }
+
+
+$.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+                                
+                                
+				});
+    </script>
+{% endblock %}

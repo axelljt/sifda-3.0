@@ -519,7 +519,9 @@ class SifdaSolicitudServicioController extends Controller
         $idEstado = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->findOneBy(array('descripcion'=>'Ingresado'));
         
         $idMedioSolicita = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->findOneBy(array('descripcion'=>'Sistema'));
-        $idUser = $em->getRepository('MinsalsifdaBundle:FosUserUser')->findOneBy(array('username'=>'anthony'));
+//        $idUser = $em->getRepository('MinsalsifdaBundle:FosUserUser')->findOneBy(array('username'=>'anthony'));
+        $idUser=$this->getUser()->getId();
+        $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idUser);
         $entity->setIdEstado($idEstado);
         $entity->setIdMedioSolicita($idMedioSolicita);
         $entity->setUser($idUser);
@@ -935,6 +937,40 @@ class SifdaSolicitudServicioController extends Controller
             'method' => 'PUT',
         ));
 
+    //Asignando un valor a un control especifico.    
+        
+       $form->add('establecimiento', 'entity', array(
+                    'label'         =>  'Establecimiento',
+                    'empty_value'=>'Seleccione un establecimiento',
+                    'class'         =>  'MinsalsifdaBundle:CtlEstablecimiento',
+                    'mapped' => false,
+                    'data' => $entity->getIdDependenciaEstablecimiento()->getIdEstablecimiento()
+               
+                ));
+        
+       
+        
+       $form->add('dependencia', 'entity', array(
+                    'label'         =>  'dependencia',
+                    'empty_value'=>'Seleccione un dependencia',
+                    'class'         =>  'MinsalsifdaBundle:CtlDependencia',
+                    'mapped' => false,
+                    'data' => $entity->getIdDependenciaEstablecimiento()->getIdDependencia()
+               
+                ));
+    
+       $form->add('idTipoServicio', 'entity', array(
+                    'label'         =>  'Tipo de servicio',
+                    'empty_value'=>'Seleccione un tipo de servicio',
+                    'class'         =>  'MinsalsifdaBundle:SifdaTipoServicio',
+                    'mapped' => false,
+                    'data' => $entity->getIdTipoServicio()
+               
+                ));
+    
+       
+       
+        
         $form->add('submit', 'submit', array('label' => 'Modificar solicitud'));
 
         return $form;

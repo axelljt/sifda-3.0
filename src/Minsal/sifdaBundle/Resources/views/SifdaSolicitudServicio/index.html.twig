@@ -71,7 +71,7 @@
         </thead>
         <tbody>
         {% for entity in entities %}
-            {%if entity.idDependenciaEstablecimiento==usuario.idDependenciaEstablecimiento%}
+            {%if entity.user.idDependenciaEstablecimiento==usuario.idDependenciaEstablecimiento%}
             <tr>
                 <td>{{ loop.index }}</td>
                 <td>{{ entity.descripcion }}</td>
