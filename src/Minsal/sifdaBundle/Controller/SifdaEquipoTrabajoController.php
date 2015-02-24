@@ -416,6 +416,7 @@ class SifdaEquipoTrabajoController extends Controller
         return array(
             'entity'      => $entity,
             'edit_form'   => $editForm->createView(),
+            //'orden'       => $ordenTrabajo
         );
     }
     /**
