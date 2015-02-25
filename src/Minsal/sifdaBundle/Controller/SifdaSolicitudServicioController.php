@@ -12,6 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Minsal\sifdaBundle\Entity\SifdaSolicitudServicio;
 use Minsal\sifdaBundle\Form\SifdaSolicitudServicioType;
 use Symfony\Component\Validator\Constraints\Count;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * SifdaSolicitudServicio controller.
@@ -101,13 +102,11 @@ class SifdaSolicitudServicioController extends Controller
         
         
         
-        $entities = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->findBy(array(),
+        $entities = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->findBy(array('idMedioSolicita' =>  array(5, 7, 8)),
                                                                                        array(
                                                                                 'fechaRecepcion' =>  'DESC',
-                                                                                'fechaRequiere' => 'ASC'           
-                                                                                     
-                                                                                           
-                                                                                           ));
+                                                                                'fechaRequiere' => 'ASC'
+                                                                                            ));
 
         $estado=1;
 //        $em = $this->getDoctrine()->getManager();
@@ -1179,7 +1178,7 @@ class SifdaSolicitudServicioController extends Controller
     
          public function FinalizacionAction()        
          {
-             
+             $response = new JsonResponse();
              $isAjax = $this->get('Request')->isXMLhttpRequest();
              if($isAjax){
                  
@@ -1192,7 +1191,18 @@ class SifdaSolicitudServicioController extends Controller
                 if (!$entity) {
                      throw $this->createNotFoundException('No encontre la Entidad.');
                 }
-            
+                $dql = "SELECT MAX(e.id) "
+               . "FROM MinsalsifdaBundle:Vwetapassolicitud e where e.idSolicitud = :idSol";
+               $repositorio = $em->createQuery($dql);
+               $repositorio->setParameter(':idSol', $entity->getId());
+               
+               $resultado = $repositorio->getResult();
+             $resultado;
+               $vwUltimaEtapa = new \Minsal\sifdaBundle\Entity\Vwetapassolicitud(); 
+               $vwUltimaEtapa = $em->getRepository('MinsalsifdaBundle:Vwetapassolicitud')->find($resultado[0][1]);
+               if($vwUltimaEtapa->getIdEstado() != 4){
+                   return $response->setData(array('val'=>0));;
+               }
             $estado=$entity->getIdEstado()->getId();
             if($estado!=4)
                 {
@@ -1201,14 +1211,14 @@ class SifdaSolicitudServicioController extends Controller
                     throw $this->createNotFoundException('No encontre el Estado.');
                 }
 
-                    $entity->setIdEstado($objEstado);
-                    $em->merge($entity);
-                    $em->flush();
+//                    $entity->setIdEstado($objEstado);
+//                    $em->merge($entity);
+//                    $em->flush();
 
-                    return new Response('1');       
+                    return $response->setData(array('val'=>1));       
                }
             else {
-                    return new Response('0');
+                    return $response->setData(array('val'=>2));
                 }
                 
 
