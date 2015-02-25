@@ -12,30 +12,29 @@ $objPHPExcel = new PHPExcel(); //nueva instancia
 $objPHPExcel->getProperties()->setCreator("SIFDA"); //autor
 $objPHPExcel->getProperties()->setTitle("Prueba para generar excel"); //titulo
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tipo = $_REQUEST['tp'];
-//$temp_us = $_REQUEST['user'];
+$temp_un = $_REQUEST['un'];
 if ($temp_ff ==0 and $temp_fi ==0)
-    {$datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+    {$datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
-where id_estado=1 and ss.user_id=2;"); }
+where id_estado=1;"); }
 else
-    {$datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+    {$datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
 where id_estado=1 
-and ss.user_id=2
 and ss.id_tipo_servicio = '$temp_tipo'
-and fecha_recepcion between '$temp_fi' and '$temp_ff'"); }
+and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'"); }
 
 //inicio estilos
 $titulo = new PHPExcel_Style(); //nuevo estilo
@@ -115,8 +114,14 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet()); //incluir la imagen
 //establecer titulos de impresion en cada hoja
 $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 6);
 
+$fila0=5;
+//$objPHPExcel->getActiveSheet()->SetCellValue("H$fila0", $temp_un);
+//$objPHPExcel->getActiveSheet()->SetCellValue("G$fila0", date('d-m-y'));
 
-$fila=6;
+
+
+
+$fila=7;
 $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes de Servicio Ingresadas");
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:I$fila"); //unir celdas
 $objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:I$fila"); //establecer estilo
@@ -128,8 +133,8 @@ $objPHPExcel->getActiveSheet()->SetCellValue("A$fila", 'Num');
 $objPHPExcel->getActiveSheet()->SetCellValue("B$fila", 'Dependencia');
 $objPHPExcel->getActiveSheet()->SetCellValue("C$fila", 'Tipo de Servicio');
 $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Descripción');
-$objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Fecha requiere');
-$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", 'Fecha recepción');
+$objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Fecha recepción');
+$objPHPExcel->getActiveSheet()->SetCellValue("F$fila", 'Fecha requiere');
 $objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:B$fila"); //establecer estilo
 $objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila:D$fila");
 $objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "E$fila:F$fila");
@@ -153,7 +158,7 @@ foreach ($datos as $value) {
     //$pdf->Cell(15,7,utf8_decode($item),1);
     //$pdf->Cell(15,7,utf8_decode($value->id),1,0,'C');
     $objPHPExcel->getActiveSheet()->SetCellValue("A$fila","$item");
-    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->abreviatura");
+    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->dependencia");
     $objPHPExcel->getActiveSheet()->SetCellValue("C$fila","$value->nombre");
     $objPHPExcel->getActiveSheet()->SetCellValue("D$fila","$value->descripcion");
     $objPHPExcel->getActiveSheet()->SetCellValue("E$fila","$value->fecha_requiere");

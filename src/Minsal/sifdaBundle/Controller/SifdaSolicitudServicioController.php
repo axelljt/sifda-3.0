@@ -523,7 +523,7 @@ class SifdaSolicitudServicioController extends Controller
         $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idUser);
         $entity->setIdEstado($idEstado);
         $entity->setIdMedioSolicita($idMedioSolicita);
-        $entity->setUser($idUser);
+        $entity->setUser($usuario);
         $entity->setFechaRecepcion(new \DateTime());
         $form->handleRequest($request);
         

@@ -8,7 +8,7 @@ require("ez_sql_postgresql.php");
 
 //$data = array(40,60,21,33);
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];

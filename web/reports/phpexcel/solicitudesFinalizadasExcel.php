@@ -12,30 +12,29 @@ $objPHPExcel = new PHPExcel(); //nueva instancia
 $objPHPExcel->getProperties()->setCreator("SIFDA"); //autor
 $objPHPExcel->getProperties()->setTitle("Prueba para generar excel"); //titulo
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tipo = $_REQUEST['tp'];
 //$temp_us = $_REQUEST['user'];
 if ($temp_ff ==0 and $temp_fi ==0)
-    {$datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+    {$datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
   FROM public.sifda_solicitud_servicio ss
   inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
-where id_estado=4 and ss.user_id=2;"); }
+where id_estado=4;"); }
 else
-    {$datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+    {$datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
 where id_estado=4 
-and ss.user_id=2
 and ss.id_tipo_servicio = '$temp_tipo'
-and fecha_recepcion between '$temp_fi' and '$temp_ff'"); }
+and fecha_recepcion >= '$temp_fi' and fecha_recepcion <= '$temp_ff'"); }
 
 //inicio estilos
 $titulo = new PHPExcel_Style(); //nuevo estilo
@@ -153,7 +152,7 @@ foreach ($datos as $value) {
     //$pdf->Cell(15,7,utf8_decode($item),1);
     //$pdf->Cell(15,7,utf8_decode($value->id),1,0,'C');
     $objPHPExcel->getActiveSheet()->SetCellValue("A$fila","$item");
-    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->abreviatura");
+    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->dependencia");
     $objPHPExcel->getActiveSheet()->SetCellValue("C$fila","$value->nombre");
     $objPHPExcel->getActiveSheet()->SetCellValue("D$fila","$value->descripcion");
     $objPHPExcel->getActiveSheet()->SetCellValue("E$fila","$value->fecha_requiere");

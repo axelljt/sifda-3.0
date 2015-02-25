@@ -12,18 +12,40 @@ class PDF extends FPDF
 // Cabecera de página
 function Header()
 {
+$temp_un = $_REQUEST['un'];
+$temp_fi = $_REQUEST['fi'];
+$temp_ff = $_REQUEST['ff'];
+$temp_dep = $_REQUEST['dep'];
+
+$fechafi = date("d-m-Y", strtotime($temp_fi));
+$fechaff = date("d-m-Y", strtotime($temp_ff));
+
 $this->Image('banner.png', 10,8,150,20);
-$this->SetFont('Arial','B',11);
+$this->SetFont('Arial','B',10);
 $this->Cell(330,-6,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');
 $this->Ln(2);
-$this->Cell(180,1,'Fecha:' .date('d-m-y'). "", 0, 0, 'R', false);
+$this->Cell(178,1,'Fecha:' .date('d-m-y'). "", 0, 0, 'R', false);
+$this->Ln(2);
+$this->Cell(174,6,'Hora:' .date('h:m'). "", 0, 0, 'R', false);
+$this->Ln(2);
+$this->Cell(175,11,$temp_un, 0, 0, 'R', false);
+
 $this->Ln(2);
 //$this->Cell(180,8,'Hora:' .  gettimeofday(). "", 0, 0, 'R', false);
 
 $this->Ln(20);
 $this->SetFont('Arial','B',11);
+$this->Cell(0,-7,utf8_decode($temp_dep), 0, 0, 'C', false);
+$this->Ln(2);
 $this->Cell(0,25,utf8_decode('Consolidado de Solicitudes por Estado'), 0, 0, 'C', false);
 $this->Ln(20);
+if($temp_fi != 0 and $temp_ff !=0){
+  $this->SetFont('Arial','',11);
+  $this->Cell(-229,15,utf8_decode(' Período del'), 0, 0, 'C', false);
+  $this->Cell(275,15,$fechafi, 0, 0, 'C', false); 
+  $this->Cell(-250,15,' al', 0, 0, 'C', false);
+  $this->Cell(280,15,$fechaff, 0, 0, 'C', false); 
+}
 //$this->Cell(15,7,utf8_decode('Numd'),1,0,'C');
 $this->Cell(85,7,utf8_decode('Estados'),1,0,'C');
 $this->Cell(75,7,utf8_decode('Num. de solicitudes'),1,0,'C');
@@ -54,7 +76,7 @@ $pdf->SetMargins(20,18);
 $pdf->AddPage("P","Letter");
 $pdf->SetFont('Arial','',11);
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];

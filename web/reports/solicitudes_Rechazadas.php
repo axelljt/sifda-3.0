@@ -12,21 +12,45 @@ class PDF extends FPDF
     // Cabecera de página
 function Header()
 {
+    
+    
+$temp_un = $_REQUEST['un'];
+$temp_fi = $_REQUEST['fi'];
+$temp_ff = $_REQUEST['ff'];
+$temp_dep = $_REQUEST['dep'];
+
+$fechafi = date("d-m-Y", strtotime($temp_fi));
+$fechaff = date("d-m-Y", strtotime($temp_ff));
+
 $this->Image('banner.png', 10,8,150,20);
-$this->SetFont('Arial','B',11);
+$this->SetFont('Arial','B',10);
 $this->Cell(330,-6,'Pagina '.$this->PageNo().'/{nb}',0,0,'C');
 $this->Ln(2);
-$this->Cell(180,1,'Fecha:' .date('d-m-y'). "", 0, 0, 'R', false);
+$this->Cell(178,1,'Fecha:' .date('d-m-y'). "", 0, 0, 'R', false);
+$this->Ln(2);
+$this->Cell(174,6,'Hora:' .date('h:m'). "", 0, 0, 'R', false);
+$this->Ln(2);
+$this->Cell(175,11,$temp_un, 0, 0, 'R', false);
+
 $this->Ln(2);
 //$this->Cell(180,8,'Hora:' .  gettimeofday(). "", 0, 0, 'R', false);
 
 $this->Ln(20);
 $this->SetFont('Arial','B',11);
-$this->Cell(0,25,utf8_decode('Reporte de Solicitudes Rechazadas'), 0, 0, 'C', false);
+$this->Cell(0,-7,utf8_decode($temp_dep), 0, 0, 'C', false);
+$this->Ln(2);
+$this->Cell(0,5,utf8_decode('Reporte de Solicitudes Rechazadas'), 0, 0, 'C', false);
+if($temp_fi != 0 and $temp_ff !=0){
+  $this->SetFont('Arial','',11);
+  $this->Cell(-229,15,utf8_decode(' Período del'), 0, 0, 'C', false);
+  $this->Cell(275,15,$fechafi, 0, 0, 'C', false); 
+  $this->Cell(-250,15,' al', 0, 0, 'C', false);
+  $this->Cell(280,15,$fechaff, 0, 0, 'C', false); 
+}
 $this->Ln(20);
-
+$this->SetFont('Arial','B',11);
 $this->SetWidths(array(5, 30, 36, 48, 25, 25));
-$this->Row(array('N',utf8_decode('Dependencia Solicitante'),utf8_decode('Tipo de servicio'),utf8_decode('Descripción'),utf8_decode('Fecha Requiere'),utf8_decode('Fecha Solicita')));
+$this->Row(array('N',utf8_decode('Dependencia Solicitante'),utf8_decode('Tipo de servicio'),utf8_decode('Descripción'),utf8_decode('Fecha Solicita'),utf8_decode('Fecha Requiere')));
 
 //$this->SetFont('Arial','',11);
 }
@@ -150,7 +174,7 @@ $pdf->SetMargins(20,18);
 $pdf->AddPage("P","Letter");
 $pdf->SetFont('Arial','',11);
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tipo = $_REQUEST['tp'];
@@ -158,26 +182,25 @@ $temp_tipo = $_REQUEST['tp'];
 if ($temp_ff ==0 and $temp_fi ==0 and $temp_tipo==0)
     {
     //$datos = $conexion->get_results("SELECT descripcion,fecha_requiere,fecha_recepcion FROM public.sifda_solicitud_servicio where id_estado = 1 "); 
-    $datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+    $datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,to_char(ss.fecha_recepcion,'DD-MM-YYYY') as fecha_recepcion, to_char(ss.fecha_requiere,'DD-MM-YYYY') as fecha_requiere
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
-where id_estado=3 and ss.user_id=2;");
+where id_estado=3;");
     }
 else
     {//$datos = $conexion->get_results("SELECT descripcion,fecha_requiere,fecha_recepcion FROM public.sifda_solicitud_servicio where where id_estado = 1 and fecha_recepcion between '$temp_fi' and '$temp_ff'"); 
-        $datos = $conexion->get_results("SELECT dep.abreviatura,sts.nombre,ss.descripcion,ss.fecha_recepcion, ss.fecha_requiere
+        $datos = $conexion->get_results("SELECT de.nombre as dependencia,sts.nombre,ss.descripcion,to_char(ss.fecha_recepcion,'DD-MM-YYYY') as fecha_recepcion, to_char(ss.fecha_requiere,'DD-MM-YYYY') as fecha_requiere
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = ss.id_dependencia_establecimiento)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
 where id_estado=3 
-and ss.user_id=2
 and ss.id_tipo_servicio = '$temp_tipo'
-and fecha_recepcion between '$temp_fi' and '$temp_ff'");
+and fecha_recepcion >= '$temp_fi' and fecha_recepcion <= '$temp_ff'");
     }
 
 //$datos = $conexion->get_row("SELECT descripcion FROM public.sifda_solicitud_servicio where descripcion = 'test1'");
@@ -186,7 +209,7 @@ and fecha_recepcion between '$temp_fi' and '$temp_ff'");
 
 foreach ($datos as $value) {
   $item = $item +1;
-  $pdf->Row(array($item,utf8_decode($value->abreviatura),utf8_decode($value->nombre),
+  $pdf->Row(array($item,utf8_decode($value->dependencia),utf8_decode($value->nombre),
 			utf8_decode($value->descripcion),utf8_decode($value->fecha_recepcion),
                         utf8_decode($value->fecha_requiere)
           ));  

@@ -12,7 +12,7 @@ $objPHPExcel = new PHPExcel(); //nueva instancia
 $objPHPExcel->getProperties()->setCreator("SIFDA"); //autor
 $objPHPExcel->getProperties()->setTitle("Prueba para generar excel"); //titulo
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];
