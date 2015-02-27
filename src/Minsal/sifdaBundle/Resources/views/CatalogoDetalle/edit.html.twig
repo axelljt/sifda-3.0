@@ -1,15 +1,22 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 {% block contenido_in -%}
-    <h1>CatalogoDetalle edit</h1>
+    <h2><center>Editar Catalogo Detalle</center></h2>
 
-    {{ form(edit_form) }}
+    
+    {{form_row(edit_form.descripcion)}}
+    {{form_row(edit_form.ref1)}}
+    {{form_row(edit_form.estatus)}}
+    {{form_row(edit_form.idCatalogo)}}
+    
+    {#{{ form(edit_form) }}#}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifda_catalogodetalle') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <table id="botones" style="margin-left:38%">
+                <tr>
+                    <td><a href="{{ path('sifda_catalogodetalle') }}" class="btn">Regresar</a></td>
+                    <td>{{form_row(edit_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                    <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                </tr>
+    </table>    
+    
+       
 {% endblock %}

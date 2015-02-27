@@ -165,7 +165,7 @@ class CatalogoDetalleController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Actualizar'));
 
         return $form;
     }
@@ -240,7 +240,7 @@ class CatalogoDetalleController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('sifda_catalogodetalle_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Eliminar'))
             ->getForm()
         ;
     }

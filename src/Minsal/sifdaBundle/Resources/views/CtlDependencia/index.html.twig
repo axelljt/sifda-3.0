@@ -1,17 +1,17 @@
 {#{% extends '::base.html.twig' %}#}
 
-{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
 
-{% block body -%}
-    <h1>CtlDependencia list</h1>
+{% block contenido_in -%}
+    <h2><center>Listado de Dependencias</center></h2>
 
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Actions</th>
+                <th><center>Id</center></th>
+                <th><center>Nombre</center></th>
+                <th><center>Actions</center></th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +22,10 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('sifda_ctldependencia_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('sifda_ctldependencia_show', { 'id': entity.id }) }}">mostrar</a>
                     </li>
                     <li>
-                        <a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}">editar</a>
                     </li>
                 </ul>
                 </td>

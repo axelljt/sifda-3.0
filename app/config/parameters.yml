@@ -3,7 +3,7 @@ parameters:
     database_driver: pdo_pgsql
     database_host: 127.0.0.1
     database_port: 5432
-    database_name: sifda12022015
+    database_name: sifda24022015
     database_user: sifda
     database_password: sifda
     mailer_transport: smtp

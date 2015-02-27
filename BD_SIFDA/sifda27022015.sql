@@ -114,8 +114,8 @@ SET default_with_oids = false;
 
 CREATE TABLE bitacora (
     id integer NOT NULL,
-    user_id integer,
     id_evento integer,
+    user_id integer,
     fecha_evento date NOT NULL,
     observacion text NOT NULL
 );
@@ -240,10 +240,10 @@ ALTER TABLE public.ctl_dependencia OWNER TO sifda;
 
 CREATE TABLE ctl_dependencia_establecimiento (
     id integer NOT NULL,
-    id_establecimiento integer,
     id_dependencia integer,
     id_dependencia_padre integer,
-    abreviatura character varying(10),
+    id_establecimiento integer,
+    abreviatura character varying(255) DEFAULT NULL::character varying,
     habilitado boolean NOT NULL
 );
 
@@ -284,8 +284,8 @@ ALTER TABLE public.ctl_dependencia_id_seq OWNER TO sifda;
 
 CREATE TABLE ctl_empleado (
     id integer NOT NULL,
-    id_dependencia_establecimiento integer,
     id_cargo integer,
+    id_dependencia_establecimiento integer,
     nombre character varying(100) NOT NULL,
     apellido character varying(100) NOT NULL,
     fecha_nacimiento date NOT NULL,
@@ -375,13 +375,6 @@ CREATE TABLE fos_user_group (
 ALTER TABLE public.fos_user_group OWNER TO sifda;
 
 --
--- Name: TABLE fos_user_group; Type: COMMENT; Schema: public; Owner: sifda
---
-
-COMMENT ON TABLE fos_user_group IS 'Maneja los grupo de roles para el BUNDLE SONATAADMINBUNDLE de symfony';
-
-
---
 -- Name: COLUMN fos_user_group.roles; Type: COMMENT; Schema: public; Owner: sifda
 --
 
@@ -411,11 +404,11 @@ CREATE TABLE fos_user_user (
     id_dependencia_establecimiento integer,
     id_empleado integer,
     username character varying(255) NOT NULL,
-    username_canonical character varying(255) DEFAULT NULL::character varying NOT NULL,
+    username_canonical character varying(255) NOT NULL,
     email character varying(255) NOT NULL,
-    email_canonical character varying(255) DEFAULT NULL::character varying NOT NULL,
+    email_canonical character varying(255) NOT NULL,
     enabled boolean NOT NULL,
-    salt character varying(255) DEFAULT NULL::character varying NOT NULL,
+    salt character varying(255) NOT NULL,
     password character varying(255) NOT NULL,
     last_login timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
     locked boolean NOT NULL,
@@ -426,11 +419,11 @@ CREATE TABLE fos_user_user (
     roles text NOT NULL,
     credentials_expired boolean NOT NULL,
     credentials_expire_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
-    created_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone NOT NULL,
-    updated_at timestamp(0) without time zone DEFAULT NULL::timestamp without time zone NOT NULL,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
     date_of_birth timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
-    firstname character varying(64),
-    lastname character varying(64),
+    firstname character varying(64) DEFAULT NULL::character varying,
+    lastname character varying(64) DEFAULT NULL::character varying,
     website character varying(64) DEFAULT NULL::character varying,
     biography character varying(1000) DEFAULT NULL::character varying,
     gender character varying(1) DEFAULT NULL::character varying,
@@ -454,13 +447,6 @@ CREATE TABLE fos_user_user (
 ALTER TABLE public.fos_user_user OWNER TO sifda;
 
 --
--- Name: TABLE fos_user_user; Type: COMMENT; Schema: public; Owner: sifda
---
-
-COMMENT ON TABLE fos_user_user IS 'Maneja los usuarios tanto para los módulos en Symfony como para los de PHP puro';
-
-
---
 -- Name: fos_user_user_group; Type: TABLE; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -471,13 +457,6 @@ CREATE TABLE fos_user_user_group (
 
 
 ALTER TABLE public.fos_user_user_group OWNER TO sifda;
-
---
--- Name: TABLE fos_user_user_group; Type: COMMENT; Schema: public; Owner: sifda
---
-
-COMMENT ON TABLE fos_user_user_group IS 'Tabla intermedia para saber que usuarios poseen que grupos dentro de los modulos con Symfony';
-
 
 --
 -- Name: fos_user_user_id_seq; Type: SEQUENCE; Schema: public; Owner: sifda
@@ -494,13 +473,27 @@ CREATE SEQUENCE fos_user_user_id_seq
 ALTER TABLE public.fos_user_user_id_seq OWNER TO sifda;
 
 --
+-- Name: role_id_seq; Type: SEQUENCE; Schema: public; Owner: sifda
+--
+
+CREATE SEQUENCE role_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.role_id_seq OWNER TO sifda;
+
+--
 -- Name: sidpla_actividad; Type: TABLE; Schema: public; Owner: sifda; Tablespace: 
 --
 
 CREATE TABLE sidpla_actividad (
     id integer NOT NULL,
-    id_linea_estrategica integer,
     id_empleado integer,
+    id_linea_estrategica integer,
     descripcion text NOT NULL,
     codigo character varying(15) NOT NULL,
     activo boolean NOT NULL,
@@ -508,7 +501,7 @@ CREATE TABLE sidpla_actividad (
     descripcion_meta_anual character varying(50) NOT NULL,
     indicador text NOT NULL,
     medio_verificacion character varying(300) NOT NULL,
-    generado boolean
+    generado boolean NOT NULL
 );
 
 
@@ -573,7 +566,7 @@ CREATE TABLE sidpla_subactividad (
     meta_anual numeric(5,2) NOT NULL,
     descripcion_meta_anual character varying(50) NOT NULL,
     indicador text NOT NULL,
-    medio_verificacion character varying(300)
+    medio_verificacion character varying(300) DEFAULT NULL::character varying
 );
 
 
@@ -656,8 +649,8 @@ ALTER TABLE public.sifda_detalle_solicitud_servicio_id_seq OWNER TO sifda;
 
 CREATE TABLE sifda_equipo_trabajo (
     id integer NOT NULL,
-    id_orden_trabajo integer,
     id_empleado integer,
+    id_orden_trabajo integer,
     responsable_equipo boolean NOT NULL
 );
 
@@ -684,13 +677,13 @@ ALTER TABLE public.sifda_equipo_trabajo_id_seq OWNER TO sifda;
 
 CREATE TABLE sifda_informe_orden_trabajo (
     id integer NOT NULL,
+    id_dependencia_establecimiento integer,
     id_empleado integer,
     id_orden_trabajo integer,
     id_subactividad integer,
-    id_dependencia_establecimiento integer,
     id_etapa integer,
     detalle text NOT NULL,
-    fecha_realizacion timestamp without time zone NOT NULL,
+    fecha_realizacion timestamp(0) without time zone NOT NULL,
     fecha_registro timestamp(0) without time zone NOT NULL,
     terminado boolean NOT NULL
 );
@@ -718,15 +711,15 @@ ALTER TABLE public.sifda_informe_orden_trabajo_id_seq OWNER TO sifda;
 
 CREATE TABLE sifda_orden_trabajo (
     id integer NOT NULL,
-    id_solicitud_servicio integer,
-    id_estado integer,
-    id_etapa integer,
-    id_dependencia_establecimiento integer,
     id_prioridad integer,
+    id_estado integer,
+    id_dependencia_establecimiento integer,
+    id_solicitud_servicio integer,
+    id_etapa integer,
     descripcion text NOT NULL,
     codigo character varying(15) NOT NULL,
     fecha_creacion timestamp(0) without time zone NOT NULL,
-    fecha_finalizacion timestamp without time zone,
+    fecha_finalizacion timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
     observacion text
 );
 
@@ -784,6 +777,7 @@ CREATE TABLE sifda_reprogramacion_servicio (
     id integer NOT NULL,
     id_solicitud_servicio integer,
     fecha_reprogramacion date NOT NULL,
+    fecha_anterior date NOT NULL,
     justificacion text NOT NULL
 );
 
@@ -851,8 +845,8 @@ ALTER TABLE public.sifda_ruta OWNER TO sifda;
 
 CREATE TABLE sifda_ruta_ciclo_vida (
     id integer NOT NULL,
-    id_tipo_servicio integer,
     id_etapa integer,
+    id_tipo_servicio integer,
     descripcion text NOT NULL,
     referencia text,
     jerarquia integer NOT NULL,
@@ -897,14 +891,14 @@ ALTER TABLE public.sifda_ruta_id_seq OWNER TO sifda;
 
 CREATE TABLE sifda_solicitud_servicio (
     id integer NOT NULL,
-    id_tipo_servicio integer,
-    user_id integer,
-    id_dependencia_establecimiento integer,
     id_estado integer,
     id_medio_solicita integer,
+    id_dependencia_establecimiento integer,
+    user_id integer,
+    id_tipo_servicio integer,
     descripcion text NOT NULL,
     fecha_recepcion timestamp(0) without time zone NOT NULL,
-    fecha_requiere timestamp without time zone
+    fecha_requiere timestamp(0) without time zone DEFAULT NULL::timestamp without time zone
 );
 
 
@@ -944,8 +938,8 @@ ALTER TABLE public.sifda_tipo_recurso OWNER TO sifda;
 
 CREATE TABLE sifda_tipo_recurso_dependencia (
     id integer NOT NULL,
-    id_tipo_recurso integer,
     id_dependencia_establecimiento integer,
+    id_tipo_recurso integer,
     costo_unitario double precision NOT NULL
 );
 
@@ -987,10 +981,10 @@ ALTER TABLE public.sifda_tipo_recurso_id_seq OWNER TO sifda;
 CREATE TABLE sifda_tipo_servicio (
     id integer NOT NULL,
     id_actividad integer,
+    id_dependencia_establecimiento integer,
     nombre character varying(75) NOT NULL,
     descripcion text NOT NULL,
-    activo boolean NOT NULL,
-    id_dependencia_establecimiento integer
+    activo boolean NOT NULL
 );
 
 
@@ -1016,8 +1010,8 @@ ALTER TABLE public.sifda_tipo_servicio_id_seq OWNER TO sifda;
 
 CREATE TABLE sifda_tracking_estado (
     id integer NOT NULL,
-    id_orden_trabajo integer,
     id_estado integer,
+    id_orden_trabajo integer,
     id_etapa integer,
     fecha_inicio timestamp(0) without time zone NOT NULL,
     fecha_fin timestamp(0) without time zone DEFAULT NULL::timestamp without time zone,
@@ -1043,11 +1037,25 @@ CREATE SEQUENCE sifda_tracking_estado_id_seq
 ALTER TABLE public.sifda_tracking_estado_id_seq OWNER TO sifda;
 
 --
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: sifda
+--
+
+CREATE SEQUENCE user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_id_seq OWNER TO sifda;
+
+--
 -- Name: vwetapassolicitud; Type: VIEW; Schema: public; Owner: sifda
 --
 
 CREATE VIEW vwetapassolicitud AS
-    SELECT row_number() OVER () AS id, ss.id AS id_solicitud, ss.descripcion AS dsc_solicitud, ss.fecha_recepcion AS fchrecep_solicitud, ss.fecha_requiere AS fchreq_solicitud, ts.id AS id_tipo_servicio, ts.nombre AS nombre_tipo_servicio, ts.descripcion AS dsc_tipo_servicio, rcv.id AS id_ciclo_vida, rcv.jerarquia AS jerar_ciclo_vida, rcv.descripcion AS dsc_ciclo_vida, rcv.peso AS etapa_peso, rcv.ignorar_sig AS ignorar_sig_etapa, srcv.id AS id_subetapa, srcv.descripcion AS dsc_subetapa, srcv.peso AS subetapa_peso, srcv.ignorar_sig AS ignorar_sig_subetapa, ot.id AS id_orden, ot.descripcion AS dsc_orden, ot.fecha_creacion AS fchcrea_orden, ot.fecha_finalizacion AS fchfin_orden, COALESCE(cd.id, 0) AS id_estado, COALESCE(cd.descripcion, 'Sin Asignar'::character varying) AS dsc_estado, e.id AS id_empleado, (((e.nombre)::text || ' '::text) || (e.apellido)::text) AS nom_empleado FROM (((((((sifda_solicitud_servicio ss LEFT JOIN sifda_tipo_servicio ts ON ((ss.id_tipo_servicio = ts.id))) LEFT JOIN sifda_ruta_ciclo_vida rcv ON ((ts.id = rcv.id_tipo_servicio))) LEFT JOIN sifda_orden_trabajo ot ON (((ot.id_etapa = rcv.id) AND (ot.id_solicitud_servicio = ss.id)))) LEFT JOIN catalogo_detalle cd ON ((cd.id = ot.id_estado))) LEFT JOIN sifda_equipo_trabajo et ON (((et.id_orden_trabajo = ot.id) AND (et.responsable_equipo = true)))) LEFT JOIN ctl_empleado e ON ((et.id_empleado = e.id))) LEFT JOIN (SELECT subetapa.id, subetapa.id_etapa, subetapa.descripcion, subetapa.jerarquia, subetapa.peso, subetapa.ignorar_sig FROM sifda_ruta_ciclo_vida subetapa WHERE (subetapa.id_etapa IS NOT NULL) ORDER BY subetapa.jerarquia) srcv ON ((srcv.id_etapa = rcv.id))) WHERE (rcv.id_etapa IS NULL) ORDER BY rcv.jerarquia;
+    SELECT row_number() OVER (ORDER BY rcv.jerarquia, srcv.jerarquia) AS id, ss.id AS id_solicitud, ss.descripcion AS dsc_solicitud, ss.fecha_recepcion AS fchrecep_solicitud, ss.fecha_requiere AS fchreq_solicitud, ts.id AS id_tipo_servicio, ts.nombre AS nombre_tipo_servicio, ts.descripcion AS dsc_tipo_servicio, rcv.id AS id_ciclo_vida, rcv.jerarquia AS jerar_ciclo_vida, rcv.descripcion AS dsc_ciclo_vida, rcv.peso AS etapa_peso, rcv.ignorar_sig AS ignorar_sig_etapa, srcv.id AS id_subetapa, srcv.descripcion AS dsc_subetapa, srcv.peso AS subetapa_peso, srcv.jerarquia AS jerarquia_subetapa, srcv.ignorar_sig AS ignorar_sig_subetapa, ot.id AS id_orden, ot.descripcion AS dsc_orden, ot.fecha_creacion AS fchcrea_orden, ot.fecha_finalizacion AS fchfin_orden, COALESCE(cd.id, 0) AS id_estado, COALESCE(cd.descripcion, 'Sin Asignar'::character varying) AS dsc_estado, e.id AS id_empleado, (((e.nombre)::text || ' '::text) || (e.apellido)::text) AS nom_empleado, e.id_dependencia_establecimiento AS depen_estab FROM (((((((sifda_solicitud_servicio ss LEFT JOIN sifda_tipo_servicio ts ON ((ss.id_tipo_servicio = ts.id))) LEFT JOIN sifda_ruta_ciclo_vida rcv ON ((ts.id = rcv.id_tipo_servicio))) LEFT JOIN sifda_orden_trabajo ot ON (((ot.id_etapa = rcv.id) AND (ot.id_solicitud_servicio = ss.id)))) LEFT JOIN catalogo_detalle cd ON ((cd.id = ot.id_estado))) LEFT JOIN sifda_equipo_trabajo et ON (((et.id_orden_trabajo = ot.id) AND (et.responsable_equipo = true)))) LEFT JOIN ctl_empleado e ON ((et.id_empleado = e.id))) LEFT JOIN (SELECT subetapa.id, subetapa.id_etapa, subetapa.descripcion, subetapa.jerarquia, subetapa.peso, subetapa.ignorar_sig FROM sifda_ruta_ciclo_vida subetapa WHERE (subetapa.id_etapa IS NOT NULL) ORDER BY subetapa.jerarquia) srcv ON ((srcv.id_etapa = rcv.id))) WHERE (rcv.id_etapa IS NULL) ORDER BY rcv.jerarquia, srcv.jerarquia;
 
 
 ALTER TABLE public.vwetapassolicitud OWNER TO sifda;
@@ -1056,7 +1064,7 @@ ALTER TABLE public.vwetapassolicitud OWNER TO sifda;
 -- Data for Name: bitacora; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY bitacora (id, user_id, id_evento, fecha_evento, observacion) FROM stdin;
+COPY bitacora (id, id_evento, user_id, fecha_evento, observacion) FROM stdin;
 \.
 
 
@@ -1109,7 +1117,7 @@ SELECT pg_catalog.setval('catalogo_detalle_id_seq', 1, false);
 -- Name: catalogo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('catalogo_id_seq', 1, true);
+SELECT pg_catalog.setval('catalogo_id_seq', 1, false);
 
 
 --
@@ -1241,1109 +1249,1109 @@ COPY ctl_dependencia (id, id_tipo_dependencia, nombre) FROM stdin;
 -- Data for Name: ctl_dependencia_establecimiento; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY ctl_dependencia_establecimiento (id, id_establecimiento, id_dependencia, id_dependencia_padre, abreviatura, habilitado) FROM stdin;
-2	2	1	\N	\N	t
-3	2	3	\N	\N	t
-5	2	5	\N	\N	t
-6	2	7	\N	\N	t
-7	2	8	\N	\N	t
-8	2	9	\N	\N	t
-9	2	10	\N	\N	t
-10	2	11	\N	\N	t
-11	2	12	\N	\N	t
-12	2	13	\N	\N	t
-13	2	14	\N	\N	t
-14	2	15	\N	\N	t
-15	2	16	\N	\N	t
-16	2	17	\N	\N	t
-17	2	18	\N	\N	t
-18	2	19	\N	\N	t
-19	2	20	\N	\N	t
-20	2	21	\N	\N	t
-21	2	23	\N	\N	t
-22	2	24	\N	\N	t
-23	2	25	\N	\N	t
-24	2	26	\N	\N	t
-25	2	27	\N	\N	t
-26	2	28	\N	\N	t
-27	2	31	\N	\N	t
-28	2	32	\N	\N	t
-29	2	33	\N	\N	t
-30	2	34	\N	\N	t
-31	2	35	\N	\N	t
-32	2	36	\N	\N	t
-33	2	37	\N	\N	t
-34	2	38	\N	\N	t
-35	2	39	\N	\N	t
-36	2	40	\N	\N	t
-37	2	41	\N	\N	t
-38	2	42	\N	\N	t
-39	2	43	\N	\N	t
-40	2	44	\N	\N	t
-41	2	45	\N	\N	t
-42	2	46	\N	\N	t
-43	2	47	\N	\N	t
-44	2	48	\N	\N	t
-45	2	49	\N	\N	t
-46	2	50	\N	\N	t
-47	2	51	\N	\N	t
-48	2	52	\N	\N	t
-49	2	53	\N	\N	t
-50	2	54	\N	\N	t
-51	2	55	\N	\N	t
-52	2	56	\N	\N	t
-53	2	57	\N	\N	t
-54	2	58	\N	\N	t
-55	2	59	\N	\N	t
-56	2	60	\N	\N	t
-57	2	61	\N	\N	t
-58	2	62	\N	\N	t
-59	2	70	\N	\N	t
-60	2	71	\N	\N	t
-61	2	72	\N	\N	t
-62	2	73	\N	\N	t
-63	2	74	\N	\N	t
-64	2	80	\N	\N	t
-65	2	81	\N	\N	t
-66	2	82	\N	\N	t
-67	2	83	\N	\N	t
-68	2	84	\N	\N	t
-69	2	85	\N	\N	t
-70	2	86	\N	\N	t
-71	2	87	\N	\N	t
-72	2	88	\N	\N	t
-73	2	89	\N	\N	t
-74	2	90	\N	\N	t
-75	2	91	\N	\N	t
-76	2	92	\N	\N	t
-77	2	93	\N	\N	t
-78	2	94	\N	\N	t
-79	2	95	\N	\N	t
-80	2	96	\N	\N	t
-81	2	97	\N	\N	t
-82	2	100	\N	\N	t
-83	2	101	\N	\N	t
-84	3	5	\N	\N	t
-85	3	10	\N	\N	t
-86	3	65	\N	\N	t
-87	3	76	\N	\N	t
-88	4	5	\N	\N	t
-89	4	10	\N	\N	t
-90	4	65	\N	\N	t
-91	4	76	\N	\N	t
-92	5	5	\N	\N	t
-93	5	10	\N	\N	t
-94	5	65	\N	\N	t
-95	5	76	\N	\N	t
-96	6	5	\N	\N	t
-97	6	10	\N	\N	t
-98	6	65	\N	\N	t
-99	6	76	\N	\N	t
-100	7	5	\N	\N	t
-101	7	10	\N	\N	t
-102	7	65	\N	\N	t
-103	7	76	\N	\N	t
-104	9	63	\N	\N	t
-105	10	63	\N	\N	t
-106	11	63	\N	\N	t
-107	12	63	\N	\N	t
-108	13	63	\N	\N	t
-109	14	63	\N	\N	t
-110	15	63	\N	\N	t
-111	16	63	\N	\N	t
-112	17	63	\N	\N	t
-113	18	63	\N	\N	t
-114	19	63	\N	\N	t
-115	20	63	\N	\N	t
-116	21	63	\N	\N	t
-117	22	63	\N	\N	t
-118	23	63	\N	\N	t
-119	24	63	\N	\N	t
-120	25	63	\N	\N	t
-121	26	63	\N	\N	t
-122	27	63	\N	\N	t
-123	28	63	\N	\N	t
-124	29	63	\N	\N	t
-125	30	63	\N	\N	t
-126	31	63	\N	\N	t
-127	32	63	\N	\N	t
-128	33	63	\N	\N	t
-129	34	63	\N	\N	t
-130	35	63	\N	\N	t
-131	36	3	\N	\N	t
-132	36	4	\N	\N	t
-133	36	5	\N	\N	t
-134	36	6	\N	\N	t
-135	36	10	\N	\N	t
-136	36	18	\N	\N	t
-137	36	23	\N	\N	t
-138	36	63	\N	\N	t
-139	36	75	\N	\N	t
-140	36	76	\N	\N	t
-141	36	84	\N	\N	t
-142	36	98	\N	\N	t
-143	36	99	\N	\N	t
-144	37	63	\N	\N	t
-145	38	63	\N	\N	t
-146	39	3	\N	\N	t
-147	39	4	\N	\N	t
-148	39	6	\N	\N	t
-149	39	10	\N	\N	t
-150	39	18	\N	\N	t
-151	39	23	\N	\N	t
-152	39	63	\N	\N	t
-153	39	75	\N	\N	t
-154	39	76	\N	\N	t
-155	39	84	\N	\N	t
-156	39	98	\N	\N	t
-157	39	99	\N	\N	t
-158	40	63	\N	\N	t
-159	41	63	\N	\N	t
-160	42	3	\N	\N	t
-161	42	4	\N	\N	t
-162	42	5	\N	\N	t
-163	42	6	\N	\N	t
-164	42	10	\N	\N	t
-165	42	18	\N	\N	t
-166	42	23	\N	\N	t
-167	42	63	\N	\N	t
-168	42	75	\N	\N	t
-169	42	76	\N	\N	t
-170	42	84	\N	\N	t
-171	42	98	\N	\N	t
-172	42	99	\N	\N	t
-173	43	63	\N	\N	t
-174	44	63	\N	\N	t
-175	45	63	\N	\N	t
-176	46	63	\N	\N	t
-177	47	63	\N	\N	t
-178	48	63	\N	\N	t
-179	49	63	\N	\N	t
-180	50	63	\N	\N	t
-181	51	63	\N	\N	t
-182	52	63	\N	\N	t
-183	53	63	\N	\N	t
-184	54	63	\N	\N	t
-185	55	63	\N	\N	t
-186	56	63	\N	\N	t
-187	57	63	\N	\N	t
-188	58	63	\N	\N	t
-189	59	63	\N	\N	t
-190	60	63	\N	\N	t
-191	61	63	\N	\N	t
-192	62	63	\N	\N	t
-193	63	63	\N	\N	t
-194	64	63	\N	\N	t
-195	65	63	\N	\N	t
-196	66	63	\N	\N	t
-197	67	63	\N	\N	t
-198	68	63	\N	\N	t
-199	69	63	\N	\N	t
-200	70	63	\N	\N	t
-201	71	63	\N	\N	t
-202	72	63	\N	\N	t
-203	73	63	\N	\N	t
-204	74	63	\N	\N	t
-205	75	63	\N	\N	t
-206	76	63	\N	\N	t
-207	77	63	\N	\N	t
-208	78	63	\N	\N	t
-209	79	63	\N	\N	t
-210	80	63	\N	\N	t
-211	81	63	\N	\N	t
-212	82	63	\N	\N	t
-213	83	63	\N	\N	t
-214	84	63	\N	\N	t
-215	85	63	\N	\N	t
-216	86	63	\N	\N	t
-217	87	63	\N	\N	t
-218	88	63	\N	\N	t
-219	89	63	\N	\N	t
-220	90	63	\N	\N	t
-221	91	63	\N	\N	t
-222	92	63	\N	\N	t
-223	93	63	\N	\N	t
-224	94	63	\N	\N	t
-225	95	63	\N	\N	t
-226	96	63	\N	\N	t
-227	97	63	\N	\N	t
-228	98	63	\N	\N	t
-229	100	63	\N	\N	t
-230	100	63	\N	\N	t
-231	101	63	\N	\N	t
-232	102	63	\N	\N	t
-233	103	63	\N	\N	t
-234	104	63	\N	\N	t
-235	105	63	\N	\N	t
-236	106	63	\N	\N	t
-237	107	63	\N	\N	t
-238	108	3	\N	\N	t
-239	108	4	\N	\N	t
-240	108	5	\N	\N	t
-241	108	6	\N	\N	t
-242	108	10	\N	\N	t
-243	108	18	\N	\N	t
-244	108	23	\N	\N	t
-245	108	63	\N	\N	t
-246	108	75	\N	\N	t
-247	108	76	\N	\N	t
-248	108	84	\N	\N	t
-249	108	98	\N	\N	t
-250	108	99	\N	\N	t
-251	109	63	\N	\N	t
-252	110	63	\N	\N	t
-253	111	63	\N	\N	t
-254	112	3	\N	\N	t
-255	112	4	\N	\N	t
-256	112	5	\N	\N	t
-257	112	6	\N	\N	t
-258	112	10	\N	\N	t
-259	112	18	\N	\N	t
-260	112	23	\N	\N	t
-261	112	63	\N	\N	t
-262	112	75	\N	\N	t
-263	112	76	\N	\N	t
-264	112	84	\N	\N	t
-265	112	98	\N	\N	t
-266	112	99	\N	\N	t
-267	113	63	\N	\N	t
-268	114	63	\N	\N	t
-269	115	63	\N	\N	t
-270	116	63	\N	\N	t
-271	117	63	\N	\N	t
-272	118	63	\N	\N	t
-273	119	63	\N	\N	t
-274	120	63	\N	\N	t
-275	121	63	\N	\N	t
-276	122	63	\N	\N	t
-277	123	63	\N	\N	t
-278	124	63	\N	\N	t
-279	125	63	\N	\N	t
-280	126	63	\N	\N	t
-281	127	63	\N	\N	t
-282	128	63	\N	\N	t
-283	129	63	\N	\N	t
-284	130	63	\N	\N	t
-285	131	63	\N	\N	t
-286	132	63	\N	\N	t
-287	133	63	\N	\N	t
-288	134	63	\N	\N	t
-289	135	63	\N	\N	t
-290	136	63	\N	\N	t
-291	137	63	\N	\N	t
-292	138	63	\N	\N	t
-293	139	63	\N	\N	t
-294	140	63	\N	\N	t
-295	141	63	\N	\N	t
-296	142	63	\N	\N	t
-297	143	63	\N	\N	t
-298	144	63	\N	\N	t
-299	145	63	\N	\N	t
-300	146	63	\N	\N	t
-301	147	63	\N	\N	t
-302	148	63	\N	\N	t
-303	149	63	\N	\N	t
-304	150	63	\N	\N	t
-305	151	63	\N	\N	t
-306	152	63	\N	\N	t
-307	153	63	\N	\N	t
-308	154	63	\N	\N	t
-309	155	63	\N	\N	t
-310	156	63	\N	\N	t
-311	157	63	\N	\N	t
-312	158	63	\N	\N	t
-313	159	63	\N	\N	t
-314	160	63	\N	\N	t
-315	161	63	\N	\N	t
-316	162	63	\N	\N	t
-317	163	63	\N	\N	t
-318	164	63	\N	\N	t
-319	165	3	\N	\N	t
-320	165	4	\N	\N	t
-321	165	5	\N	\N	t
-322	165	6	\N	\N	t
-323	165	10	\N	\N	t
-324	165	18	\N	\N	t
-325	165	23	\N	\N	t
-326	165	63	\N	\N	t
-327	165	75	\N	\N	t
-328	165	76	\N	\N	t
-329	165	84	\N	\N	t
-330	165	98	\N	\N	t
-331	165	99	\N	\N	t
-332	166	63	\N	\N	t
-333	167	63	\N	\N	t
-334	168	63	\N	\N	t
-335	169	63	\N	\N	t
-336	170	63	\N	\N	t
-337	171	63	\N	\N	t
-338	172	63	\N	\N	t
-339	173	63	\N	\N	t
-340	174	63	\N	\N	t
-341	175	63	\N	\N	t
-342	176	63	\N	\N	t
-343	177	63	\N	\N	t
-344	178	63	\N	\N	t
-345	179	63	\N	\N	t
-346	180	63	\N	\N	t
-347	181	63	\N	\N	t
-348	182	63	\N	\N	t
-349	183	63	\N	\N	t
-350	184	63	\N	\N	t
-351	185	63	\N	\N	t
-352	186	63	\N	\N	t
-353	187	63	\N	\N	t
-354	188	63	\N	\N	t
-355	189	63	\N	\N	t
-356	190	63	\N	\N	t
-357	191	63	\N	\N	t
-358	192	63	\N	\N	t
-359	193	63	\N	\N	t
-360	194	63	\N	\N	t
-361	195	63	\N	\N	t
-362	196	63	\N	\N	t
-363	197	63	\N	\N	t
-364	198	63	\N	\N	t
-365	199	63	\N	\N	t
-366	200	63	\N	\N	t
-367	201	63	\N	\N	t
-368	202	63	\N	\N	t
-369	203	63	\N	\N	t
-370	204	3	\N	\N	t
-371	204	4	\N	\N	t
-372	204	5	\N	\N	t
-373	204	6	\N	\N	t
-374	204	10	\N	\N	t
-375	204	18	\N	\N	t
-376	204	23	\N	\N	t
-377	204	63	\N	\N	t
-378	204	75	\N	\N	t
-379	204	76	\N	\N	t
-380	204	84	\N	\N	t
-381	204	98	\N	\N	t
-382	204	99	\N	\N	t
-383	205	63	\N	\N	t
-384	206	63	\N	\N	t
-385	207	3	\N	\N	t
-386	207	4	\N	\N	t
-387	207	5	\N	\N	t
-388	207	6	\N	\N	t
-389	207	10	\N	\N	t
-390	207	18	\N	\N	t
-391	207	23	\N	\N	t
-392	207	63	\N	\N	t
-393	207	75	\N	\N	t
-394	207	76	\N	\N	t
-395	207	84	\N	\N	t
-396	207	98	\N	\N	t
-397	207	99	\N	\N	t
-398	208	63	\N	\N	t
-399	209	63	\N	\N	t
-400	210	63	\N	\N	t
-401	211	63	\N	\N	t
-402	212	63	\N	\N	t
-403	213	63	\N	\N	t
-404	214	63	\N	\N	t
-405	215	63	\N	\N	t
-406	216	63	\N	\N	t
-407	217	63	\N	\N	t
-408	218	63	\N	\N	t
-409	219	63	\N	\N	t
-410	220	63	\N	\N	t
-411	221	63	\N	\N	t
-412	222	63	\N	\N	t
-413	223	63	\N	\N	t
-414	224	63	\N	\N	t
-415	224	63	\N	\N	t
-416	226	63	\N	\N	t
-417	227	63	\N	\N	t
-418	228	3	\N	\N	t
-419	228	4	\N	\N	t
-420	228	5	\N	\N	t
-421	228	6	\N	\N	t
-422	228	10	\N	\N	t
-423	228	18	\N	\N	t
-424	228	23	\N	\N	t
-425	228	63	\N	\N	t
-426	228	75	\N	\N	t
-427	228	76	\N	\N	t
-428	228	84	\N	\N	t
-429	228	98	\N	\N	t
-430	228	99	\N	\N	t
-431	229	63	\N	\N	t
-432	230	63	\N	\N	t
-433	231	63	\N	\N	t
-434	232	63	\N	\N	t
-435	233	63	\N	\N	t
-436	234	63	\N	\N	t
-1102	235	63	\N	\N	t
-437	236	63	\N	\N	t
-438	237	63	\N	\N	t
-439	238	63	\N	\N	t
-440	239	63	\N	\N	t
-441	240	63	\N	\N	t
-442	241	63	\N	\N	t
-443	242	63	\N	\N	t
-444	243	63	\N	\N	t
-445	244	63	\N	\N	t
-446	245	63	\N	\N	t
-447	246	63	\N	\N	t
-448	247	63	\N	\N	t
-449	247	84	\N	\N	t
-450	248	63	\N	\N	t
-451	249	63	\N	\N	t
-452	250	63	\N	\N	t
-453	251	63	\N	\N	t
-454	252	63	\N	\N	t
-455	253	63	\N	\N	t
-456	254	63	\N	\N	t
-457	255	63	\N	\N	t
-458	256	63	\N	\N	t
-459	257	63	\N	\N	t
-460	258	63	\N	\N	t
-461	259	63	\N	\N	t
-462	260	63	\N	\N	t
-463	261	63	\N	\N	t
-464	262	63	\N	\N	t
-465	263	63	\N	\N	t
-466	264	63	\N	\N	t
-467	265	63	\N	\N	t
-468	266	63	\N	\N	t
-469	267	63	\N	\N	t
-470	268	63	\N	\N	t
-471	269	63	\N	\N	t
-472	270	63	\N	\N	t
-473	271	63	\N	\N	t
-474	272	63	\N	\N	t
-475	273	63	\N	\N	t
-476	274	3	\N	\N	t
-477	274	4	\N	\N	t
-478	274	5	\N	\N	t
-479	274	6	\N	\N	t
-480	274	10	\N	\N	t
-481	274	18	\N	\N	t
-482	274	23	\N	\N	t
-483	274	63	\N	\N	t
-484	274	75	\N	\N	t
-485	274	76	\N	\N	t
-486	274	98	\N	\N	t
-487	274	99	\N	\N	t
-488	275	63	\N	\N	t
-489	276	63	\N	\N	t
-490	277	3	\N	\N	t
-491	277	4	\N	\N	t
-492	277	5	\N	\N	t
-493	277	6	\N	\N	t
-494	277	10	\N	\N	t
-495	277	18	\N	\N	t
-496	277	23	\N	\N	t
-497	277	63	\N	\N	t
-498	277	75	\N	\N	t
-499	277	76	\N	\N	t
-500	277	84	\N	\N	t
-501	277	98	\N	\N	t
-502	277	99	\N	\N	t
-503	278	63	\N	\N	t
-504	279	63	\N	\N	t
-505	280	63	\N	\N	t
-506	281	63	\N	\N	t
-507	282	63	\N	\N	t
-508	283	63	\N	\N	t
-509	284	63	\N	\N	t
-510	285	63	\N	\N	t
-511	286	63	\N	\N	t
-512	287	63	\N	\N	t
-513	288	63	\N	\N	t
-514	289	63	\N	\N	t
-515	290	63	\N	\N	t
-516	291	63	\N	\N	t
-517	292	63	\N	\N	t
-518	293	63	\N	\N	t
-519	294	63	\N	\N	t
-520	295	63	\N	\N	t
-521	296	63	\N	\N	t
-522	297	63	\N	\N	t
-523	298	63	\N	\N	t
-524	299	63	\N	\N	t
-525	300	63	\N	\N	t
-526	301	63	\N	\N	t
-527	302	63	\N	\N	t
-528	303	63	\N	\N	t
-529	304	63	\N	\N	t
-530	305	63	\N	\N	t
-531	306	63	\N	\N	t
-532	307	63	\N	\N	t
-533	308	63	\N	\N	t
-534	309	63	\N	\N	t
-535	310	3	\N	\N	t
-536	310	4	\N	\N	t
-537	310	5	\N	\N	t
-538	310	6	\N	\N	t
-539	310	10	\N	\N	t
-540	310	18	\N	\N	t
-541	310	23	\N	\N	t
-542	310	63	\N	\N	t
-543	310	75	\N	\N	t
-544	310	76	\N	\N	t
-545	310	84	\N	\N	t
-546	310	98	\N	\N	t
-547	310	99	\N	\N	t
-548	311	63	\N	\N	t
-549	312	63	\N	\N	t
-550	313	63	\N	\N	t
-551	314	63	\N	\N	t
-552	315	63	\N	\N	t
-553	316	63	\N	\N	t
-554	317	63	\N	\N	t
-555	318	63	\N	\N	t
-556	319	63	\N	\N	t
-557	320	63	\N	\N	t
-558	321	63	\N	\N	t
-559	322	63	\N	\N	t
-560	323	63	\N	\N	t
-561	324	63	\N	\N	t
-562	325	63	\N	\N	t
-563	326	63	\N	\N	t
-564	327	63	\N	\N	t
-565	328	63	\N	\N	t
-566	329	63	\N	\N	t
-567	330	63	\N	\N	t
-568	331	63	\N	\N	t
-569	332	3	\N	\N	t
-570	332	4	\N	\N	t
-571	332	5	\N	\N	t
-572	332	6	\N	\N	t
-573	332	10	\N	\N	t
-574	332	18	\N	\N	t
-575	332	23	\N	\N	t
-576	332	63	\N	\N	t
-577	332	75	\N	\N	t
-578	332	76	\N	\N	t
-579	332	84	\N	\N	t
-580	332	98	\N	\N	t
-581	332	99	\N	\N	t
-582	333	63	\N	\N	t
-583	334	63	\N	\N	t
-584	335	63	\N	\N	t
-585	336	3	\N	\N	t
-586	336	4	\N	\N	t
-587	336	5	\N	\N	t
-588	336	6	\N	\N	t
-589	336	10	\N	\N	t
-590	336	18	\N	\N	t
-591	336	23	\N	\N	t
-592	336	63	\N	\N	t
-593	336	75	\N	\N	t
-594	336	76	\N	\N	t
-595	336	84	\N	\N	t
-596	336	98	\N	\N	t
-597	336	99	\N	\N	t
-598	337	63	\N	\N	t
-599	338	63	\N	\N	t
-600	339	63	\N	\N	t
-601	340	3	\N	\N	t
-602	340	4	\N	\N	t
-603	340	5	\N	\N	t
-604	340	6	\N	\N	t
-605	340	10	\N	\N	t
-606	340	18	\N	\N	t
-607	340	23	\N	\N	t
-608	340	63	\N	\N	t
-609	340	75	\N	\N	t
-610	340	76	\N	\N	t
-611	340	84	\N	\N	t
-612	340	98	\N	\N	t
-613	340	99	\N	\N	t
-614	341	63	\N	\N	t
-615	342	63	\N	\N	t
-616	343	63	\N	\N	t
-617	344	63	\N	\N	t
-618	345	63	\N	\N	t
-619	346	63	\N	\N	t
-620	347	63	\N	\N	t
-621	348	63	\N	\N	t
-622	349	63	\N	\N	t
-623	350	63	\N	\N	t
-624	351	63	\N	\N	t
-625	352	63	\N	\N	t
-626	353	63	\N	\N	t
-627	354	63	\N	\N	t
-628	355	63	\N	\N	t
-629	356	63	\N	\N	t
-630	357	63	\N	\N	t
-631	358	63	\N	\N	t
-632	359	63	\N	\N	t
-633	360	63	\N	\N	t
-634	361	63	\N	\N	t
-635	362	63	\N	\N	t
-636	363	63	\N	\N	t
-637	364	63	\N	\N	t
-638	365	63	\N	\N	t
-639	366	63	\N	\N	t
-640	367	63	\N	\N	t
-641	368	63	\N	\N	t
-642	369	63	\N	\N	t
-643	370	63	\N	\N	t
-644	371	63	\N	\N	t
-645	372	63	\N	\N	t
-646	373	63	\N	\N	t
-647	374	63	\N	\N	t
-648	375	63	\N	\N	t
-649	376	63	\N	\N	t
-650	377	63	\N	\N	t
-651	378	63	\N	\N	t
-652	379	63	\N	\N	t
-653	380	3	\N	\N	t
-654	380	4	\N	\N	t
-655	380	5	\N	\N	t
-656	380	6	\N	\N	t
-657	380	10	\N	\N	t
-658	380	18	\N	\N	t
-659	380	23	\N	\N	t
-660	380	63	\N	\N	t
-661	380	75	\N	\N	t
-662	380	76	\N	\N	t
-663	380	84	\N	\N	t
-664	380	98	\N	\N	t
-665	380	99	\N	\N	t
-666	381	63	\N	\N	t
-667	382	63	\N	\N	t
-668	383	3	\N	\N	t
-669	383	4	\N	\N	t
-670	383	5	\N	\N	t
-671	383	6	\N	\N	t
-672	383	10	\N	\N	t
-673	383	18	\N	\N	t
-674	383	23	\N	\N	t
-675	383	63	\N	\N	t
-676	383	75	\N	\N	t
-677	383	76	\N	\N	t
-678	383	84	\N	\N	t
-679	383	98	\N	\N	t
-680	383	99	\N	\N	t
-681	384	63	\N	\N	t
-682	385	63	\N	\N	t
-683	386	3	\N	\N	t
-684	386	4	\N	\N	t
-685	386	5	\N	\N	t
-686	386	6	\N	\N	t
-687	386	10	\N	\N	t
-688	386	18	\N	\N	t
-689	386	23	\N	\N	t
-690	386	63	\N	\N	t
-691	386	75	\N	\N	t
-692	386	76	\N	\N	t
-693	386	84	\N	\N	t
-694	386	98	\N	\N	t
-695	386	99	\N	\N	t
-696	387	63	\N	\N	t
-697	388	63	\N	\N	t
-698	389	63	\N	\N	t
-699	390	63	\N	\N	t
-700	391	63	\N	\N	t
-701	392	63	\N	\N	t
-702	393	63	\N	\N	t
-703	394	63	\N	\N	t
-704	395	63	\N	\N	t
-705	396	63	\N	\N	t
-706	397	63	\N	\N	t
-707	398	63	\N	\N	t
-708	399	63	\N	\N	t
-709	400	63	\N	\N	t
-710	401	63	\N	\N	t
-711	402	63	\N	\N	t
-712	403	63	\N	\N	t
-713	404	63	\N	\N	t
-714	405	63	\N	\N	t
-715	406	63	\N	\N	t
-716	407	63	\N	\N	t
-717	408	63	\N	\N	t
-718	409	63	\N	\N	t
-719	410	63	\N	\N	t
-720	411	63	\N	\N	t
-721	412	63	\N	\N	t
-722	413	63	\N	\N	t
-723	414	63	\N	\N	t
-724	415	63	\N	\N	t
-725	416	63	\N	\N	t
-726	417	63	\N	\N	t
-727	418	63	\N	\N	t
-728	419	63	\N	\N	t
-729	420	63	\N	\N	t
-730	421	63	\N	\N	t
-731	422	63	\N	\N	t
-732	423	63	\N	\N	t
-733	424	63	\N	\N	t
-734	425	63	\N	\N	t
-735	426	63	\N	\N	t
-736	427	63	\N	\N	t
-737	428	63	\N	\N	t
-738	429	63	\N	\N	t
-739	430	63	\N	\N	t
-740	431	63	\N	\N	t
-741	432	63	\N	\N	t
-742	433	63	\N	\N	t
-743	434	3	\N	\N	t
-744	434	4	\N	\N	t
-745	434	5	\N	\N	t
-746	434	6	\N	\N	t
-747	434	10	\N	\N	t
-748	434	18	\N	\N	t
-749	434	23	\N	\N	t
-750	434	63	\N	\N	t
-751	434	75	\N	\N	t
-752	434	76	\N	\N	t
-753	434	84	\N	\N	t
-754	434	98	\N	\N	t
-755	434	99	\N	\N	t
-756	435	63	\N	\N	t
-757	436	63	\N	\N	t
-758	437	63	\N	\N	t
-759	438	63	\N	\N	t
-760	439	63	\N	\N	t
-761	440	63	\N	\N	t
-762	441	63	\N	\N	t
-763	442	63	\N	\N	t
-764	443	63	\N	\N	t
-765	444	63	\N	\N	t
-766	445	63	\N	\N	t
-767	446	63	\N	\N	t
-768	447	63	\N	\N	t
-769	448	63	\N	\N	t
-770	449	63	\N	\N	t
-771	450	63	\N	\N	t
-772	451	63	\N	\N	t
-773	452	63	\N	\N	t
-774	453	63	\N	\N	t
-775	454	63	\N	\N	t
-776	455	63	\N	\N	t
-777	456	63	\N	\N	t
-778	457	63	\N	\N	t
-779	458	63	\N	\N	t
-780	459	63	\N	\N	t
-781	460	63	\N	\N	t
-782	461	63	\N	\N	t
-783	462	63	\N	\N	t
-784	463	63	\N	\N	t
-785	464	63	\N	\N	t
-786	465	63	\N	\N	t
-787	466	63	\N	\N	t
-788	467	3	\N	\N	t
-789	467	4	\N	\N	t
-790	467	5	\N	\N	t
-791	467	6	\N	\N	t
-792	467	10	\N	\N	t
-793	467	18	\N	\N	t
-794	467	23	\N	\N	t
-795	467	63	\N	\N	t
-796	467	75	\N	\N	t
-797	467	76	\N	\N	t
-798	467	84	\N	\N	t
-799	467	98	\N	\N	t
-800	467	99	\N	\N	t
-801	468	63	\N	\N	t
-802	469	63	\N	\N	t
-803	470	63	\N	\N	t
-804	471	3	\N	\N	t
-805	471	4	\N	\N	t
-806	471	5	\N	\N	t
-807	471	6	\N	\N	t
-808	471	10	\N	\N	t
-809	471	18	\N	\N	t
-810	471	23	\N	\N	t
-811	471	63	\N	\N	t
-812	471	75	\N	\N	t
-813	471	76	\N	\N	t
-814	471	84	\N	\N	t
-815	471	98	\N	\N	t
-816	471	99	\N	\N	t
-817	472	63	\N	\N	t
-818	473	63	\N	\N	t
-819	474	63	\N	\N	t
-820	475	63	\N	\N	t
-821	476	63	\N	\N	t
-822	477	63	\N	\N	t
-823	478	63	\N	\N	t
-824	479	63	\N	\N	t
-825	480	63	\N	\N	t
-826	481	63	\N	\N	t
-827	482	63	\N	\N	t
-828	483	63	\N	\N	t
-829	484	63	\N	\N	t
-830	485	63	\N	\N	t
-831	486	63	\N	\N	t
-832	487	63	\N	\N	t
-833	488	63	\N	\N	t
-834	489	63	\N	\N	t
-835	490	63	\N	\N	t
-836	491	63	\N	\N	t
-837	492	63	\N	\N	t
-838	493	63	\N	\N	t
-839	494	63	\N	\N	t
-840	495	63	\N	\N	t
-841	496	63	\N	\N	t
-842	497	63	\N	\N	t
-843	498	63	\N	\N	t
-844	499	63	\N	\N	t
-845	500	63	\N	\N	t
-846	501	63	\N	\N	t
-847	502	63	\N	\N	t
-848	503	63	\N	\N	t
-849	504	63	\N	\N	t
-850	505	63	\N	\N	t
-851	506	63	\N	\N	t
-852	507	63	\N	\N	t
-853	508	63	\N	\N	t
-854	509	63	\N	\N	t
-855	510	63	\N	\N	t
-856	511	63	\N	\N	t
-857	512	3	\N	\N	t
-858	512	4	\N	\N	t
-859	512	5	\N	\N	t
-860	512	6	\N	\N	t
-861	512	10	\N	\N	t
-862	512	18	\N	\N	t
-863	512	23	\N	\N	t
-864	512	63	\N	\N	t
-865	512	75	\N	\N	t
-866	512	76	\N	\N	t
-867	512	84	\N	\N	t
-868	512	98	\N	\N	t
-869	512	99	\N	\N	t
-870	513	63	\N	\N	t
-871	514	63	\N	\N	t
-872	515	63	\N	\N	t
-873	516	63	\N	\N	t
-874	517	63	\N	\N	t
-875	518	3	\N	\N	t
-876	518	4	\N	\N	t
-877	518	5	\N	\N	t
-878	518	6	\N	\N	t
-879	518	10	\N	\N	t
-880	518	18	\N	\N	t
-881	518	23	\N	\N	t
-882	518	63	\N	\N	t
-883	518	75	\N	\N	t
-884	518	76	\N	\N	t
-885	518	84	\N	\N	t
-886	518	98	\N	\N	t
-887	518	99	\N	\N	t
-888	519	63	\N	\N	t
-889	520	63	\N	\N	t
-890	521	63	\N	\N	t
-891	522	63	\N	\N	t
-892	523	3	\N	\N	t
-893	523	4	\N	\N	t
-894	523	6	\N	\N	t
-895	523	10	\N	\N	t
-896	523	18	\N	\N	t
-897	523	23	\N	\N	t
-898	523	63	\N	\N	t
-899	523	75	\N	\N	t
-900	523	76	\N	\N	t
-901	523	84	\N	\N	t
-902	523	98	\N	\N	t
-903	523	99	\N	\N	t
-904	524	63	\N	\N	t
-905	525	63	\N	\N	t
-906	526	63	\N	\N	t
-907	527	63	\N	\N	t
-908	528	3	\N	\N	t
-909	528	4	\N	\N	t
-910	528	5	\N	\N	t
-911	528	6	\N	\N	t
-912	528	10	\N	\N	t
-913	528	18	\N	\N	t
-914	528	23	\N	\N	t
-915	528	63	\N	\N	t
-916	528	75	\N	\N	t
-917	528	76	\N	\N	t
-918	528	84	\N	\N	t
-919	528	98	\N	\N	t
-920	528	99	\N	\N	t
-921	529	63	\N	\N	t
-922	530	63	\N	\N	t
-923	531	63	\N	\N	t
-924	532	63	\N	\N	t
-925	533	3	\N	\N	t
-926	533	4	\N	\N	t
-927	533	5	\N	\N	t
-928	533	6	\N	\N	t
-929	533	10	\N	\N	t
-930	533	18	\N	\N	t
-931	533	23	\N	\N	t
-932	533	63	\N	\N	t
-933	533	75	\N	\N	t
-934	533	76	\N	\N	t
-935	533	84	\N	\N	t
-936	533	98	\N	\N	t
-937	533	99	\N	\N	t
-938	534	63	\N	\N	t
-939	535	63	\N	\N	t
-940	536	3	\N	\N	t
-941	536	4	\N	\N	t
-942	536	5	\N	\N	t
-943	536	6	\N	\N	t
-944	536	10	\N	\N	t
-945	536	18	\N	\N	t
-946	536	23	\N	\N	t
-947	536	63	\N	\N	t
-948	536	75	\N	\N	t
-949	536	76	\N	\N	t
-950	536	84	\N	\N	t
-951	536	98	\N	\N	t
-952	536	99	\N	\N	t
-953	537	63	\N	\N	t
-954	538	63	\N	\N	t
-955	539	3	\N	\N	t
-956	539	4	\N	\N	t
-957	539	5	\N	\N	t
-958	539	6	\N	\N	t
-959	539	10	\N	\N	t
-960	539	18	\N	\N	t
-961	539	23	\N	\N	t
-962	539	55	\N	\N	t
-963	539	63	\N	\N	t
-964	539	75	\N	\N	t
-965	539	76	\N	\N	t
-966	539	84	\N	\N	t
-967	539	98	\N	\N	t
-968	539	99	\N	\N	t
-969	540	63	\N	\N	t
-970	541	63	\N	\N	t
-971	542	63	\N	\N	t
-972	543	63	\N	\N	t
-973	544	63	\N	\N	t
-974	545	63	\N	\N	t
-975	546	63	\N	\N	t
-976	547	63	\N	\N	t
-977	548	63	\N	\N	t
-978	549	63	\N	\N	t
-979	550	63	\N	\N	t
-980	551	63	\N	\N	t
-981	552	63	\N	\N	t
-982	553	63	\N	\N	t
-983	554	63	\N	\N	t
-984	555	63	\N	\N	t
-985	556	63	\N	\N	t
-986	557	63	\N	\N	t
-987	558	63	\N	\N	t
-988	559	63	\N	\N	t
-989	560	63	\N	\N	t
-990	561	63	\N	\N	t
-991	562	63	\N	\N	t
-992	563	63	\N	\N	t
-993	564	63	\N	\N	t
-994	565	63	\N	\N	t
-995	566	63	\N	\N	t
-996	567	63	\N	\N	t
-997	568	63	\N	\N	t
-998	569	63	\N	\N	t
-999	570	63	\N	\N	t
-1000	571	63	\N	\N	t
-1001	572	63	\N	\N	t
-1002	573	63	\N	\N	t
-1003	574	63	\N	\N	t
-1004	575	63	\N	\N	t
-1005	576	63	\N	\N	t
-1006	577	63	\N	\N	t
-1007	578	63	\N	\N	t
-1008	579	63	\N	\N	t
-1009	580	63	\N	\N	t
-1010	581	63	\N	\N	t
-1011	582	63	\N	\N	t
-1012	583	63	\N	\N	t
-1013	584	63	\N	\N	t
-1014	585	63	\N	\N	t
-1015	586	63	\N	\N	t
-1016	587	63	\N	\N	t
-1017	588	63	\N	\N	t
-1018	589	63	\N	\N	t
-1019	590	63	\N	\N	t
-1020	591	63	\N	\N	t
-1021	592	63	\N	\N	t
-1022	593	63	\N	\N	t
-1023	594	63	\N	\N	t
-1024	595	63	\N	\N	t
-1025	596	63	\N	\N	t
-1026	597	63	\N	\N	t
-1027	598	63	\N	\N	t
-1028	599	63	\N	\N	t
-1029	600	63	\N	\N	t
-1030	601	63	\N	\N	t
-1031	602	63	\N	\N	t
-1032	603	63	\N	\N	t
-1033	604	63	\N	\N	t
-1034	605	63	\N	\N	t
-1035	606	63	\N	\N	t
-1036	607	63	\N	\N	t
-1037	608	63	\N	\N	t
-1038	609	63	\N	\N	t
-1039	610	63	\N	\N	t
-1040	611	63	\N	\N	t
-1041	612	63	\N	\N	t
-1042	613	63	\N	\N	t
-1043	614	63	\N	\N	t
-1044	615	63	\N	\N	t
-1045	616	63	\N	\N	t
-1046	617	63	\N	\N	t
-1047	618	63	\N	\N	t
-1048	619	63	\N	\N	t
-1049	620	63	\N	\N	t
-1050	621	63	\N	\N	t
-1051	622	63	\N	\N	t
-1052	622	98	\N	\N	t
-1053	622	99	\N	\N	t
-1054	623	63	\N	\N	t
-1055	624	63	\N	\N	t
-1056	625	63	\N	\N	t
-1057	626	63	\N	\N	t
-1058	627	63	\N	\N	t
-1059	628	63	\N	\N	t
-1060	629	63	\N	\N	t
-1061	630	63	\N	\N	t
-1062	631	63	\N	\N	t
-1063	632	63	\N	\N	t
-1064	633	63	\N	\N	t
-1065	634	63	\N	\N	t
-1066	635	63	\N	\N	t
-1067	636	63	\N	\N	t
-1068	637	63	\N	\N	t
-1069	638	63	\N	\N	t
-1070	639	63	\N	\N	t
-1071	640	66	\N	\N	t
-1072	640	67	\N	\N	t
-1073	640	68	\N	\N	t
-1074	640	69	\N	\N	t
-1075	641	3	\N	\N	t
-1076	641	4	\N	\N	t
-1077	641	5	\N	\N	t
-1078	641	6	\N	\N	t
-1079	641	10	\N	\N	t
-1080	641	18	\N	\N	t
-1081	641	23	\N	\N	t
-1082	641	63	\N	\N	t
-1083	641	75	\N	\N	t
-1084	641	76	\N	\N	t
-1085	641	84	\N	\N	t
-1086	641	98	\N	\N	t
-1087	641	99	\N	\N	t
-1088	642	77	\N	\N	t
-1089	643	78	\N	\N	t
-1090	643	102	\N	\N	t
-1091	644	10	\N	\N	t
-1092	644	18	\N	\N	t
-1093	645	2	\N	\N	t
-1094	645	3	\N	\N	t
-1095	645	4	\N	\N	t
-1096	645	5	\N	\N	t
-1097	645	6	\N	\N	t
-1098	645	10	\N	\N	t
-1099	645	76	\N	\N	t
-1100	645	98	\N	\N	t
-1101	645	99	\N	\N	t
-4	2	4	\N	\N	t
-1	7	4	\N	DTIC	t
+COPY ctl_dependencia_establecimiento (id, id_dependencia, id_dependencia_padre, id_establecimiento, abreviatura, habilitado) FROM stdin;
+2	1	\N	2	\N	t
+3	3	\N	2	\N	t
+5	5	\N	2	\N	t
+6	7	\N	2	\N	t
+7	8	\N	2	\N	t
+8	9	\N	2	\N	t
+9	10	\N	2	\N	t
+10	11	\N	2	\N	t
+11	12	\N	2	\N	t
+12	13	\N	2	\N	t
+13	14	\N	2	\N	t
+14	15	\N	2	\N	t
+15	16	\N	2	\N	t
+16	17	\N	2	\N	t
+17	18	\N	2	\N	t
+18	19	\N	2	\N	t
+19	20	\N	2	\N	t
+20	21	\N	2	\N	t
+22	24	\N	2	\N	t
+23	25	\N	2	\N	t
+24	26	\N	2	\N	t
+25	27	\N	2	\N	t
+26	28	\N	2	\N	t
+27	31	\N	2	\N	t
+28	32	\N	2	\N	t
+29	33	\N	2	\N	t
+30	34	\N	2	\N	t
+31	35	\N	2	\N	t
+32	36	\N	2	\N	t
+33	37	\N	2	\N	t
+34	38	\N	2	\N	t
+35	39	\N	2	\N	t
+36	40	\N	2	\N	t
+37	41	\N	2	\N	t
+38	42	\N	2	\N	t
+39	43	\N	2	\N	t
+40	44	\N	2	\N	t
+41	45	\N	2	\N	t
+42	46	\N	2	\N	t
+43	47	\N	2	\N	t
+44	48	\N	2	\N	t
+45	49	\N	2	\N	t
+46	50	\N	2	\N	t
+47	51	\N	2	\N	t
+48	52	\N	2	\N	t
+49	53	\N	2	\N	t
+50	54	\N	2	\N	t
+51	55	\N	2	\N	t
+52	56	\N	2	\N	t
+53	57	\N	2	\N	t
+54	58	\N	2	\N	t
+55	59	\N	2	\N	t
+56	60	\N	2	\N	t
+57	61	\N	2	\N	t
+58	62	\N	2	\N	t
+59	70	\N	2	\N	t
+60	71	\N	2	\N	t
+61	72	\N	2	\N	t
+62	73	\N	2	\N	t
+63	74	\N	2	\N	t
+64	80	\N	2	\N	t
+65	81	\N	2	\N	t
+66	82	\N	2	\N	t
+67	83	\N	2	\N	t
+68	84	\N	2	\N	t
+69	85	\N	2	\N	t
+70	86	\N	2	\N	t
+71	87	\N	2	\N	t
+72	88	\N	2	\N	t
+73	89	\N	2	\N	t
+74	90	\N	2	\N	t
+75	91	\N	2	\N	t
+76	92	\N	2	\N	t
+77	93	\N	2	\N	t
+78	94	\N	2	\N	t
+79	95	\N	2	\N	t
+80	96	\N	2	\N	t
+81	97	\N	2	\N	t
+82	100	\N	2	\N	t
+83	101	\N	2	\N	t
+84	5	\N	3	\N	t
+85	10	\N	3	\N	t
+86	65	\N	3	\N	t
+87	76	\N	3	\N	t
+88	5	\N	4	\N	t
+89	10	\N	4	\N	t
+90	65	\N	4	\N	t
+91	76	\N	4	\N	t
+92	5	\N	5	\N	t
+93	10	\N	5	\N	t
+94	65	\N	5	\N	t
+95	76	\N	5	\N	t
+96	5	\N	6	\N	t
+97	10	\N	6	\N	t
+98	65	\N	6	\N	t
+99	76	\N	6	\N	t
+100	5	\N	7	\N	t
+101	10	\N	7	\N	t
+102	65	\N	7	\N	t
+103	76	\N	7	\N	t
+104	63	\N	9	\N	t
+105	63	\N	10	\N	t
+106	63	\N	11	\N	t
+107	63	\N	12	\N	t
+108	63	\N	13	\N	t
+109	63	\N	14	\N	t
+110	63	\N	15	\N	t
+111	63	\N	16	\N	t
+112	63	\N	17	\N	t
+113	63	\N	18	\N	t
+114	63	\N	19	\N	t
+115	63	\N	20	\N	t
+116	63	\N	21	\N	t
+117	63	\N	22	\N	t
+118	63	\N	23	\N	t
+119	63	\N	24	\N	t
+120	63	\N	25	\N	t
+121	63	\N	26	\N	t
+122	63	\N	27	\N	t
+123	63	\N	28	\N	t
+124	63	\N	29	\N	t
+125	63	\N	30	\N	t
+126	63	\N	31	\N	t
+127	63	\N	32	\N	t
+128	63	\N	33	\N	t
+129	63	\N	34	\N	t
+130	63	\N	35	\N	t
+131	3	\N	36	\N	t
+132	4	\N	36	\N	t
+133	5	\N	36	\N	t
+134	6	\N	36	\N	t
+135	10	\N	36	\N	t
+136	18	\N	36	\N	t
+137	23	\N	36	\N	t
+138	63	\N	36	\N	t
+139	75	\N	36	\N	t
+140	76	\N	36	\N	t
+141	84	\N	36	\N	t
+142	98	\N	36	\N	t
+143	99	\N	36	\N	t
+144	63	\N	37	\N	t
+145	63	\N	38	\N	t
+146	3	\N	39	\N	t
+147	4	\N	39	\N	t
+148	6	\N	39	\N	t
+149	10	\N	39	\N	t
+150	18	\N	39	\N	t
+151	23	\N	39	\N	t
+152	63	\N	39	\N	t
+153	75	\N	39	\N	t
+154	76	\N	39	\N	t
+155	84	\N	39	\N	t
+156	98	\N	39	\N	t
+157	99	\N	39	\N	t
+158	63	\N	40	\N	t
+159	63	\N	41	\N	t
+160	3	\N	42	\N	t
+161	4	\N	42	\N	t
+162	5	\N	42	\N	t
+163	6	\N	42	\N	t
+164	10	\N	42	\N	t
+165	18	\N	42	\N	t
+166	23	\N	42	\N	t
+167	63	\N	42	\N	t
+168	75	\N	42	\N	t
+169	76	\N	42	\N	t
+170	84	\N	42	\N	t
+171	98	\N	42	\N	t
+172	99	\N	42	\N	t
+173	63	\N	43	\N	t
+174	63	\N	44	\N	t
+175	63	\N	45	\N	t
+176	63	\N	46	\N	t
+177	63	\N	47	\N	t
+178	63	\N	48	\N	t
+179	63	\N	49	\N	t
+180	63	\N	50	\N	t
+181	63	\N	51	\N	t
+182	63	\N	52	\N	t
+183	63	\N	53	\N	t
+184	63	\N	54	\N	t
+185	63	\N	55	\N	t
+186	63	\N	56	\N	t
+187	63	\N	57	\N	t
+188	63	\N	58	\N	t
+189	63	\N	59	\N	t
+190	63	\N	60	\N	t
+191	63	\N	61	\N	t
+192	63	\N	62	\N	t
+193	63	\N	63	\N	t
+194	63	\N	64	\N	t
+195	63	\N	65	\N	t
+196	63	\N	66	\N	t
+197	63	\N	67	\N	t
+198	63	\N	68	\N	t
+199	63	\N	69	\N	t
+200	63	\N	70	\N	t
+201	63	\N	71	\N	t
+202	63	\N	72	\N	t
+203	63	\N	73	\N	t
+204	63	\N	74	\N	t
+205	63	\N	75	\N	t
+206	63	\N	76	\N	t
+207	63	\N	77	\N	t
+208	63	\N	78	\N	t
+209	63	\N	79	\N	t
+210	63	\N	80	\N	t
+211	63	\N	81	\N	t
+212	63	\N	82	\N	t
+213	63	\N	83	\N	t
+214	63	\N	84	\N	t
+215	63	\N	85	\N	t
+216	63	\N	86	\N	t
+217	63	\N	87	\N	t
+218	63	\N	88	\N	t
+219	63	\N	89	\N	t
+220	63	\N	90	\N	t
+221	63	\N	91	\N	t
+222	63	\N	92	\N	t
+223	63	\N	93	\N	t
+224	63	\N	94	\N	t
+225	63	\N	95	\N	t
+226	63	\N	96	\N	t
+227	63	\N	97	\N	t
+228	63	\N	98	\N	t
+229	63	\N	100	\N	t
+230	63	\N	100	\N	t
+231	63	\N	101	\N	t
+232	63	\N	102	\N	t
+233	63	\N	103	\N	t
+234	63	\N	104	\N	t
+235	63	\N	105	\N	t
+236	63	\N	106	\N	t
+237	63	\N	107	\N	t
+238	3	\N	108	\N	t
+239	4	\N	108	\N	t
+240	5	\N	108	\N	t
+241	6	\N	108	\N	t
+242	10	\N	108	\N	t
+243	18	\N	108	\N	t
+244	23	\N	108	\N	t
+245	63	\N	108	\N	t
+246	75	\N	108	\N	t
+247	76	\N	108	\N	t
+248	84	\N	108	\N	t
+249	98	\N	108	\N	t
+250	99	\N	108	\N	t
+251	63	\N	109	\N	t
+252	63	\N	110	\N	t
+253	63	\N	111	\N	t
+254	3	\N	112	\N	t
+255	4	\N	112	\N	t
+256	5	\N	112	\N	t
+257	6	\N	112	\N	t
+258	10	\N	112	\N	t
+259	18	\N	112	\N	t
+260	23	\N	112	\N	t
+261	63	\N	112	\N	t
+262	75	\N	112	\N	t
+263	76	\N	112	\N	t
+264	84	\N	112	\N	t
+265	98	\N	112	\N	t
+266	99	\N	112	\N	t
+267	63	\N	113	\N	t
+268	63	\N	114	\N	t
+269	63	\N	115	\N	t
+270	63	\N	116	\N	t
+271	63	\N	117	\N	t
+272	63	\N	118	\N	t
+273	63	\N	119	\N	t
+274	63	\N	120	\N	t
+275	63	\N	121	\N	t
+276	63	\N	122	\N	t
+277	63	\N	123	\N	t
+278	63	\N	124	\N	t
+279	63	\N	125	\N	t
+280	63	\N	126	\N	t
+281	63	\N	127	\N	t
+282	63	\N	128	\N	t
+283	63	\N	129	\N	t
+284	63	\N	130	\N	t
+285	63	\N	131	\N	t
+286	63	\N	132	\N	t
+287	63	\N	133	\N	t
+288	63	\N	134	\N	t
+289	63	\N	135	\N	t
+290	63	\N	136	\N	t
+291	63	\N	137	\N	t
+292	63	\N	138	\N	t
+293	63	\N	139	\N	t
+294	63	\N	140	\N	t
+295	63	\N	141	\N	t
+296	63	\N	142	\N	t
+297	63	\N	143	\N	t
+298	63	\N	144	\N	t
+299	63	\N	145	\N	t
+300	63	\N	146	\N	t
+301	63	\N	147	\N	t
+302	63	\N	148	\N	t
+303	63	\N	149	\N	t
+304	63	\N	150	\N	t
+305	63	\N	151	\N	t
+306	63	\N	152	\N	t
+307	63	\N	153	\N	t
+308	63	\N	154	\N	t
+309	63	\N	155	\N	t
+310	63	\N	156	\N	t
+311	63	\N	157	\N	t
+312	63	\N	158	\N	t
+313	63	\N	159	\N	t
+314	63	\N	160	\N	t
+315	63	\N	161	\N	t
+316	63	\N	162	\N	t
+317	63	\N	163	\N	t
+318	63	\N	164	\N	t
+319	3	\N	165	\N	t
+320	4	\N	165	\N	t
+321	5	\N	165	\N	t
+323	10	\N	165	\N	t
+324	18	\N	165	\N	t
+325	23	\N	165	\N	t
+326	63	\N	165	\N	t
+327	75	\N	165	\N	t
+328	76	\N	165	\N	t
+329	84	\N	165	\N	t
+330	98	\N	165	\N	t
+331	99	\N	165	\N	t
+332	63	\N	166	\N	t
+333	63	\N	167	\N	t
+334	63	\N	168	\N	t
+335	63	\N	169	\N	t
+336	63	\N	170	\N	t
+337	63	\N	171	\N	t
+338	63	\N	172	\N	t
+339	63	\N	173	\N	t
+340	63	\N	174	\N	t
+341	63	\N	175	\N	t
+342	63	\N	176	\N	t
+343	63	\N	177	\N	t
+344	63	\N	178	\N	t
+345	63	\N	179	\N	t
+346	63	\N	180	\N	t
+347	63	\N	181	\N	t
+348	63	\N	182	\N	t
+349	63	\N	183	\N	t
+350	63	\N	184	\N	t
+351	63	\N	185	\N	t
+352	63	\N	186	\N	t
+353	63	\N	187	\N	t
+354	63	\N	188	\N	t
+355	63	\N	189	\N	t
+356	63	\N	190	\N	t
+357	63	\N	191	\N	t
+358	63	\N	192	\N	t
+359	63	\N	193	\N	t
+360	63	\N	194	\N	t
+361	63	\N	195	\N	t
+362	63	\N	196	\N	t
+363	63	\N	197	\N	t
+364	63	\N	198	\N	t
+365	63	\N	199	\N	t
+366	63	\N	200	\N	t
+367	63	\N	201	\N	t
+368	63	\N	202	\N	t
+369	63	\N	203	\N	t
+370	3	\N	204	\N	t
+371	4	\N	204	\N	t
+372	5	\N	204	\N	t
+373	6	\N	204	\N	t
+374	10	\N	204	\N	t
+375	18	\N	204	\N	t
+376	23	\N	204	\N	t
+377	63	\N	204	\N	t
+378	75	\N	204	\N	t
+379	76	\N	204	\N	t
+380	84	\N	204	\N	t
+381	98	\N	204	\N	t
+382	99	\N	204	\N	t
+383	63	\N	205	\N	t
+384	63	\N	206	\N	t
+385	3	\N	207	\N	t
+386	4	\N	207	\N	t
+387	5	\N	207	\N	t
+388	6	\N	207	\N	t
+389	10	\N	207	\N	t
+390	18	\N	207	\N	t
+391	23	\N	207	\N	t
+392	63	\N	207	\N	t
+393	75	\N	207	\N	t
+394	76	\N	207	\N	t
+395	84	\N	207	\N	t
+396	98	\N	207	\N	t
+397	99	\N	207	\N	t
+398	63	\N	208	\N	t
+399	63	\N	209	\N	t
+400	63	\N	210	\N	t
+401	63	\N	211	\N	t
+402	63	\N	212	\N	t
+403	63	\N	213	\N	t
+404	63	\N	214	\N	t
+405	63	\N	215	\N	t
+406	63	\N	216	\N	t
+407	63	\N	217	\N	t
+408	63	\N	218	\N	t
+409	63	\N	219	\N	t
+410	63	\N	220	\N	t
+411	63	\N	221	\N	t
+412	63	\N	222	\N	t
+413	63	\N	223	\N	t
+414	63	\N	224	\N	t
+415	63	\N	224	\N	t
+416	63	\N	226	\N	t
+417	63	\N	227	\N	t
+418	3	\N	228	\N	t
+419	4	\N	228	\N	t
+420	5	\N	228	\N	t
+421	6	\N	228	\N	t
+422	10	\N	228	\N	t
+423	18	\N	228	\N	t
+424	23	\N	228	\N	t
+425	63	\N	228	\N	t
+426	75	\N	228	\N	t
+427	76	\N	228	\N	t
+428	84	\N	228	\N	t
+429	98	\N	228	\N	t
+430	99	\N	228	\N	t
+431	63	\N	229	\N	t
+432	63	\N	230	\N	t
+433	63	\N	231	\N	t
+434	63	\N	232	\N	t
+435	63	\N	233	\N	t
+436	63	\N	234	\N	t
+1102	63	\N	235	\N	t
+437	63	\N	236	\N	t
+438	63	\N	237	\N	t
+439	63	\N	238	\N	t
+440	63	\N	239	\N	t
+441	63	\N	240	\N	t
+442	63	\N	241	\N	t
+443	63	\N	242	\N	t
+444	63	\N	243	\N	t
+445	63	\N	244	\N	t
+446	63	\N	245	\N	t
+447	63	\N	246	\N	t
+448	63	\N	247	\N	t
+449	84	\N	247	\N	t
+450	63	\N	248	\N	t
+451	63	\N	249	\N	t
+452	63	\N	250	\N	t
+453	63	\N	251	\N	t
+454	63	\N	252	\N	t
+455	63	\N	253	\N	t
+456	63	\N	254	\N	t
+457	63	\N	255	\N	t
+458	63	\N	256	\N	t
+459	63	\N	257	\N	t
+460	63	\N	258	\N	t
+461	63	\N	259	\N	t
+462	63	\N	260	\N	t
+463	63	\N	261	\N	t
+464	63	\N	262	\N	t
+465	63	\N	263	\N	t
+466	63	\N	264	\N	t
+467	63	\N	265	\N	t
+468	63	\N	266	\N	t
+469	63	\N	267	\N	t
+470	63	\N	268	\N	t
+471	63	\N	269	\N	t
+472	63	\N	270	\N	t
+473	63	\N	271	\N	t
+474	63	\N	272	\N	t
+475	63	\N	273	\N	t
+476	3	\N	274	\N	t
+477	4	\N	274	\N	t
+478	5	\N	274	\N	t
+479	6	\N	274	\N	t
+480	10	\N	274	\N	t
+481	18	\N	274	\N	t
+482	23	\N	274	\N	t
+483	63	\N	274	\N	t
+484	75	\N	274	\N	t
+485	76	\N	274	\N	t
+486	98	\N	274	\N	t
+487	99	\N	274	\N	t
+488	63	\N	275	\N	t
+489	63	\N	276	\N	t
+490	3	\N	277	\N	t
+491	4	\N	277	\N	t
+492	5	\N	277	\N	t
+493	6	\N	277	\N	t
+494	10	\N	277	\N	t
+495	18	\N	277	\N	t
+496	23	\N	277	\N	t
+497	63	\N	277	\N	t
+498	75	\N	277	\N	t
+499	76	\N	277	\N	t
+500	84	\N	277	\N	t
+501	98	\N	277	\N	t
+502	99	\N	277	\N	t
+503	63	\N	278	\N	t
+504	63	\N	279	\N	t
+505	63	\N	280	\N	t
+506	63	\N	281	\N	t
+507	63	\N	282	\N	t
+508	63	\N	283	\N	t
+509	63	\N	284	\N	t
+510	63	\N	285	\N	t
+511	63	\N	286	\N	t
+512	63	\N	287	\N	t
+513	63	\N	288	\N	t
+514	63	\N	289	\N	t
+515	63	\N	290	\N	t
+516	63	\N	291	\N	t
+517	63	\N	292	\N	t
+518	63	\N	293	\N	t
+519	63	\N	294	\N	t
+520	63	\N	295	\N	t
+521	63	\N	296	\N	t
+522	63	\N	297	\N	t
+523	63	\N	298	\N	t
+524	63	\N	299	\N	t
+525	63	\N	300	\N	t
+526	63	\N	301	\N	t
+527	63	\N	302	\N	t
+528	63	\N	303	\N	t
+529	63	\N	304	\N	t
+530	63	\N	305	\N	t
+531	63	\N	306	\N	t
+532	63	\N	307	\N	t
+533	63	\N	308	\N	t
+534	63	\N	309	\N	t
+535	3	\N	310	\N	t
+536	4	\N	310	\N	t
+537	5	\N	310	\N	t
+538	6	\N	310	\N	t
+539	10	\N	310	\N	t
+540	18	\N	310	\N	t
+541	23	\N	310	\N	t
+542	63	\N	310	\N	t
+543	75	\N	310	\N	t
+544	76	\N	310	\N	t
+545	84	\N	310	\N	t
+546	98	\N	310	\N	t
+547	99	\N	310	\N	t
+548	63	\N	311	\N	t
+549	63	\N	312	\N	t
+550	63	\N	313	\N	t
+551	63	\N	314	\N	t
+552	63	\N	315	\N	t
+553	63	\N	316	\N	t
+554	63	\N	317	\N	t
+555	63	\N	318	\N	t
+556	63	\N	319	\N	t
+557	63	\N	320	\N	t
+558	63	\N	321	\N	t
+559	63	\N	322	\N	t
+560	63	\N	323	\N	t
+561	63	\N	324	\N	t
+562	63	\N	325	\N	t
+563	63	\N	326	\N	t
+564	63	\N	327	\N	t
+565	63	\N	328	\N	t
+566	63	\N	329	\N	t
+567	63	\N	330	\N	t
+568	63	\N	331	\N	t
+569	3	\N	332	\N	t
+570	4	\N	332	\N	t
+571	5	\N	332	\N	t
+572	6	\N	332	\N	t
+573	10	\N	332	\N	t
+574	18	\N	332	\N	t
+575	23	\N	332	\N	t
+576	63	\N	332	\N	t
+577	75	\N	332	\N	t
+578	76	\N	332	\N	t
+579	84	\N	332	\N	t
+580	98	\N	332	\N	t
+581	99	\N	332	\N	t
+582	63	\N	333	\N	t
+583	63	\N	334	\N	t
+584	63	\N	335	\N	t
+585	3	\N	336	\N	t
+586	4	\N	336	\N	t
+587	5	\N	336	\N	t
+588	6	\N	336	\N	t
+589	10	\N	336	\N	t
+590	18	\N	336	\N	t
+591	23	\N	336	\N	t
+592	63	\N	336	\N	t
+593	75	\N	336	\N	t
+594	76	\N	336	\N	t
+595	84	\N	336	\N	t
+596	98	\N	336	\N	t
+597	99	\N	336	\N	t
+598	63	\N	337	\N	t
+599	63	\N	338	\N	t
+600	63	\N	339	\N	t
+601	3	\N	340	\N	t
+602	4	\N	340	\N	t
+603	5	\N	340	\N	t
+604	6	\N	340	\N	t
+605	10	\N	340	\N	t
+606	18	\N	340	\N	t
+607	23	\N	340	\N	t
+608	63	\N	340	\N	t
+609	75	\N	340	\N	t
+610	76	\N	340	\N	t
+611	84	\N	340	\N	t
+612	98	\N	340	\N	t
+613	99	\N	340	\N	t
+614	63	\N	341	\N	t
+615	63	\N	342	\N	t
+616	63	\N	343	\N	t
+617	63	\N	344	\N	t
+618	63	\N	345	\N	t
+619	63	\N	346	\N	t
+620	63	\N	347	\N	t
+621	63	\N	348	\N	t
+622	63	\N	349	\N	t
+623	63	\N	350	\N	t
+624	63	\N	351	\N	t
+625	63	\N	352	\N	t
+626	63	\N	353	\N	t
+627	63	\N	354	\N	t
+628	63	\N	355	\N	t
+629	63	\N	356	\N	t
+630	63	\N	357	\N	t
+631	63	\N	358	\N	t
+632	63	\N	359	\N	t
+633	63	\N	360	\N	t
+634	63	\N	361	\N	t
+635	63	\N	362	\N	t
+636	63	\N	363	\N	t
+637	63	\N	364	\N	t
+638	63	\N	365	\N	t
+639	63	\N	366	\N	t
+640	63	\N	367	\N	t
+641	63	\N	368	\N	t
+642	63	\N	369	\N	t
+643	63	\N	370	\N	t
+644	63	\N	371	\N	t
+645	63	\N	372	\N	t
+646	63	\N	373	\N	t
+647	63	\N	374	\N	t
+648	63	\N	375	\N	t
+649	63	\N	376	\N	t
+650	63	\N	377	\N	t
+651	63	\N	378	\N	t
+652	63	\N	379	\N	t
+653	3	\N	380	\N	t
+654	4	\N	380	\N	t
+655	5	\N	380	\N	t
+656	6	\N	380	\N	t
+657	10	\N	380	\N	t
+658	18	\N	380	\N	t
+659	23	\N	380	\N	t
+660	63	\N	380	\N	t
+661	75	\N	380	\N	t
+662	76	\N	380	\N	t
+663	84	\N	380	\N	t
+664	98	\N	380	\N	t
+665	99	\N	380	\N	t
+666	63	\N	381	\N	t
+667	63	\N	382	\N	t
+668	3	\N	383	\N	t
+669	4	\N	383	\N	t
+670	5	\N	383	\N	t
+671	6	\N	383	\N	t
+672	10	\N	383	\N	t
+673	18	\N	383	\N	t
+674	23	\N	383	\N	t
+675	63	\N	383	\N	t
+676	75	\N	383	\N	t
+677	76	\N	383	\N	t
+678	84	\N	383	\N	t
+679	98	\N	383	\N	t
+680	99	\N	383	\N	t
+681	63	\N	384	\N	t
+682	63	\N	385	\N	t
+683	3	\N	386	\N	t
+684	4	\N	386	\N	t
+685	5	\N	386	\N	t
+686	6	\N	386	\N	t
+687	10	\N	386	\N	t
+688	18	\N	386	\N	t
+689	23	\N	386	\N	t
+690	63	\N	386	\N	t
+691	75	\N	386	\N	t
+692	76	\N	386	\N	t
+693	84	\N	386	\N	t
+694	98	\N	386	\N	t
+695	99	\N	386	\N	t
+696	63	\N	387	\N	t
+697	63	\N	388	\N	t
+698	63	\N	389	\N	t
+699	63	\N	390	\N	t
+700	63	\N	391	\N	t
+701	63	\N	392	\N	t
+702	63	\N	393	\N	t
+703	63	\N	394	\N	t
+704	63	\N	395	\N	t
+705	63	\N	396	\N	t
+706	63	\N	397	\N	t
+707	63	\N	398	\N	t
+708	63	\N	399	\N	t
+709	63	\N	400	\N	t
+710	63	\N	401	\N	t
+711	63	\N	402	\N	t
+712	63	\N	403	\N	t
+713	63	\N	404	\N	t
+714	63	\N	405	\N	t
+715	63	\N	406	\N	t
+716	63	\N	407	\N	t
+717	63	\N	408	\N	t
+718	63	\N	409	\N	t
+719	63	\N	410	\N	t
+720	63	\N	411	\N	t
+721	63	\N	412	\N	t
+722	63	\N	413	\N	t
+723	63	\N	414	\N	t
+724	63	\N	415	\N	t
+725	63	\N	416	\N	t
+726	63	\N	417	\N	t
+727	63	\N	418	\N	t
+728	63	\N	419	\N	t
+729	63	\N	420	\N	t
+730	63	\N	421	\N	t
+731	63	\N	422	\N	t
+732	63	\N	423	\N	t
+733	63	\N	424	\N	t
+734	63	\N	425	\N	t
+735	63	\N	426	\N	t
+736	63	\N	427	\N	t
+737	63	\N	428	\N	t
+738	63	\N	429	\N	t
+739	63	\N	430	\N	t
+740	63	\N	431	\N	t
+741	63	\N	432	\N	t
+742	63	\N	433	\N	t
+743	3	\N	434	\N	t
+744	4	\N	434	\N	t
+745	5	\N	434	\N	t
+746	6	\N	434	\N	t
+747	10	\N	434	\N	t
+748	18	\N	434	\N	t
+749	23	\N	434	\N	t
+750	63	\N	434	\N	t
+751	75	\N	434	\N	t
+752	76	\N	434	\N	t
+753	84	\N	434	\N	t
+754	98	\N	434	\N	t
+755	99	\N	434	\N	t
+756	63	\N	435	\N	t
+757	63	\N	436	\N	t
+758	63	\N	437	\N	t
+759	63	\N	438	\N	t
+760	63	\N	439	\N	t
+761	63	\N	440	\N	t
+762	63	\N	441	\N	t
+763	63	\N	442	\N	t
+764	63	\N	443	\N	t
+765	63	\N	444	\N	t
+766	63	\N	445	\N	t
+767	63	\N	446	\N	t
+768	63	\N	447	\N	t
+769	63	\N	448	\N	t
+770	63	\N	449	\N	t
+771	63	\N	450	\N	t
+772	63	\N	451	\N	t
+773	63	\N	452	\N	t
+774	63	\N	453	\N	t
+775	63	\N	454	\N	t
+776	63	\N	455	\N	t
+777	63	\N	456	\N	t
+778	63	\N	457	\N	t
+779	63	\N	458	\N	t
+780	63	\N	459	\N	t
+781	63	\N	460	\N	t
+782	63	\N	461	\N	t
+783	63	\N	462	\N	t
+784	63	\N	463	\N	t
+785	63	\N	464	\N	t
+786	63	\N	465	\N	t
+787	63	\N	466	\N	t
+788	3	\N	467	\N	t
+789	4	\N	467	\N	t
+790	5	\N	467	\N	t
+791	6	\N	467	\N	t
+792	10	\N	467	\N	t
+793	18	\N	467	\N	t
+794	23	\N	467	\N	t
+795	63	\N	467	\N	t
+796	75	\N	467	\N	t
+797	76	\N	467	\N	t
+798	84	\N	467	\N	t
+799	98	\N	467	\N	t
+800	99	\N	467	\N	t
+801	63	\N	468	\N	t
+802	63	\N	469	\N	t
+803	63	\N	470	\N	t
+804	3	\N	471	\N	t
+805	4	\N	471	\N	t
+806	5	\N	471	\N	t
+807	6	\N	471	\N	t
+808	10	\N	471	\N	t
+809	18	\N	471	\N	t
+810	23	\N	471	\N	t
+811	63	\N	471	\N	t
+812	75	\N	471	\N	t
+813	76	\N	471	\N	t
+814	84	\N	471	\N	t
+815	98	\N	471	\N	t
+816	99	\N	471	\N	t
+817	63	\N	472	\N	t
+818	63	\N	473	\N	t
+819	63	\N	474	\N	t
+820	63	\N	475	\N	t
+821	63	\N	476	\N	t
+822	63	\N	477	\N	t
+823	63	\N	478	\N	t
+824	63	\N	479	\N	t
+825	63	\N	480	\N	t
+826	63	\N	481	\N	t
+827	63	\N	482	\N	t
+828	63	\N	483	\N	t
+829	63	\N	484	\N	t
+830	63	\N	485	\N	t
+831	63	\N	486	\N	t
+832	63	\N	487	\N	t
+833	63	\N	488	\N	t
+834	63	\N	489	\N	t
+835	63	\N	490	\N	t
+836	63	\N	491	\N	t
+837	63	\N	492	\N	t
+838	63	\N	493	\N	t
+839	63	\N	494	\N	t
+840	63	\N	495	\N	t
+841	63	\N	496	\N	t
+842	63	\N	497	\N	t
+843	63	\N	498	\N	t
+844	63	\N	499	\N	t
+845	63	\N	500	\N	t
+846	63	\N	501	\N	t
+847	63	\N	502	\N	t
+848	63	\N	503	\N	t
+849	63	\N	504	\N	t
+850	63	\N	505	\N	t
+851	63	\N	506	\N	t
+852	63	\N	507	\N	t
+853	63	\N	508	\N	t
+854	63	\N	509	\N	t
+855	63	\N	510	\N	t
+856	63	\N	511	\N	t
+857	3	\N	512	\N	t
+858	4	\N	512	\N	t
+859	5	\N	512	\N	t
+860	6	\N	512	\N	t
+861	10	\N	512	\N	t
+862	18	\N	512	\N	t
+863	23	\N	512	\N	t
+864	63	\N	512	\N	t
+865	75	\N	512	\N	t
+866	76	\N	512	\N	t
+867	84	\N	512	\N	t
+868	98	\N	512	\N	t
+869	99	\N	512	\N	t
+870	63	\N	513	\N	t
+871	63	\N	514	\N	t
+872	63	\N	515	\N	t
+873	63	\N	516	\N	t
+874	63	\N	517	\N	t
+875	3	\N	518	\N	t
+876	4	\N	518	\N	t
+877	5	\N	518	\N	t
+878	6	\N	518	\N	t
+879	10	\N	518	\N	t
+880	18	\N	518	\N	t
+881	23	\N	518	\N	t
+882	63	\N	518	\N	t
+883	75	\N	518	\N	t
+884	76	\N	518	\N	t
+885	84	\N	518	\N	t
+886	98	\N	518	\N	t
+887	99	\N	518	\N	t
+888	63	\N	519	\N	t
+889	63	\N	520	\N	t
+890	63	\N	521	\N	t
+891	63	\N	522	\N	t
+892	3	\N	523	\N	t
+893	4	\N	523	\N	t
+894	6	\N	523	\N	t
+895	10	\N	523	\N	t
+896	18	\N	523	\N	t
+897	23	\N	523	\N	t
+898	63	\N	523	\N	t
+899	75	\N	523	\N	t
+900	76	\N	523	\N	t
+901	84	\N	523	\N	t
+902	98	\N	523	\N	t
+903	99	\N	523	\N	t
+904	63	\N	524	\N	t
+905	63	\N	525	\N	t
+906	63	\N	526	\N	t
+907	63	\N	527	\N	t
+908	3	\N	528	\N	t
+909	4	\N	528	\N	t
+910	5	\N	528	\N	t
+911	6	\N	528	\N	t
+912	10	\N	528	\N	t
+913	18	\N	528	\N	t
+914	23	\N	528	\N	t
+915	63	\N	528	\N	t
+916	75	\N	528	\N	t
+917	76	\N	528	\N	t
+918	84	\N	528	\N	t
+919	98	\N	528	\N	t
+920	99	\N	528	\N	t
+921	63	\N	529	\N	t
+922	63	\N	530	\N	t
+923	63	\N	531	\N	t
+924	63	\N	532	\N	t
+925	3	\N	533	\N	t
+926	4	\N	533	\N	t
+927	5	\N	533	\N	t
+928	6	\N	533	\N	t
+929	10	\N	533	\N	t
+930	18	\N	533	\N	t
+931	23	\N	533	\N	t
+932	63	\N	533	\N	t
+933	75	\N	533	\N	t
+934	76	\N	533	\N	t
+935	84	\N	533	\N	t
+936	98	\N	533	\N	t
+937	99	\N	533	\N	t
+938	63	\N	534	\N	t
+939	63	\N	535	\N	t
+940	3	\N	536	\N	t
+941	4	\N	536	\N	t
+942	5	\N	536	\N	t
+943	6	\N	536	\N	t
+944	10	\N	536	\N	t
+945	18	\N	536	\N	t
+946	23	\N	536	\N	t
+947	63	\N	536	\N	t
+948	75	\N	536	\N	t
+949	76	\N	536	\N	t
+950	84	\N	536	\N	t
+951	98	\N	536	\N	t
+952	99	\N	536	\N	t
+953	63	\N	537	\N	t
+954	63	\N	538	\N	t
+955	3	\N	539	\N	t
+956	4	\N	539	\N	t
+957	5	\N	539	\N	t
+958	6	\N	539	\N	t
+959	10	\N	539	\N	t
+960	18	\N	539	\N	t
+961	23	\N	539	\N	t
+962	55	\N	539	\N	t
+963	63	\N	539	\N	t
+964	75	\N	539	\N	t
+965	76	\N	539	\N	t
+966	84	\N	539	\N	t
+967	98	\N	539	\N	t
+968	99	\N	539	\N	t
+969	63	\N	540	\N	t
+970	63	\N	541	\N	t
+971	63	\N	542	\N	t
+972	63	\N	543	\N	t
+973	63	\N	544	\N	t
+974	63	\N	545	\N	t
+975	63	\N	546	\N	t
+976	63	\N	547	\N	t
+977	63	\N	548	\N	t
+978	63	\N	549	\N	t
+979	63	\N	550	\N	t
+980	63	\N	551	\N	t
+981	63	\N	552	\N	t
+982	63	\N	553	\N	t
+983	63	\N	554	\N	t
+984	63	\N	555	\N	t
+985	63	\N	556	\N	t
+986	63	\N	557	\N	t
+987	63	\N	558	\N	t
+988	63	\N	559	\N	t
+989	63	\N	560	\N	t
+990	63	\N	561	\N	t
+991	63	\N	562	\N	t
+992	63	\N	563	\N	t
+993	63	\N	564	\N	t
+994	63	\N	565	\N	t
+995	63	\N	566	\N	t
+996	63	\N	567	\N	t
+997	63	\N	568	\N	t
+998	63	\N	569	\N	t
+999	63	\N	570	\N	t
+1000	63	\N	571	\N	t
+1001	63	\N	572	\N	t
+1002	63	\N	573	\N	t
+1003	63	\N	574	\N	t
+1004	63	\N	575	\N	t
+1005	63	\N	576	\N	t
+1006	63	\N	577	\N	t
+1007	63	\N	578	\N	t
+1008	63	\N	579	\N	t
+1009	63	\N	580	\N	t
+1010	63	\N	581	\N	t
+1011	63	\N	582	\N	t
+1012	63	\N	583	\N	t
+1013	63	\N	584	\N	t
+1014	63	\N	585	\N	t
+1015	63	\N	586	\N	t
+1016	63	\N	587	\N	t
+1017	63	\N	588	\N	t
+1018	63	\N	589	\N	t
+1019	63	\N	590	\N	t
+1020	63	\N	591	\N	t
+1021	63	\N	592	\N	t
+1022	63	\N	593	\N	t
+1023	63	\N	594	\N	t
+1024	63	\N	595	\N	t
+1025	63	\N	596	\N	t
+1026	63	\N	597	\N	t
+1027	63	\N	598	\N	t
+1028	63	\N	599	\N	t
+1029	63	\N	600	\N	t
+1030	63	\N	601	\N	t
+1031	63	\N	602	\N	t
+1032	63	\N	603	\N	t
+1033	63	\N	604	\N	t
+1034	63	\N	605	\N	t
+1035	63	\N	606	\N	t
+1036	63	\N	607	\N	t
+1037	63	\N	608	\N	t
+1038	63	\N	609	\N	t
+1039	63	\N	610	\N	t
+1040	63	\N	611	\N	t
+1041	63	\N	612	\N	t
+1042	63	\N	613	\N	t
+1043	63	\N	614	\N	t
+1044	63	\N	615	\N	t
+1045	63	\N	616	\N	t
+1046	63	\N	617	\N	t
+1047	63	\N	618	\N	t
+1048	63	\N	619	\N	t
+1049	63	\N	620	\N	t
+1050	63	\N	621	\N	t
+1051	63	\N	622	\N	t
+1052	98	\N	622	\N	t
+1053	99	\N	622	\N	t
+1054	63	\N	623	\N	t
+1055	63	\N	624	\N	t
+1056	63	\N	625	\N	t
+1057	63	\N	626	\N	t
+1058	63	\N	627	\N	t
+1059	63	\N	628	\N	t
+1060	63	\N	629	\N	t
+1061	63	\N	630	\N	t
+1062	63	\N	631	\N	t
+1063	63	\N	632	\N	t
+1064	63	\N	633	\N	t
+1065	63	\N	634	\N	t
+1066	63	\N	635	\N	t
+1067	63	\N	636	\N	t
+1068	63	\N	637	\N	t
+1069	63	\N	638	\N	t
+1070	63	\N	639	\N	t
+1071	66	\N	640	\N	t
+1072	67	\N	640	\N	t
+1073	68	\N	640	\N	t
+1074	69	\N	640	\N	t
+1075	3	\N	641	\N	t
+1076	4	\N	641	\N	t
+1077	5	\N	641	\N	t
+1078	6	\N	641	\N	t
+1079	10	\N	641	\N	t
+1080	18	\N	641	\N	t
+1081	23	\N	641	\N	t
+1082	63	\N	641	\N	t
+1083	75	\N	641	\N	t
+1084	76	\N	641	\N	t
+1085	84	\N	641	\N	t
+1086	98	\N	641	\N	t
+1087	99	\N	641	\N	t
+1088	77	\N	642	\N	t
+1089	78	\N	643	\N	t
+1090	102	\N	643	\N	t
+1091	10	\N	644	\N	t
+1092	18	\N	644	\N	t
+1093	2	\N	645	\N	t
+1094	3	\N	645	\N	t
+1095	4	\N	645	\N	t
+1096	5	\N	645	\N	t
+1097	6	\N	645	\N	t
+1098	10	\N	645	\N	t
+1099	76	\N	645	\N	t
+1100	98	\N	645	\N	t
+1101	99	\N	645	\N	t
+1	4	\N	7	DTIC	t
+322	6	\N	165	FARMACIA	t
+4	4	\N	2	DTIC	t
+21	23	\N	2	UCM	t
 \.
 
 
@@ -2358,58 +2366,41 @@ SELECT pg_catalog.setval('ctl_dependencia_establecimiento_id_seq', 1, false);
 -- Name: ctl_dependencia_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('ctl_dependencia_id_seq', 1, true);
+SELECT pg_catalog.setval('ctl_dependencia_id_seq', 1, false);
 
 
 --
 -- Data for Name: ctl_empleado; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY ctl_empleado (id, id_dependencia_establecimiento, id_cargo, nombre, apellido, fecha_nacimiento, correo_electronico) FROM stdin;
-1	4	1	Juan	Roque	1985-01-12	roquej@gmail.com
-2	4	2	Saul	Aguilar	1991-08-09	saguilar@yahoo.es
-3	4	2	Carolina	Perez	1972-06-11	cperez@salud.gob
-5	4	2	Oscar	Jimenez	1979-10-21	jimenez.osc979@gmail.com
-4	4	2	Leticia	Salamanca	1988-04-12	letty.sal@gmail.com
-35	1	1	Emilio	Perla	1972-03-04	epeña@gmail.com
-6	1	3	Marcos	Rivera	1986-10-24	mrivera@salud.gob
-7	1	3	Mauricio	Castro	1990-03-27	mcastro@salud.gob
-8	1	3	Karla	Guerrero	1984-03-03	kguerrero@salud.gob
-9	1	3	Jose	ponce	1987-05-04	jponce@gmail.com
-10	1	1	Martin	Reyes	1982-01-03	mreyes@gmail.com
-11	1	1	Carlos	Gutierrez	1982-06-01	cgutierres@gmail.com
-12	1	1	Pablo	Peña	1982-03-06	cpeña@gmail.com
-13	19	1	Luis Edgardo	Torres	1967-06-23	luised019_torres@hotmail.com
-14	19	1	Karla Maria	Zelaya	1983-01-02	km.zelaya020@gmail.com
-15	19	1	Teresa	Amaya	1994-12-18	nami.amaya94@yahoo.com
-16	19	2	Cesar Alejandro	Bonilla	1990-03-29	bonilla_cesale@hotmail.com
-17	19	2	Mario	Solorzano	1992-09-10	luigi.solorzano@gmail.com
-18	19	2	Claudia	Cruz	1989-07-27	ccruz@salud.gob.sv
-19	19	2	Carmen	Pineda de Melendez	1956-04-13	cpineda@salud.gob.sv
-20	4	2	Carolina	Perez	1972-06-11	cperez@salud.gob.sv
-21	19	2	Fatima Lissette	Godoy	1996-11-05	Fatyliss_god@hotmail.com
-22	19	2	Geovanny Misael	Carranza Segovia	1976-05-07	gcarranza@saud.gob.sv
-23	12	1	Raul Alexander	Menjivar Perez	1959-08-08	raul_menjivar@hotmail.com
-24	12	1	Vanessa 	Molina Rodriguez	1974-01-22	rodmolina@yahoo.es
-25	12	2	Rene Mauricio 	Santamaria	1983-07-19	santamaria.mau@gmail.com
-26	12	2	Daniela Raquel	Mendez Medina	1985-05-09	dany.mendez@gmail.com
-27	12	2	Carlos Rafael	Zepeda	1979-01-31	charly.zepeda.yahoo.com
-28	12	2	Victor	Gonzalez Zanabria	1989-11-26	victor_gonzalez@hotmail.com
-29	659	1	Elena Margarita	Sanchez	1961-04-28	margarita_sanchez@hotmail.com
-30	859	1	Juan Miguel	Diaz	1966-03-15	jmiguel.diaz@yahoo.es
-31	322	1	Wendy Lourdes	Cañas Escobar	1980-04-22	wescobar@yahoo.com
-32	101	1	Manuel de Jesus	Rivera Ruiz	1991-07-17	shus.rruiz@gmail.com
-33	19	2	Gerardo Eliseo	Serrano Castro	1984-10-16	madara.serrano@gmail.com
-34	12	2	William José	Mejia Batres	1987-08-24	will.mejia@gmail.com
+COPY ctl_empleado (id, id_cargo, id_dependencia_establecimiento, nombre, apellido, fecha_nacimiento, correo_electronico) FROM stdin;
+1	1	4	Juan	Roque	1985-01-12	roquej@gmail.com
+2	2	4	Saul	Aguilar	1991-08-09	saguilar@yahoo.es
+3	2	4	Carolina	Perez	1972-06-11	cperez@salud.gob
+4	2	4	Leticia	Salamanca	1988-04-12	letty.sal@gmail.com
+5	2	4	Oscar	Jimenez	1979-10-21	jimenez.osc979@gmail.com
+6	3	4	Marcos	Rivera	1986-10-24	mrivera@salud.gob
+7	3	4	Mauricio	Castro	1990-03-27	mcastro@salud.gob
+8	3	4	Karla	Guerrero	1984-03-03	kguerrero@salud.gob
+9	3	4	Jose	ponce	1987-05-04	jponce@gmail.com
+10	1	4	Martin	Reyes	1982-01-03	mreyes@gmail.com
+11	1	4	Carlos	Gutierrez	1982-06-01	cgutierres@gmail.com
+12	1	4	Pablo	Peña	1982-03-06	cpeña@gmail.com
+13	1	4	Emilio	Perla	1972-03-04	epeña@gmail.com
+17	1	23	Martin 	Contreras	1985-07-06	axelljt@gmail.com 
+14	1	23	Julio 	Martinez	1985-05-10	makakoioi@gmail.com 
+16	1	23	Paola	Rivas	1985-06-06	karensita8421@gmail.com
+15	1	23	Marta	Reyes	1985-03-12	anthony.huezo@gmail.com 
+18	1	23	Mario	Rivera	1987-05-03	karensita8421@gmail.com
+19	1	23	Carlos	Duque	1988-04-12	makakoioi@gmail.com
 \.
-
 
 
 --
 -- Name: ctl_empleado_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('ctl_empleado_id_seq', 36, false);
+SELECT pg_catalog.setval('ctl_empleado_id_seq', 1, false);
 
 
 --
@@ -3108,7 +3099,7 @@ COPY fos_user_group (id, name, roles) FROM stdin;
 -- Name: fos_user_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('fos_user_group_id_seq', 3, true);
+SELECT pg_catalog.setval('fos_user_group_id_seq', 1, false);
 
 
 --
@@ -3116,9 +3107,17 @@ SELECT pg_catalog.setval('fos_user_group_id_seq', 3, true);
 --
 
 COPY fos_user_user (id, id_dependencia_establecimiento, id_empleado, username, username_canonical, email, email_canonical, enabled, salt, password, last_login, locked, expired, expires_at, confirmation_token, password_requested_at, roles, credentials_expired, credentials_expire_at, created_at, updated_at, date_of_birth, firstname, lastname, website, biography, gender, locale, timezone, phone, facebook_uid, facebook_name, facebook_data, twitter_uid, twitter_name, twitter_data, gplus_uid, gplus_name, gplus_data, token, two_step_code) FROM stdin;
-3	\N	\N	sviana	sviana	sviana@salud.gob.sv	sviana@salud.gob.sv	t	3ik1vjp3h9mo0g4cooos8o00swk808g	a2uCQBSR/lqrmIdgi8+HkvtrklbsY0svXGPp7WkyEVom4MWvr/nNcA/fh4NJKc7LZIKwduDUWsABL+xsiv9RCA==	2015-01-29 11:27:07	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-29 09:37:24	2015-01-29 11:27:07	\N	Sonia	Viana	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
-1	4	\N	Minsal	minsal	minsal@salud.gob.sv	minsal@salud.gob.sv	t	nqc2pq64y9wkwk4o0o8o8ossc00skoc	RYzSYKZJbFvpqIUS7AEyN1vQmix9IKNZoIMUmA3jvZQeEVDlECevcOYlCELWoRingMT36/vAtfBmr9rLEsQXaQ==	2015-02-07 02:20:08	f	f	\N	\N	\N	a:2:{i:0;s:16:"ROLE_SUPER_ADMIN";i:1;s:10:"ROLE_ADMIN";}	f	\N	2015-01-27 21:03:12	2015-01-29 11:45:48	\N	Pedro	Perez	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
-2	\N	\N	anthony	anthony	anthony.huezo@gmail.com	anthony.huezo@gmail.com	t	44n26usz7740oswcgggg0kk400w8sgc	6sTUfgUKmPOKq0A+UXVHOOAlilTBvx+r6SCWHFgscRbRmn9TdnTCetnNbklRmTNIOBp8r5PVqFC9QVY66tDHYw==	2015-02-07 02:20:54	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-28 23:40:51	2015-01-29 12:51:53	\N	Anthony	Huezo	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
+6	4	5	tecnico	tecnico	tecnico@gmail.com	tecnico@gmail.com	t	ox8omybl0j4s4cwcoo0c4ko0cc0gw4s	Xo4x4vwNwt2O+ct6NtpF6jnNA7ugCkZHm+e544TQ3/H4Ya7c/p9pRURTIECH2Izy27p1cCA8hDhyZAgsREgbjA==	2015-02-17 11:35:59	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+9	23	15	tecnico1ucm	tecnico1ucm	antony@gmail.com	antony@gmail.com	t	2ak3h1mp7q1wsww4sswggws0ssogs8s	Fbl7P1+eePi4TYGQU2VIX40cb0CKWMHBL2BiWy2Uhc5XGwF/yJ8HwgssaXtvELGqNmARlVGYl5jEJZhQJWUiKA==	2015-02-22 05:47:14	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+2	4	2	anthony	anthony	anthony.huezo@gmail.com	anthony.huezo@gmail.com	t	44n26usz7740oswcgggg0kk400w8sgc	6sTUfgUKmPOKq0A+UXVHOOAlilTBvx+r6SCWHFgscRbRmn9TdnTCetnNbklRmTNIOBp8r5PVqFC9QVY66tDHYw==	2015-02-07 02:20:54	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-28 23:40:51	2015-01-29 12:51:53	\N	Anthony	Huezo	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
+7	322	6	solicitante	solicitante	solicitante@gmail.com	solicitante@gmail.com	t	893f5smysj8co4gco4c4cgsss4wk4k4	RvWUS53TELbEEl8WARzzFFwW4O3iHTe63T5lG1bpCY5GhE9WQFQ7JIm490PZdfB9aJioDAPksDgtsr5zIs4uKw==	2015-02-19 08:39:46	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+3	4	3	sviana	sviana	sviana@salud.gob.sv	sviana@salud.gob.sv	t	3ik1vjp3h9mo0g4cooos8o00swk808g	a2uCQBSR/lqrmIdgi8+HkvtrklbsY0svXGPp7WkyEVom4MWvr/nNcA/fh4NJKc7LZIKwduDUWsABL+xsiv9RCA==	2015-02-17 11:21:07	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-29 09:37:24	2015-01-29 11:27:07	\N	Sonia	Viana	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
+1	322	1	Minsal	minsal	minsal@salud.gob.sv	minsal@salud.gob.sv	t	nqc2pq64y9wkwk4o0o8o8ossc00skoc	RYzSYKZJbFvpqIUS7AEyN1vQmix9IKNZoIMUmA3jvZQeEVDlECevcOYlCELWoRingMT36/vAtfBmr9rLEsQXaQ==	2015-02-17 11:21:56	f	f	\N	\N	\N	a:2:{i:0;s:16:"ROLE_SUPER_ADMIN";i:1;s:10:"ROLE_ADMIN";}	f	\N	2015-01-27 21:03:12	2015-01-29 11:45:48	\N	Pedro	Perez	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
+5	4	4	responsable	responsable	responsable@gmail.com	responsable@gmail.com	t	27nh1rszygpw04o4cogwcskwow0ksc0	i+qNN4ExKVYHVgG3vOknJcMt4vTrH+0qRzn8c/hqPUaUKXyiOgs7CQYn3ep6M3i0UPrTpM3xxkq8PmCkJGVEAw==	2015-02-19 12:04:48	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+11	23	16	tecnico2ucm	tecnico2ucm	huezo@gmail.com	huezo@gmail.com	t	owmk6ygpf40woo84c8gcwo8sco08w0o	9vyikSk9xh1A1bG9HJohZkjFEBDZNZ/hk0syYa9NTXFGdqCYj4VeyLVnIZYr9NosZwQKNWtRH8v5pB59BWecUQ==	2015-02-22 05:48:51	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+12	\N	\N	tecnico3ucm	tecnico3ucm	mrivera@gmail.com	mrivera@gmail.com	t	2l6uovdpagisgsg8gccoccksks8wgk0	8ifaCoP6U4evsGix9m5n77McjFv8HHyK21f7MCp8YgqGFiDC9R2TwHIrOb5OvFPIqpfC7NdmW4FPCtQ1v65taw==	\N	f	f	\N	\N	\N	a:0:{}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8	23	14	solicitanteucm	solicitanteucm	emilio@gmail.com	emilio@gmail.com	t	lqhgxxirzxsog4so8ksgg4wk4gossks	seNPeWY3JXksoDnTtq0KbG7LN5stNW15XWoDW0nEkBtp/qekDJxckg1LzmXn3MSVDRJTCIA7uqnYHr6+ab6bHg==	2015-02-23 02:09:09	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+10	23	17	responsableucm	responsableucm	axel@gmail.com	axel@gmail.com	t	l3lufubf8ogokk4ogkkc0o0sk0cokgs	87arS95nuqvaPFive4bMThGOY0OH36KptM71irB0xCKH5L3B7lakqlXWF5C72e5vVcRWnDsfBqwhjSBMSVEKTQ==	2015-02-23 02:24:26	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -3139,14 +3138,21 @@ COPY fos_user_user_group (user_id, group_id) FROM stdin;
 -- Name: fos_user_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('fos_user_user_id_seq', 3, true);
+SELECT pg_catalog.setval('fos_user_user_id_seq', 1, false);
+
+
+--
+-- Name: role_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
+--
+
+SELECT pg_catalog.setval('role_id_seq', 1, false);
 
 
 --
 -- Data for Name: sidpla_actividad; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sidpla_actividad (id, id_linea_estrategica, id_empleado, descripcion, codigo, activo, meta_anual, descripcion_meta_anual, indicador, medio_verificacion, generado) FROM stdin;
+COPY sidpla_actividad (id, id_empleado, id_linea_estrategica, descripcion, codigo, activo, meta_anual, descripcion_meta_anual, indicador, medio_verificacion, generado) FROM stdin;
 \.
 
 
@@ -3221,7 +3227,7 @@ SELECT pg_catalog.setval('sifda_detalle_solicitud_servicio_id_seq', 1, false);
 -- Data for Name: sifda_equipo_trabajo; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_equipo_trabajo (id, id_orden_trabajo, id_empleado, responsable_equipo) FROM stdin;
+COPY sifda_equipo_trabajo (id, id_empleado, id_orden_trabajo, responsable_equipo) FROM stdin;
 \.
 
 
@@ -3229,14 +3235,14 @@ COPY sifda_equipo_trabajo (id, id_orden_trabajo, id_empleado, responsable_equipo
 -- Name: sifda_equipo_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_equipo_trabajo_id_seq', 2, true);
+SELECT pg_catalog.setval('sifda_equipo_trabajo_id_seq', 1, false);
 
 
 --
 -- Data for Name: sifda_informe_orden_trabajo; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_informe_orden_trabajo (id, id_empleado, id_orden_trabajo, id_subactividad, id_dependencia_establecimiento, id_etapa, detalle, fecha_realizacion, fecha_registro, terminado) FROM stdin;
+COPY sifda_informe_orden_trabajo (id, id_dependencia_establecimiento, id_empleado, id_orden_trabajo, id_subactividad, id_etapa, detalle, fecha_realizacion, fecha_registro, terminado) FROM stdin;
 \.
 
 
@@ -3244,14 +3250,14 @@ COPY sifda_informe_orden_trabajo (id, id_empleado, id_orden_trabajo, id_subactiv
 -- Name: sifda_informe_orden_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_informe_orden_trabajo_id_seq', 1, true);
+SELECT pg_catalog.setval('sifda_informe_orden_trabajo_id_seq', 1, false);
 
 
 --
 -- Data for Name: sifda_orden_trabajo; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_orden_trabajo (id, id_solicitud_servicio, id_estado, id_etapa, id_dependencia_establecimiento, id_prioridad, descripcion, codigo, fecha_creacion, fecha_finalizacion, observacion) FROM stdin;
+COPY sifda_orden_trabajo (id, id_prioridad, id_estado, id_dependencia_establecimiento, id_solicitud_servicio, id_etapa, descripcion, codigo, fecha_creacion, fecha_finalizacion, observacion) FROM stdin;
 \.
 
 
@@ -3259,7 +3265,7 @@ COPY sifda_orden_trabajo (id, id_solicitud_servicio, id_estado, id_etapa, id_dep
 -- Name: sifda_orden_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_orden_trabajo_id_seq', 4, true);
+SELECT pg_catalog.setval('sifda_orden_trabajo_id_seq', 1, false);
 
 
 --
@@ -3281,7 +3287,7 @@ SELECT pg_catalog.setval('sifda_recurso_servicio_id_seq', 1, false);
 -- Data for Name: sifda_reprogramacion_servicio; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_reprogramacion_servicio (id, id_solicitud_servicio, fecha_reprogramacion, justificacion) FROM stdin;
+COPY sifda_reprogramacion_servicio (id, id_solicitud_servicio, fecha_reprogramacion, fecha_anterior, justificacion) FROM stdin;
 \.
 
 
@@ -3289,7 +3295,7 @@ COPY sifda_reprogramacion_servicio (id, id_solicitud_servicio, fecha_reprogramac
 -- Name: sifda_reprogramacion_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_reprogramacion_servicio_id_seq', 2, true);
+SELECT pg_catalog.setval('sifda_reprogramacion_servicio_id_seq', 1, false);
 
 
 --
@@ -3319,7 +3325,7 @@ COPY sifda_ruta (id, id_tipo_servicio, descripcion, tipo) FROM stdin;
 -- Data for Name: sifda_ruta_ciclo_vida; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_ruta_ciclo_vida (id, id_tipo_servicio, id_etapa, descripcion, referencia, jerarquia, ignorar_sig, peso) FROM stdin;
+COPY sifda_ruta_ciclo_vida (id, id_etapa, id_tipo_servicio, descripcion, referencia, jerarquia, ignorar_sig, peso) FROM stdin;
 \.
 
 
@@ -3327,21 +3333,21 @@ COPY sifda_ruta_ciclo_vida (id, id_tipo_servicio, id_etapa, descripcion, referen
 -- Name: sifda_ruta_ciclo_vida_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_ruta_ciclo_vida_id_seq', 3, true);
+SELECT pg_catalog.setval('sifda_ruta_ciclo_vida_id_seq', 1, false);
 
 
 --
 -- Name: sifda_ruta_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_ruta_id_seq', 1, true);
+SELECT pg_catalog.setval('sifda_ruta_id_seq', 1, false);
 
 
 --
 -- Data for Name: sifda_solicitud_servicio; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_solicitud_servicio (id, id_tipo_servicio, user_id, id_dependencia_establecimiento, id_estado, id_medio_solicita, descripcion, fecha_recepcion, fecha_requiere) FROM stdin;
+COPY sifda_solicitud_servicio (id, id_estado, id_medio_solicita, id_dependencia_establecimiento, user_id, id_tipo_servicio, descripcion, fecha_recepcion, fecha_requiere) FROM stdin;
 \.
 
 
@@ -3349,7 +3355,7 @@ COPY sifda_solicitud_servicio (id, id_tipo_servicio, user_id, id_dependencia_est
 -- Name: sifda_solicitud_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_solicitud_servicio_id_seq', 3, true);
+SELECT pg_catalog.setval('sifda_solicitud_servicio_id_seq', 1, false);
 
 
 --
@@ -3364,7 +3370,7 @@ COPY sifda_tipo_recurso (id, nombre, descripcion, rrhh) FROM stdin;
 -- Data for Name: sifda_tipo_recurso_dependencia; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_tipo_recurso_dependencia (id, id_tipo_recurso, id_dependencia_establecimiento, costo_unitario) FROM stdin;
+COPY sifda_tipo_recurso_dependencia (id, id_dependencia_establecimiento, id_tipo_recurso, costo_unitario) FROM stdin;
 \.
 
 
@@ -3386,8 +3392,28 @@ SELECT pg_catalog.setval('sifda_tipo_recurso_id_seq', 1, false);
 -- Data for Name: sifda_tipo_servicio; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_tipo_servicio (id, id_actividad, nombre, descripcion, activo, id_dependencia_establecimiento) FROM stdin;
-
+COPY sifda_tipo_servicio (id, id_actividad, id_dependencia_establecimiento, nombre, descripcion, activo) FROM stdin;
+1	\N	21	Carpintería	Carpintería	t
+2	\N	21	Albañilería	Albañilería	t
+3	\N	21	Fontanería	Fontanería	t
+4	\N	21	Pintura General	Pintura General	t
+5	\N	21	Pintura Mobiliario	Pintura Mobiliario	t
+6	\N	21	Reparación Mecánica	Reparación Mecánica	t
+7	\N	21	Reparación Eléctrica	Reparación Eléctrica	t
+8	\N	21	Equipo de oficina	Equipo de oficina	t
+9	\N	21	Reparación Telefónica	Reparación Telefónica	t
+10	\N	21	Aire Acondicionado	Aire Acondicionado	t
+11	\N	21	Reparación Electrónica	Reparación Electrónica	t
+12	\N	21	Mantenimiento General de maquinaria	Mantenimiento General de maquinaría	t
+13	\N	21	Estimación de reparaciones y costos	Estimación de reparaciones y costos	t
+14	\N	21	Ensamblar Maquinas	Ensamblar Maquinas	t
+15	\N	21	Ensamblar Equipos	Emsamblar Equipos	t
+16	\N	21	Reparación de Cisterna	Reparación de Cistera	t
+17	\N	21	Evaluación de instalaciones eléctricas	Evaluación de instalaciones eléctricas	t
+18	\N	21	Mantenimiento preventivo de Maquinaría	Mantenimiento preventivo de Maquinaría	t
+19	\N	21	Mantenimiento correctivo de maquinaría	Mantenimiento Correctivo de Maquinaría	t
+20	\N	21	Limpieza en Fotocopiadoras	Limpieza en Fotocopiadoras	t
+21	\N	21	Mantenimiento Automotriz	Mantenimiento Automotriz	t
 \.
 
 
@@ -3395,14 +3421,14 @@ COPY sifda_tipo_servicio (id, id_actividad, nombre, descripcion, activo, id_depe
 -- Name: sifda_tipo_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_tipo_servicio_id_seq', 3, true);
+SELECT pg_catalog.setval('sifda_tipo_servicio_id_seq', 1, false);
 
 
 --
 -- Data for Name: sifda_tracking_estado; Type: TABLE DATA; Schema: public; Owner: sifda
 --
 
-COPY sifda_tracking_estado (id, id_orden_trabajo, id_estado, id_etapa, fecha_inicio, fecha_fin, prog_actividad, observacion) FROM stdin;
+COPY sifda_tracking_estado (id, id_estado, id_orden_trabajo, id_etapa, fecha_inicio, fecha_fin, prog_actividad, observacion) FROM stdin;
 \.
 
 
@@ -3411,6 +3437,85 @@ COPY sifda_tracking_estado (id, id_orden_trabajo, id_estado, id_etapa, fecha_ini
 --
 
 SELECT pg_catalog.setval('sifda_tracking_estado_id_seq', 1, false);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
+--
+
+SELECT pg_catalog.setval('user_id_seq', 1, false);
+
+
+--
+-- Name: bitacora_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY bitacora
+    ADD CONSTRAINT bitacora_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: catalogo_detalle_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY catalogo_detalle
+    ADD CONSTRAINT catalogo_detalle_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: catalogo_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY catalogo
+    ADD CONSTRAINT catalogo_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_cargo_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_cargo
+    ADD CONSTRAINT ctl_cargo_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_dependencia_establecimiento_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_dependencia_establecimiento
+    ADD CONSTRAINT ctl_dependencia_establecimiento_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_dependencia_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_dependencia
+    ADD CONSTRAINT ctl_dependencia_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_empleado_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_empleado
+    ADD CONSTRAINT ctl_empleado_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_establecimiento_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_establecimiento
+    ADD CONSTRAINT ctl_establecimiento_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ctl_tipo_dependencia_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY ctl_tipo_dependencia
+    ADD CONSTRAINT ctl_tipo_dependencia_pkey PRIMARY KEY (id);
 
 
 --
@@ -3438,261 +3543,147 @@ ALTER TABLE ONLY fos_user_user
 
 
 --
--- Name: pk_bitacora; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY bitacora
-    ADD CONSTRAINT pk_bitacora PRIMARY KEY (id);
-
-
---
--- Name: pk_catalogo; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY catalogo
-    ADD CONSTRAINT pk_catalogo PRIMARY KEY (id);
-
-
---
--- Name: pk_catalogo_detalle; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY catalogo_detalle
-    ADD CONSTRAINT pk_catalogo_detalle PRIMARY KEY (id);
-
-
---
--- Name: pk_ctl_cargo; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_cargo
-    ADD CONSTRAINT pk_ctl_cargo PRIMARY KEY (id);
-
-
---
--- Name: pk_ctl_dependencia; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_dependencia
-    ADD CONSTRAINT pk_ctl_dependencia PRIMARY KEY (id);
-
-
---
--- Name: pk_ctl_empleado; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_empleado
-    ADD CONSTRAINT pk_ctl_empleado PRIMARY KEY (id);
-
-
---
--- Name: pk_ctl_establecimiento; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_establecimiento
-    ADD CONSTRAINT pk_ctl_establecimiento PRIMARY KEY (id);
-
-
---
--- Name: pk_ctl_tipo_dependencia; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_tipo_dependencia
-    ADD CONSTRAINT pk_ctl_tipo_dependencia PRIMARY KEY (id);
-
-
---
--- Name: pk_dependencia_establecimiento; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY ctl_dependencia_establecimiento
-    ADD CONSTRAINT pk_dependencia_establecimiento PRIMARY KEY (id);
-
-
---
--- Name: pk_detalle; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_detalle_solicitud_orden
-    ADD CONSTRAINT pk_detalle PRIMARY KEY (id);
-
-
---
--- Name: pk_detalle_solicitud_servicio; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_detalle_solicitud_servicio
-    ADD CONSTRAINT pk_detalle_solicitud_servicio PRIMARY KEY (id);
-
-
---
--- Name: pk_reprogramacion_servicio; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_reprogramacion_servicio
-    ADD CONSTRAINT pk_reprogramacion_servicio PRIMARY KEY (id);
-
-
---
--- Name: pk_sidpla_actividad; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sidpla_actividad_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sidpla_actividad
-    ADD CONSTRAINT pk_sidpla_actividad PRIMARY KEY (id);
+    ADD CONSTRAINT sidpla_actividad_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sidpla_linea_estrategica; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sidpla_linea_estrategica_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sidpla_linea_estrategica
-    ADD CONSTRAINT pk_sidpla_linea_estrategica PRIMARY KEY (id);
+    ADD CONSTRAINT sidpla_linea_estrategica_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sidpla_subactividad; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sidpla_subactividad_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sidpla_subactividad
-    ADD CONSTRAINT pk_sidpla_subactividad PRIMARY KEY (id);
+    ADD CONSTRAINT sidpla_subactividad_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_equipo_trabajo; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_detalle_solicitud_orden_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY sifda_detalle_solicitud_orden
+    ADD CONSTRAINT sifda_detalle_solicitud_orden_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sifda_detalle_solicitud_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY sifda_detalle_solicitud_servicio
+    ADD CONSTRAINT sifda_detalle_solicitud_servicio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sifda_equipo_trabajo_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_equipo_trabajo
-    ADD CONSTRAINT pk_sifda_equipo_trabajo PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_equipo_trabajo_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_informe_orden_trabajo; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_informe_orden_trabajo_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_informe_orden_trabajo
-    ADD CONSTRAINT pk_sifda_informe_orden_trabajo PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_informe_orden_trabajo_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_orden_trabajo; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_orden_trabajo_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_orden_trabajo
-    ADD CONSTRAINT pk_sifda_orden_trabajo PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_orden_trabajo_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_recurso_servicio; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_recurso_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_recurso_servicio
-    ADD CONSTRAINT pk_sifda_recurso_servicio PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_recurso_servicio_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_retraso_actividad; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_reprogramacion_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY sifda_reprogramacion_servicio
+    ADD CONSTRAINT sifda_reprogramacion_servicio_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sifda_retraso_actividad_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_retraso_actividad
-    ADD CONSTRAINT pk_sifda_retraso_actividad PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_retraso_actividad_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_ruta; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_ruta
-    ADD CONSTRAINT pk_sifda_ruta PRIMARY KEY (id);
-
-
---
--- Name: pk_sifda_ruta_ciclo_vida; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_ruta_ciclo_vida_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_ruta_ciclo_vida
-    ADD CONSTRAINT pk_sifda_ruta_ciclo_vida PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_ruta_ciclo_vida_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_solicitud_servicio; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_ruta_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+--
+
+ALTER TABLE ONLY sifda_ruta
+    ADD CONSTRAINT sifda_ruta_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sifda_solicitud_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_solicitud_servicio
-    ADD CONSTRAINT pk_sifda_solicitud_servicio PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_solicitud_servicio_pkey PRIMARY KEY (id);
 
 
 --
--- Name: pk_sifda_tipo_recurso; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_tipo_recurso
-    ADD CONSTRAINT pk_sifda_tipo_recurso PRIMARY KEY (id);
-
-
---
--- Name: pk_sifda_tipo_servicio; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_tipo_servicio
-    ADD CONSTRAINT pk_sifda_tipo_servicio PRIMARY KEY (id);
-
-
---
--- Name: pk_sifda_tracking_estado; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
---
-
-ALTER TABLE ONLY sifda_tracking_estado
-    ADD CONSTRAINT pk_sifda_tracking_estado PRIMARY KEY (id);
-
-
---
--- Name: pk_tipo_recurso_dependencia; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_tipo_recurso_dependencia_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
 ALTER TABLE ONLY sifda_tipo_recurso_dependencia
-    ADD CONSTRAINT pk_tipo_recurso_dependencia PRIMARY KEY (id);
+    ADD CONSTRAINT sifda_tipo_recurso_dependencia_pkey PRIMARY KEY (id);
 
 
 --
--- Name: almacena_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_tipo_recurso_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX almacena_fk ON sifda_tracking_estado USING btree (id_estado);
-
-
---
--- Name: atiende_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX atiende_fk ON sifda_orden_trabajo USING btree (id_dependencia_establecimiento);
+ALTER TABLE ONLY sifda_tipo_recurso
+    ADD CONSTRAINT sifda_tipo_recurso_pkey PRIMARY KEY (id);
 
 
 --
--- Name: conformado_por_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_tipo_servicio_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX conformado_por_fk ON ctl_dependencia USING btree (id_tipo_dependencia);
-
-
---
--- Name: constituye_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX constituye_fk ON sifda_tipo_servicio USING btree (id_actividad);
+ALTER TABLE ONLY sifda_tipo_servicio
+    ADD CONSTRAINT sifda_tipo_servicio_pkey PRIMARY KEY (id);
 
 
 --
--- Name: crea_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: sifda_tracking_estado_pkey; Type: CONSTRAINT; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX crea_fk ON sifda_orden_trabajo USING btree (id_solicitud_servicio);
-
-
---
--- Name: define_estado_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX define_estado_fk ON sifda_orden_trabajo USING btree (id_estado);
+ALTER TABLE ONLY sifda_tracking_estado
+    ADD CONSTRAINT sifda_tracking_estado_pkey PRIMARY KEY (id);
 
 
 --
@@ -3703,108 +3694,185 @@ CREATE INDEX define_etapa_fk ON sifda_orden_trabajo USING btree (id_etapa);
 
 
 --
--- Name: define_evento_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_144207df49e7be1; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX define_evento_fk ON bitacora USING btree (id_evento);
-
-
---
--- Name: define_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX define_fk ON sifda_solicitud_servicio USING btree (id_tipo_servicio);
+CREATE INDEX idx_144207df49e7be1 ON ctl_dependencia USING btree (id_tipo_dependencia);
 
 
 --
--- Name: define_medio_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_1f50e2dc890253c7; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX define_medio_fk ON sifda_solicitud_servicio USING btree (id_medio_solicita);
-
-
---
--- Name: define_prioridad_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX define_prioridad_fk ON sifda_orden_trabajo USING btree (id_prioridad);
+CREATE INDEX idx_1f50e2dc890253c7 ON sifda_equipo_trabajo USING btree (id_empleado);
 
 
 --
--- Name: define_recurso_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_1f50e2dcff707141; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX define_recurso_fk ON sifda_recurso_servicio USING btree (id_tipo_recurso_dependencia);
-
-
---
--- Name: describe_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX describe_fk ON sifda_detalle_solicitud_servicio USING btree (id_solicitud_servicio);
+CREATE INDEX idx_1f50e2dcff707141 ON sifda_equipo_trabajo USING btree (id_orden_trabajo);
 
 
 --
--- Name: ejecuta_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_238434196d903705; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX ejecuta_fk ON sidpla_actividad USING btree (id_empleado);
-
-
---
--- Name: es_atendida_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX es_atendida_fk ON sifda_equipo_trabajo USING btree (id_orden_trabajo);
+CREATE INDEX idx_238434196d903705 ON sifda_detalle_solicitud_orden USING btree (id_detalle_solicitud_servicio);
 
 
 --
--- Name: es_conformado_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_23843419ff707141; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX es_conformado_fk ON sidpla_subactividad USING btree (id_actividad);
-
-
---
--- Name: es_generado_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX es_generado_fk ON sifda_informe_orden_trabajo USING btree (id_orden_trabajo);
+CREATE INDEX idx_23843419ff707141 ON sifda_detalle_solicitud_orden USING btree (id_orden_trabajo);
 
 
 --
--- Name: especifica_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_24d08fe93a5c634d; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX especifica_fk ON catalogo_detalle USING btree (id_catalogo);
-
-
---
--- Name: establece_estado_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX establece_estado_fk ON sifda_solicitud_servicio USING btree (id_estado);
+CREATE INDEX idx_24d08fe93a5c634d ON sifda_informe_orden_trabajo USING btree (id_subactividad);
 
 
 --
--- Name: forma_parte_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_24d08fe9890253c7; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX forma_parte_fk ON sifda_equipo_trabajo USING btree (id_empleado);
-
-
---
--- Name: genera_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX genera_fk ON bitacora USING btree (user_id);
+CREATE INDEX idx_24d08fe9890253c7 ON sifda_informe_orden_trabajo USING btree (id_empleado);
 
 
 --
--- Name: gestiona_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_24d08fe9e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX gestiona_fk ON sidpla_subactividad USING btree (id_empleado);
+CREATE INDEX idx_24d08fe9e54d836e ON sifda_informe_orden_trabajo USING btree (id_dependencia_establecimiento);
+
+
+--
+-- Name: idx_24d08fe9ff707141; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_24d08fe9ff707141 ON sifda_informe_orden_trabajo USING btree (id_orden_trabajo);
+
+
+--
+-- Name: idx_26b328fea36b7986; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_26b328fea36b7986 ON sifda_ruta_ciclo_vida USING btree (id_tipo_servicio);
+
+
+--
+-- Name: idx_26b328fec1b7f0f4; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_26b328fec1b7f0f4 ON sifda_ruta_ciclo_vida USING btree (id_etapa);
+
+
+--
+-- Name: idx_34aefc666a540e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_34aefc666a540e ON sifda_tracking_estado USING btree (id_estado);
+
+
+--
+-- Name: idx_34aefc66c1b7f0f4; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_34aefc66c1b7f0f4 ON sifda_tracking_estado USING btree (id_etapa);
+
+
+--
+-- Name: idx_34aefc66ff707141; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_34aefc66ff707141 ON sifda_tracking_estado USING btree (id_orden_trabajo);
+
+
+--
+-- Name: idx_68d54b24d23f6540; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_68d54b24d23f6540 ON sifda_reprogramacion_servicio USING btree (id_solicitud_servicio);
+
+
+--
+-- Name: idx_789f9e17d23f6540; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_789f9e17d23f6540 ON sifda_detalle_solicitud_servicio USING btree (id_solicitud_servicio);
+
+
+--
+-- Name: idx_7fe39de2828363b6; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_7fe39de2828363b6 ON sifda_tipo_recurso_dependencia USING btree (id_tipo_recurso);
+
+
+--
+-- Name: idx_7fe39de2e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_7fe39de2e54d836e ON sifda_tipo_recurso_dependencia USING btree (id_dependencia_establecimiento);
+
+
+--
+-- Name: idx_9087fef961b1bee8; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9087fef961b1bee8 ON bitacora USING btree (id_evento);
+
+
+--
+-- Name: idx_9087fef9a76ed395; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9087fef9a76ed395 ON bitacora USING btree (user_id);
+
+
+--
+-- Name: idx_9b784dd9890253c7; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9b784dd9890253c7 ON sidpla_subactividad USING btree (id_empleado);
+
+
+--
+-- Name: idx_9b784dd9dc70121; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9b784dd9dc70121 ON sidpla_subactividad USING btree (id_actividad);
+
+
+--
+-- Name: idx_9e3a7e98653f909; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9e3a7e98653f909 ON sidpla_actividad USING btree (id_linea_estrategica);
+
+
+--
+-- Name: idx_9e3a7e98890253c7; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_9e3a7e98890253c7 ON sidpla_actividad USING btree (id_empleado);
+
+
+--
+-- Name: idx_b0295384d56b1641; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_b0295384d56b1641 ON ctl_empleado USING btree (id_cargo);
+
+
+--
+-- Name: idx_b0295384e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_b0295384e54d836e ON ctl_empleado USING btree (id_dependencia_establecimiento);
 
 
 --
@@ -3822,6 +3890,41 @@ CREATE INDEX idx_b3c77447fe54d947 ON fos_user_user_group USING btree (group_id);
 
 
 --
+-- Name: idx_bc5984322bf76b46; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_bc5984322bf76b46 ON ctl_dependencia_establecimiento USING btree (id_dependencia_padre);
+
+
+--
+-- Name: idx_bc5984327dfa12f6; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_bc5984327dfa12f6 ON ctl_dependencia_establecimiento USING btree (id_establecimiento);
+
+
+--
+-- Name: idx_bc598432ca22cd3f; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_bc598432ca22cd3f ON ctl_dependencia_establecimiento USING btree (id_dependencia);
+
+
+--
+-- Name: idx_bf94104adc70121; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_bf94104adc70121 ON sifda_tipo_servicio USING btree (id_actividad);
+
+
+--
+-- Name: idx_bf94104ae54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_bf94104ae54d836e ON sifda_tipo_servicio USING btree (id_dependencia_establecimiento);
+
+
+--
 -- Name: idx_bitacora; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -3829,10 +3932,24 @@ CREATE UNIQUE INDEX idx_bitacora ON bitacora USING btree (id);
 
 
 --
--- Name: idx_catalogo_detalle; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_c560d761890253c7; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE UNIQUE INDEX idx_catalogo_detalle ON catalogo_detalle USING btree (id);
+CREATE INDEX idx_c560d761890253c7 ON fos_user_user USING btree (id_empleado);
+
+
+--
+-- Name: idx_c560d761e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_c560d761e54d836e ON fos_user_user USING btree (id_dependencia_establecimiento);
+
+
+--
+-- Name: idx_catalogo; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE UNIQUE INDEX idx_catalogo ON catalogo USING btree (id);
 
 
 --
@@ -3843,20 +3960,6 @@ CREATE UNIQUE INDEX idx_ctl_cargo ON ctl_cargo USING btree (id);
 
 
 --
--- Name: idx_ctl_dependencia; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_ctl_dependencia ON ctl_dependencia USING btree (id);
-
-
---
--- Name: idx_ctl_establecimiento; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_ctl_establecimiento ON ctl_establecimiento USING btree (id);
-
-
---
 -- Name: idx_ctl_tipo_dependencia; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -3864,17 +3967,10 @@ CREATE UNIQUE INDEX idx_ctl_tipo_dependencia ON ctl_tipo_dependencia USING btree
 
 
 --
--- Name: idx_depen_estab; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_d0a819c8ff707141; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX idx_depen_estab ON ctl_empleado USING btree (id_dependencia_establecimiento);
-
-
---
--- Name: idx_det_orden_trabajo; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_det_orden_trabajo ON sifda_detalle_solicitud_orden USING btree (id_orden_trabajo);
+CREATE INDEX idx_d0a819c8ff707141 ON sifda_retraso_actividad USING btree (id_orden_trabajo);
 
 
 --
@@ -3892,6 +3988,83 @@ CREATE UNIQUE INDEX idx_detalle_solicitud_servicio ON sifda_detalle_solicitud_se
 
 
 --
+-- Name: idx_e01bb1a36a540e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e01bb1a36a540e ON sifda_solicitud_servicio USING btree (id_estado);
+
+
+--
+-- Name: idx_e01bb1a3a36b7986; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e01bb1a3a36b7986 ON sifda_solicitud_servicio USING btree (id_tipo_servicio);
+
+
+--
+-- Name: idx_e01bb1a3a76ed395; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e01bb1a3a76ed395 ON sifda_solicitud_servicio USING btree (user_id);
+
+
+--
+-- Name: idx_e01bb1a3e2aa4972; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e01bb1a3e2aa4972 ON sifda_solicitud_servicio USING btree (id_medio_solicita);
+
+
+--
+-- Name: idx_e01bb1a3e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e01bb1a3e54d836e ON sifda_solicitud_servicio USING btree (id_dependencia_establecimiento);
+
+
+--
+-- Name: idx_e38f188d23bdde75; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e38f188d23bdde75 ON sifda_orden_trabajo USING btree (id_prioridad);
+
+
+--
+-- Name: idx_e38f188d6a540e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e38f188d6a540e ON sifda_orden_trabajo USING btree (id_estado);
+
+
+--
+-- Name: idx_e38f188dd23f6540; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e38f188dd23f6540 ON sifda_orden_trabajo USING btree (id_solicitud_servicio);
+
+
+--
+-- Name: idx_e38f188de54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e38f188de54d836e ON sifda_orden_trabajo USING btree (id_dependencia_establecimiento);
+
+
+--
+-- Name: idx_e8978381b77787d0; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_e8978381b77787d0 ON catalogo_detalle USING btree (id_catalogo);
+
+
+--
+-- Name: idx_ea60c340e54d836e; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+--
+
+CREATE INDEX idx_ea60c340e54d836e ON sidpla_linea_estrategica USING btree (id_dependencia_establecimiento);
+
+
+--
 -- Name: idx_empleado; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -3899,73 +4072,24 @@ CREATE UNIQUE INDEX idx_empleado ON ctl_empleado USING btree (id);
 
 
 --
--- Name: idx_id_cargo; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_establecimiento; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX idx_id_cargo ON ctl_empleado USING btree (id_cargo);
-
-
---
--- Name: idx_id_catalogo; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_catalogo ON catalogo_detalle USING btree (id_catalogo);
+CREATE UNIQUE INDEX idx_establecimiento ON ctl_establecimiento USING btree (id);
 
 
 --
--- Name: idx_id_dep_establecimiento; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_fcb39128562305e8; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX idx_id_dep_establecimiento ON ctl_dependencia_establecimiento USING btree (id_establecimiento);
-
-
---
--- Name: idx_id_dependencia; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_dependencia ON ctl_dependencia USING btree (id_tipo_dependencia);
+CREATE INDEX idx_fcb39128562305e8 ON sifda_recurso_servicio USING btree (id_informe_orden_trabajo);
 
 
 --
--- Name: idx_id_dependencia_est; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_fcb391289bf924c0; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE INDEX idx_id_dependencia_est ON ctl_dependencia_establecimiento USING btree (id_dependencia);
-
-
---
--- Name: idx_id_dependencia_establecimiento; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_id_dependencia_establecimiento ON ctl_dependencia_establecimiento USING btree (id);
-
-
---
--- Name: idx_id_dependencia_padre; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_dependencia_padre ON ctl_dependencia_establecimiento USING btree (id_dependencia_padre);
-
-
---
--- Name: idx_id_det_sol_serv; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_det_sol_serv ON sifda_detalle_solicitud_orden USING btree (id_detalle_solicitud_servicio);
-
-
---
--- Name: idx_id_evento; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_evento ON bitacora USING btree (id_evento);
-
-
---
--- Name: idx_id_ruta_etapa; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_id_ruta_etapa ON sifda_ruta_ciclo_vida USING btree (id_etapa);
+CREATE INDEX idx_fcb391289bf924c0 ON sifda_recurso_servicio USING btree (id_tipo_recurso_dependencia);
 
 
 --
@@ -4004,20 +4128,6 @@ CREATE UNIQUE INDEX idx_sifda_informe_orden_trabajo ON sifda_informe_orden_traba
 
 
 --
--- Name: idx_sifda_orden_trabajo; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_sifda_orden_trabajo ON sifda_orden_trabajo USING btree (id);
-
-
---
--- Name: idx_sifda_recurso_servicio; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_sifda_recurso_servicio ON sifda_recurso_servicio USING btree (id);
-
-
---
 -- Name: idx_sifda_retraso_actividad; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -4053,31 +4163,10 @@ CREATE UNIQUE INDEX idx_sifda_tipo_recurso ON sifda_tipo_recurso USING btree (id
 
 
 --
--- Name: idx_sifda_tracking_estado; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: idx_tracking_estado; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
-CREATE UNIQUE INDEX idx_sifda_tracking_estado ON sifda_tracking_estado USING btree (id);
-
-
---
--- Name: idx_tipo_recurso_dependencia; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX idx_tipo_recurso_dependencia ON sifda_tipo_recurso_dependencia USING btree (id);
-
-
---
--- Name: idx_user_id; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX idx_user_id ON bitacora USING btree (user_id);
-
-
---
--- Name: index_catalogo_detalle; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE UNIQUE INDEX index_catalogo_detalle ON catalogo_detalle USING btree (id);
+CREATE UNIQUE INDEX idx_tracking_estado ON sifda_tracking_estado USING btree (id);
 
 
 --
@@ -4088,76 +4177,6 @@ CREATE UNIQUE INDEX indx_sifda_tipo_servicio ON sifda_tipo_servicio USING btree 
 
 
 --
--- Name: ingresa_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX ingresa_fk ON sifda_solicitud_servicio USING btree (user_id);
-
-
---
--- Name: maneja_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX maneja_fk ON ctl_dependencia_establecimiento USING btree (id_establecimiento);
-
-
---
--- Name: pertenece_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX pertenece_fk ON ctl_dependencia_establecimiento USING btree (id_dependencia_padre);
-
-
---
--- Name: posee_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX posee_fk ON sidpla_linea_estrategica USING btree (id_dependencia_establecimiento);
-
-
---
--- Name: proporciona_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX proporciona_fk ON sifda_detalle_solicitud_orden USING btree (id_orden_trabajo);
-
-
---
--- Name: puede_tener_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX puede_tener_fk ON sifda_retraso_actividad USING btree (id_orden_trabajo);
-
-
---
--- Name: realiza_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX realiza_fk ON sifda_informe_orden_trabajo USING btree (id_dependencia_establecimiento);
-
-
---
--- Name: registra_etapa_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX registra_etapa_fk ON sifda_tracking_estado USING btree (id_etapa);
-
-
---
--- Name: requiere_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX requiere_fk ON sifda_informe_orden_trabajo USING btree (id_subactividad);
-
-
---
--- Name: se_compone_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX se_compone_fk ON sifda_tipo_recurso_dependencia USING btree (id_tipo_recurso);
-
-
---
 -- Name: se_generan_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
@@ -4165,45 +4184,10 @@ CREATE INDEX se_generan_fk ON sifda_informe_orden_trabajo USING btree (id_etapa)
 
 
 --
--- Name: se_identifica_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX se_identifica_fk ON sidpla_actividad USING btree (id_linea_estrategica);
-
-
---
--- Name: se_registra_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX se_registra_fk ON sifda_tracking_estado USING btree (id_orden_trabajo);
-
-
---
--- Name: se_traslada_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX se_traslada_fk ON sifda_reprogramacion_servicio USING btree (id_solicitud_servicio);
-
-
---
--- Name: solicita_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX solicita_fk ON sifda_solicitud_servicio USING btree (id_dependencia_establecimiento);
-
-
---
 -- Name: tiene_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
 --
 
 CREATE INDEX tiene_fk ON sifda_ruta USING btree (id_tipo_servicio);
-
-
---
--- Name: trabaja_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX trabaja_fk ON ctl_empleado USING btree (id_dependencia_establecimiento);
 
 
 --
@@ -4228,33 +4212,211 @@ CREATE UNIQUE INDEX uniq_c560d761a0d96fbf ON fos_user_user USING btree (email_ca
 
 
 --
--- Name: utiliza_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
+-- Name: fk_144207df49e7be1; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-CREATE INDEX utiliza_fk ON sifda_tipo_recurso_dependencia USING btree (id_dependencia_establecimiento);
-
-
---
--- Name: valora_fk; Type: INDEX; Schema: public; Owner: sifda; Tablespace: 
---
-
-CREATE INDEX valora_fk ON sifda_recurso_servicio USING btree (id_informe_orden_trabajo);
+ALTER TABLE ONLY ctl_dependencia
+    ADD CONSTRAINT fk_144207df49e7be1 FOREIGN KEY (id_tipo_dependencia) REFERENCES ctl_tipo_dependencia(id);
 
 
 --
--- Name: fk_actividad_subactividad; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_1f50e2dc890253c7; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_equipo_trabajo
+    ADD CONSTRAINT fk_1f50e2dc890253c7 FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id);
+
+
+--
+-- Name: fk_1f50e2dcff707141; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_equipo_trabajo
+    ADD CONSTRAINT fk_1f50e2dcff707141 FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id);
+
+
+--
+-- Name: fk_238434196d903705; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_detalle_solicitud_orden
+    ADD CONSTRAINT fk_238434196d903705 FOREIGN KEY (id_detalle_solicitud_servicio) REFERENCES sifda_detalle_solicitud_servicio(id);
+
+
+--
+-- Name: fk_23843419ff707141; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_detalle_solicitud_orden
+    ADD CONSTRAINT fk_23843419ff707141 FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id);
+
+
+--
+-- Name: fk_24d08fe93a5c634d; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_informe_orden_trabajo
+    ADD CONSTRAINT fk_24d08fe93a5c634d FOREIGN KEY (id_subactividad) REFERENCES sidpla_subactividad(id);
+
+
+--
+-- Name: fk_24d08fe9890253c7; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_informe_orden_trabajo
+    ADD CONSTRAINT fk_24d08fe9890253c7 FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id);
+
+
+--
+-- Name: fk_24d08fe9e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_informe_orden_trabajo
+    ADD CONSTRAINT fk_24d08fe9e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_24d08fe9ff707141; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_informe_orden_trabajo
+    ADD CONSTRAINT fk_24d08fe9ff707141 FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id);
+
+
+--
+-- Name: fk_26b328fea36b7986; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_ruta_ciclo_vida
+    ADD CONSTRAINT fk_26b328fea36b7986 FOREIGN KEY (id_tipo_servicio) REFERENCES sifda_tipo_servicio(id);
+
+
+--
+-- Name: fk_26b328fec1b7f0f4; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_ruta_ciclo_vida
+    ADD CONSTRAINT fk_26b328fec1b7f0f4 FOREIGN KEY (id_etapa) REFERENCES sifda_ruta_ciclo_vida(id);
+
+
+--
+-- Name: fk_34aefc666a540e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_tracking_estado
+    ADD CONSTRAINT fk_34aefc666a540e FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id);
+
+
+--
+-- Name: fk_34aefc66c1b7f0f4; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_tracking_estado
+    ADD CONSTRAINT fk_34aefc66c1b7f0f4 FOREIGN KEY (id_etapa) REFERENCES sifda_ruta_ciclo_vida(id);
+
+
+--
+-- Name: fk_34aefc66ff707141; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_tracking_estado
+    ADD CONSTRAINT fk_34aefc66ff707141 FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id);
+
+
+--
+-- Name: fk_68d54b24d23f6540; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_reprogramacion_servicio
+    ADD CONSTRAINT fk_68d54b24d23f6540 FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id);
+
+
+--
+-- Name: fk_789f9e17d23f6540; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_detalle_solicitud_servicio
+    ADD CONSTRAINT fk_789f9e17d23f6540 FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id);
+
+
+--
+-- Name: fk_7fe39de2828363b6; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_tipo_recurso_dependencia
+    ADD CONSTRAINT fk_7fe39de2828363b6 FOREIGN KEY (id_tipo_recurso) REFERENCES sifda_tipo_recurso(id);
+
+
+--
+-- Name: fk_7fe39de2e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_tipo_recurso_dependencia
+    ADD CONSTRAINT fk_7fe39de2e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_9087fef961b1bee8; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY bitacora
+    ADD CONSTRAINT fk_9087fef961b1bee8 FOREIGN KEY (id_evento) REFERENCES catalogo_detalle(id);
+
+
+--
+-- Name: fk_9087fef9a76ed395; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY bitacora
+    ADD CONSTRAINT fk_9087fef9a76ed395 FOREIGN KEY (user_id) REFERENCES fos_user_user(id);
+
+
+--
+-- Name: fk_9b784dd9890253c7; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
 ALTER TABLE ONLY sidpla_subactividad
-    ADD CONSTRAINT fk_actividad_subactividad FOREIGN KEY (id_actividad) REFERENCES sidpla_actividad(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_9b784dd9890253c7 FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id);
 
 
 --
--- Name: fk_actividad_tipo_servicio; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_9b784dd9dc70121; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-ALTER TABLE ONLY sifda_tipo_servicio
-    ADD CONSTRAINT fk_actividad_tipo_servicio FOREIGN KEY (id_actividad) REFERENCES sidpla_actividad(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY sidpla_subactividad
+    ADD CONSTRAINT fk_9b784dd9dc70121 FOREIGN KEY (id_actividad) REFERENCES sidpla_actividad(id);
+
+
+--
+-- Name: fk_9e3a7e98653f909; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sidpla_actividad
+    ADD CONSTRAINT fk_9e3a7e98653f909 FOREIGN KEY (id_linea_estrategica) REFERENCES sidpla_linea_estrategica(id);
+
+
+--
+-- Name: fk_9e3a7e98890253c7; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sidpla_actividad
+    ADD CONSTRAINT fk_9e3a7e98890253c7 FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id);
+
+
+--
+-- Name: fk_b0295384d56b1641; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY ctl_empleado
+    ADD CONSTRAINT fk_b0295384d56b1641 FOREIGN KEY (id_cargo) REFERENCES ctl_cargo(id);
+
+
+--
+-- Name: fk_b0295384e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY ctl_empleado
+    ADD CONSTRAINT fk_b0295384e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
 
 
 --
@@ -4274,147 +4436,83 @@ ALTER TABLE ONLY fos_user_user_group
 
 
 --
--- Name: fk_cargo_empleado; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY ctl_empleado
-    ADD CONSTRAINT fk_cargo_empleado FOREIGN KEY (id_cargo) REFERENCES ctl_cargo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_catalogo_detalle; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY catalogo_detalle
-    ADD CONSTRAINT fk_catalogo_catalogo_detalle FOREIGN KEY (id_catalogo) REFERENCES catalogo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_bitacora; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY bitacora
-    ADD CONSTRAINT fk_catalogo_detalle_bitacora FOREIGN KEY (id_evento) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_orden; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_orden_trabajo
-    ADD CONSTRAINT fk_catalogo_detalle_orden FOREIGN KEY (id_prioridad) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_orden_t; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_orden_trabajo
-    ADD CONSTRAINT fk_catalogo_detalle_orden_t FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_solicitud; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_solicitud_servicio
-    ADD CONSTRAINT fk_catalogo_detalle_solicitud FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_solicitud_s; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_solicitud_servicio
-    ADD CONSTRAINT fk_catalogo_detalle_solicitud_s FOREIGN KEY (id_medio_solicita) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_catalogo_detalle_tracking; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_tracking_estado
-    ADD CONSTRAINT fk_catalogo_detalle_tracking FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_dependencia_dependencia_establecimiento; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_bc5984322bf76b46; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
 ALTER TABLE ONLY ctl_dependencia_establecimiento
-    ADD CONSTRAINT fk_dependencia_dependencia_establecimiento FOREIGN KEY (id_dependencia) REFERENCES ctl_dependencia(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_bc5984322bf76b46 FOREIGN KEY (id_dependencia_padre) REFERENCES ctl_dependencia_establecimiento(id);
 
 
 --
--- Name: fk_dependencia_estab_linea_estr; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_bc5984327dfa12f6; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-ALTER TABLE ONLY sidpla_linea_estrategica
-    ADD CONSTRAINT fk_dependencia_estab_linea_estr FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_dependencia_establecimiento_empleado; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY ctl_empleado
-    ADD CONSTRAINT fk_dependencia_establecimiento_empleado FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY ctl_dependencia_establecimiento
+    ADD CONSTRAINT fk_bc5984327dfa12f6 FOREIGN KEY (id_establecimiento) REFERENCES ctl_establecimiento(id);
 
 
 --
--- Name: fk_dependencia_establecimiento_tipo_servicio; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_bc598432ca22cd3f; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY ctl_dependencia_establecimiento
+    ADD CONSTRAINT fk_bc598432ca22cd3f FOREIGN KEY (id_dependencia) REFERENCES ctl_dependencia(id);
+
+
+--
+-- Name: fk_bf94104adc70121; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
 ALTER TABLE ONLY sifda_tipo_servicio
-    ADD CONSTRAINT fk_dependencia_establecimiento_tipo_servicio FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_bf94104adc70121 FOREIGN KEY (id_actividad) REFERENCES sidpla_actividad(id);
 
 
 --
--- Name: fk_dependencia_informe; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_bf94104ae54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-ALTER TABLE ONLY sifda_informe_orden_trabajo
-    ADD CONSTRAINT fk_dependencia_informe FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_dependencia_orden; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_orden_trabajo
-    ADD CONSTRAINT fk_dependencia_orden FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY sifda_tipo_servicio
+    ADD CONSTRAINT fk_bf94104ae54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
 
 
 --
--- Name: fk_dependencia_padre; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_c560d761890253c7; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-ALTER TABLE ONLY ctl_dependencia_establecimiento
-    ADD CONSTRAINT fk_dependencia_padre FOREIGN KEY (id_dependencia_padre) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY fos_user_user
+    ADD CONSTRAINT fk_c560d761890253c7 FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id);
 
 
 --
--- Name: fk_dependencia_solicitud; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_c560d761e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY fos_user_user
+    ADD CONSTRAINT fk_c560d761e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_d0a819c8ff707141; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_retraso_actividad
+    ADD CONSTRAINT fk_d0a819c8ff707141 FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id);
+
+
+--
+-- Name: fk_e01bb1a36a540e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
 ALTER TABLE ONLY sifda_solicitud_servicio
-    ADD CONSTRAINT fk_dependencia_solicitud FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_e01bb1a36a540e FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id);
 
 
 --
--- Name: fk_dependencia_tipo_recurso; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_e01bb1a3a36b7986; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
-ALTER TABLE ONLY sifda_tipo_recurso_dependencia
-    ADD CONSTRAINT fk_dependencia_tipo_recurso FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_det_solicitud_det_orden; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_detalle_solicitud_orden
-    ADD CONSTRAINT fk_det_solicitud_det_orden FOREIGN KEY (id_detalle_solicitud_servicio) REFERENCES sifda_detalle_solicitud_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY sifda_solicitud_servicio
+    ADD CONSTRAINT fk_e01bb1a3a36b7986 FOREIGN KEY (id_tipo_servicio) REFERENCES sifda_tipo_servicio(id);
 
 
 --
@@ -4426,211 +4524,83 @@ ALTER TABLE ONLY sifda_solicitud_servicio
 
 
 --
--- Name: fk_empleado_actividad; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sidpla_actividad
-    ADD CONSTRAINT fk_empleado_actividad FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_empleado_equipo; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_equipo_trabajo
-    ADD CONSTRAINT fk_empleado_equipo FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_empleado_informe; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_informe_orden_trabajo
-    ADD CONSTRAINT fk_empleado_informe FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_empleado_subactividad; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sidpla_subactividad
-    ADD CONSTRAINT fk_empleado_subactividad FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_establecimiento_dependencia_establecimiento; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY ctl_dependencia_establecimiento
-    ADD CONSTRAINT fk_establecimiento_dependencia_establecimiento FOREIGN KEY (id_establecimiento) REFERENCES ctl_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_fos_user_user_bitacora; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY bitacora
-    ADD CONSTRAINT fk_fos_user_user_bitacora FOREIGN KEY (user_id) REFERENCES fos_user_user(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_fos_user_user_dependencia_establecimiento; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY fos_user_user
-    ADD CONSTRAINT fk_fos_user_user_dependencia_establecimiento FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_fos_user_user_empleado; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY fos_user_user
-    ADD CONSTRAINT fk_fos_user_user_empleado FOREIGN KEY (id_empleado) REFERENCES ctl_empleado(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_informe_recurso; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_recurso_servicio
-    ADD CONSTRAINT fk_informe_recurso FOREIGN KEY (id_informe_orden_trabajo) REFERENCES sifda_informe_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_linea_estrategica_actividad; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sidpla_actividad
-    ADD CONSTRAINT fk_linea_estrategica_actividad FOREIGN KEY (id_linea_estrategica) REFERENCES sidpla_linea_estrategica(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_orden_det_orden; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_detalle_solicitud_orden
-    ADD CONSTRAINT fk_orden_det_orden FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_orden_equipo; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_equipo_trabajo
-    ADD CONSTRAINT fk_orden_equipo FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_orden_retraso; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_retraso_actividad
-    ADD CONSTRAINT fk_orden_retraso FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_orden_trabajo_informe; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_informe_orden_trabajo
-    ADD CONSTRAINT fk_orden_trabajo_informe FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_orden_tracking; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_tracking_estado
-    ADD CONSTRAINT fk_orden_tracking FOREIGN KEY (id_orden_trabajo) REFERENCES sifda_orden_trabajo(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_ruta_ciclo_etapa; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_ruta_ciclo_vida
-    ADD CONSTRAINT fk_ruta_ciclo_etapa FOREIGN KEY (id_etapa) REFERENCES sifda_ruta_ciclo_vida(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_ruta_ciclo_tracking; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_tracking_estado
-    ADD CONSTRAINT fk_ruta_ciclo_tracking FOREIGN KEY (id_etapa) REFERENCES sifda_ruta_ciclo_vida(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_solicitud_detalle_solic; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_detalle_solicitud_servicio
-    ADD CONSTRAINT fk_solicitud_detalle_solic FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_solicitud_orden; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_orden_trabajo
-    ADD CONSTRAINT fk_solicitud_orden FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_solicitud_reprogramacion; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_reprogramacion_servicio
-    ADD CONSTRAINT fk_solicitud_reprogramacion FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_subactividad_informe; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_informe_orden_trabajo
-    ADD CONSTRAINT fk_subactividad_informe FOREIGN KEY (id_subactividad) REFERENCES sidpla_subactividad(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_tipo_dependencia_dependencia; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY ctl_dependencia
-    ADD CONSTRAINT fk_tipo_dependencia_dependencia FOREIGN KEY (id_tipo_dependencia) REFERENCES ctl_tipo_dependencia(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_tipo_recurso_recurso; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_recurso_servicio
-    ADD CONSTRAINT fk_tipo_recurso_recurso FOREIGN KEY (id_tipo_recurso_dependencia) REFERENCES sifda_tipo_recurso_dependencia(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_tipo_recurso_tipo_dep; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_tipo_recurso_dependencia
-    ADD CONSTRAINT fk_tipo_recurso_tipo_dep FOREIGN KEY (id_tipo_recurso) REFERENCES sifda_tipo_recurso(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_tipo_servicio_ruta_ciclo; Type: FK CONSTRAINT; Schema: public; Owner: sifda
---
-
-ALTER TABLE ONLY sifda_ruta_ciclo_vida
-    ADD CONSTRAINT fk_tipo_servicio_ruta_ciclo FOREIGN KEY (id_tipo_servicio) REFERENCES sifda_tipo_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
-
-
---
--- Name: fk_tipo_servicio_solicitud; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+-- Name: fk_e01bb1a3e2aa4972; Type: FK CONSTRAINT; Schema: public; Owner: sifda
 --
 
 ALTER TABLE ONLY sifda_solicitud_servicio
-    ADD CONSTRAINT fk_tipo_servicio_solicitud FOREIGN KEY (id_tipo_servicio) REFERENCES sifda_tipo_servicio(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+    ADD CONSTRAINT fk_e01bb1a3e2aa4972 FOREIGN KEY (id_medio_solicita) REFERENCES catalogo_detalle(id);
+
+
+--
+-- Name: fk_e01bb1a3e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_solicitud_servicio
+    ADD CONSTRAINT fk_e01bb1a3e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_e38f188d23bdde75; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_orden_trabajo
+    ADD CONSTRAINT fk_e38f188d23bdde75 FOREIGN KEY (id_prioridad) REFERENCES catalogo_detalle(id);
+
+
+--
+-- Name: fk_e38f188d6a540e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_orden_trabajo
+    ADD CONSTRAINT fk_e38f188d6a540e FOREIGN KEY (id_estado) REFERENCES catalogo_detalle(id);
+
+
+--
+-- Name: fk_e38f188dd23f6540; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_orden_trabajo
+    ADD CONSTRAINT fk_e38f188dd23f6540 FOREIGN KEY (id_solicitud_servicio) REFERENCES sifda_solicitud_servicio(id);
+
+
+--
+-- Name: fk_e38f188de54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_orden_trabajo
+    ADD CONSTRAINT fk_e38f188de54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_e8978381b77787d0; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY catalogo_detalle
+    ADD CONSTRAINT fk_e8978381b77787d0 FOREIGN KEY (id_catalogo) REFERENCES catalogo(id);
+
+
+--
+-- Name: fk_ea60c340e54d836e; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sidpla_linea_estrategica
+    ADD CONSTRAINT fk_ea60c340e54d836e FOREIGN KEY (id_dependencia_establecimiento) REFERENCES ctl_dependencia_establecimiento(id);
+
+
+--
+-- Name: fk_fcb39128562305e8; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_recurso_servicio
+    ADD CONSTRAINT fk_fcb39128562305e8 FOREIGN KEY (id_informe_orden_trabajo) REFERENCES sifda_informe_orden_trabajo(id);
+
+
+--
+-- Name: fk_fcb391289bf924c0; Type: FK CONSTRAINT; Schema: public; Owner: sifda
+--
+
+ALTER TABLE ONLY sifda_recurso_servicio
+    ADD CONSTRAINT fk_fcb391289bf924c0 FOREIGN KEY (id_tipo_recurso_dependencia) REFERENCES sifda_tipo_recurso_dependencia(id);
 
 
 --

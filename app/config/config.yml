@@ -76,7 +76,8 @@ swiftmailer:
     host:       smtp.gmail.com
     port:       465
     username:   ultimodelafilax
-    password:   123456xxx
+#    password:   123456xxx
+    password:   654321xxx
 #    delivery_address: wilx.sv@gmail.com
 
 fos_user:

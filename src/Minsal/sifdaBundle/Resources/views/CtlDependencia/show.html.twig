@@ -1,7 +1,7 @@
 {#{% extends '::base.html.twig' %}#}
-{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
-{% block body -%}
-    <h1>CtlDependencia</h1>
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    <h2><center>Informacion de la Dependencia</center></h2>
 
     <table class="table table-bordered table-hover table-condensed">
         <tbody>
@@ -16,17 +16,13 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifda_ctldependencia') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    
+    <table id="botones" style="margin-left:38%">
+                <tr>
+                    <td><a href="{{ path('sifda_ctldependencia') }}" class="btn">Regresar</a></td>
+                    <td><a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}" class="btn">Editar</a></td>
+                    <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                </tr>
+    </table>
+    
 {% endblock %}

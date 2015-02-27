@@ -153,4 +153,8 @@ class Catalogo
     {
         return $this->ref1;
     }
+    
+     public function __toString() {
+        return $this->nombre;
+    }
 }

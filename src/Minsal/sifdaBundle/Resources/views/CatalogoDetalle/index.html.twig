@@ -1,32 +1,32 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 {% block contenido_in -%}
 
-    <h1>CatalogoDetalle list</h1>
+    <center><h3>Listado de Detalle Catalogo</h3></center>
 
-    <table class="records_list">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Descripcion</th>
-                <th>Ref1</th>
-                <th>Estatus</th>
-                <th>Actions</th>
+                <th><center>Id</center></th>
+                <th><center>Descripcion</center></th>
+                <th><center>Ref1</center></th>
+                <th><center>Estatus</center></th>
+                <th><center>Actions</center></th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
-                <td><a href="{{ path('sifda_catalogodetalle_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.descripcion }}</td>
-                <td>{{ entity.ref1 }}</td>
-                <td>{{ entity.estatus }}</td>
+                <td><center><a href="{{ path('sifda_catalogodetalle_show', { 'id': entity.id }) }}">{{ entity.id }}</a></center></td>
+                <td><center>{{ entity.descripcion }}</center></td>
+                <td><center>{{ entity.ref1 }}</center></td>
+                <td><center>{{ entity.estatus }}</center></td>
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('sifda_catalogodetalle_show', { 'id': entity.id }) }}">show</a>
+                        <center><a href="{{ path('sifda_catalogodetalle_show', { 'id': entity.id }) }}">mostrar</a></center>
                     </li>
                     <li>
-                        <a href="{{ path('sifda_catalogodetalle_edit', { 'id': entity.id }) }}">edit</a>
+                        <center><a href="{{ path('sifda_catalogodetalle_edit', { 'id': entity.id }) }}">editar</a></center>
                     </li>
                 </ul>
                 </td>

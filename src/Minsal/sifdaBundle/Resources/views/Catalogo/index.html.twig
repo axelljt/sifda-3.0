@@ -1,17 +1,17 @@
 {#{% extends '::base.html.twig' %}#}
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 {% block contenido_in -%}
-    <h1>Catalogo list</h1>
+    <h2><center>Lista de Catalogos </center></h2>
 
-    <table class="table" class="table table-bordered table-hover table-condensed">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Descripcion</th>
-                <th>Sistema</th>
-                <th>Ref1</th>
-                <th>Actions</th>
+                <th><center>Id</center></th>
+                <th><center>Nombre</center></th>
+                <th><center>Descripcion</center></th>
+                <th><center>Sistema</center></th>
+                <th><center>Ref1</center></th>
+                <th><center>Actions</center></th>
             </tr>
         </thead>
         <tbody>
@@ -25,10 +25,10 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('sifda_catalogo_show', { 'id': entity.id }) }}">show</a>
+                        <a href="{{ path('sifda_catalogo_show', { 'id': entity.id }) }}">mostrar</a>
                     </li>
                     <li>
-                        <a href="{{ path('sifda_catalogo_edit', { 'id': entity.id }) }}">edit</a>
+                        <a href="{{ path('sifda_catalogo_edit', { 'id': entity.id }) }}">editar</a>
                     </li>
                 </ul>
                 </td>
