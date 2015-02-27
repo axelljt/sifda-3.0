@@ -1,0 +1,108 @@
+{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
+
+{% block stylesheets %}
+    {{parent()}}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}" ></script>
+{% endblock %}
+
+{%block css %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/minsalsifda/css/datepicker.css') }}" rel="stylesheet" media="all">
+{% endblock %}  
+{% block js %}
+    {{ parent() }}
+    <script type="text/javascript" src="{{ asset('bundles/minsalsifda/js/bootstrap-datepicker.js') }}"></script>  
+{%endblock %}
+{% block contenido_in  %}
+    <center>
+    <h3>Consulta de los Estados de la Solicitud de Servicio</h3>
+{#    <h4>La solicitud de servicio se encuentra en el estado</h4><br>#}
+    
+    
+    </center>
+    <div class="row-fluid">
+        <div class="span2">
+            <table id="leyenda">
+                <tr>
+                    <td><img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroGris3.PNG') }}"/></td>
+                    <td><strong>PENDIENTE</strong></td>
+                </tr>
+                <tr>
+                    <td><img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroRojo.PNG') }}"/></td>
+                    <td><strong>RECHAZADO</strong></td>
+                </tr>
+                <tr>
+                    <td><img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroNaranja2.PNG') }}"/></td>
+                    <td><strong>PROCESO</strong></td>
+                </tr>
+                <tr>
+                    <td><img height="80%" width="80%" src="{{ asset('bundles/minsalsifda/images/cuadroVerde.PNG') }}"/></td>
+                    <td><strong>FINALIZADO</strong></td>
+                </tr>
+            </table>
+        </div>
+        <div class="span10">
+            <table id="tabla_descripcion" class="table table-bordered table-hover table-condensed">
+                <tr><td aling="right"><strong>Dependencia Atiende:</strong></center></td>
+                    <td>{{entity.idDependenciaEstablecimiento}} </td>    
+                </tr>
+                
+                <tr><td aling="right"><strong>Tipo Servicio Solicitado:</strong></center></td>
+                    <td>{{entity.idTipoServicio}}</td>
+                </tr>
+                <tr><td aling="right"><strong>Persona Solicitante:</strong></center></td>
+                    <td>{{entity.user.idEmpleado}}</td>
+                </tr>
+                <tr><td aling="right"><strong>Descripcion:</strong></center></td>
+                    <td>{{entity.descripcion}}</td>
+                </tr>    
+                                                              
+            </table>
+            <table id="tabla_show" class="table table-bordered table-hover table-condensed">
+                <tr>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados_verdes/registrado-verde.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados_verdes/aprobacion-verde.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados_verdes/proceso-verde.png') }}"/></center></td>
+                    <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados_naranja/entregado-naranja.png') }}"/></center></td>
+                     <td><center><img height="100px" width="100px" src="{{ asset('bundles/minsalsifda/images/Estados_grises/finalizado-gris.png') }}"/></center></td>
+                </tr>
+                <tr>
+                    <td><center><strong>Registro</strong></center></td>
+                    <td><center><strong>Aprobación</strong></center></td>
+                    <td><center><strong>En proceso</strong></center></td>
+                    <td><center><strong>Recepción</strong></center></td>
+                    <td><center><strong>Finalizado</strong></center></td>
+                </tr>
+            </table>
+            <br>
+            <center>
+                <table id="botones">
+                    <tr>
+                        <td><a href="{{ path('sifda_solicitudservicio')}}" class="btn">Regresar</a></td>
+                    </tr>  
+                </table>            
+            </center>
+            <br>
+        </div>
+    </div>
+
+{% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+    $(document).ready(function(){
+        $('#1').click(function(){
+            $('#contenido').show("slow");
+        });
+        
+        $('#2').click(function(){
+            $('#contenido').hide("slow");
+        });
+    });
+    </script>
+{% endblock %}   

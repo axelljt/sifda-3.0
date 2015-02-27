@@ -9,37 +9,6 @@
     <div id="seleccion">
         <div class="row-fluid">
             <div class="span11 offset1">
-                
-                
-               {# <div class="span3">  #}
-                
-                 {#   <table>
-                        
-                        <tr>
-                            <td>
-                                <label>Estados:</label>
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <select id="cmb1" name="ComboEstado"  class="btn dropdown-toggle" style="width: 150px">
-                                     {% for estado in estados%}
-                               
-                                        <option value="{{loop.index}}">{{estado.descripcion}}</option>
-                                     {% endfor %}   
-                                    </select>
-                               </div>
-                            </td>
-                            
-                        </tr>
-                                               
-                    </table>#}
-                
-                                        
-                                     
-               {# </div>#}
-                    
-                    
-                             
                 <div class="span4">
                  <table>
                             <tr>
@@ -51,24 +20,7 @@
                             <tr>
                                 <td><input type="radio" name="consulta" id="especifico" value="especifico" >Especifico</td>
                             </tr>
-                            
                                 
-                                
-                                
-                                
-                                
-                                {#<td>
-                                    <div id="btn1">
-                                        <input type="submit" class="btn btn-primary" id="bbuscar" value="Buscar" name="Buscar">
-                                    </div>
-                                </td>#}
-                            
-                            <tr>
-                                <td></td>
-                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF " name="GenerarPDF " onclick="window.open('/reports/solicitudesReport_ingresados.php?fi='+mostrarfi()+'&ff='+mostrarff())"></td>
-                                <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel " name="GenerarExcel "></td>
-                            </tr>
-                            
                  </table>
                 </div>
                 
@@ -77,58 +29,7 @@
                     
                 
                   <table id="combos">
-                {#      <tr>
-                          <td>
-                              <label>Establecimiento:</label>
-                          </td>
-                          <td>
-                                <div class="btn-group">
-                                    <select id="cmb1" name="ComboEstado"  class="btn dropdown-toggle" style="width: 250px">
-                                     <option value="0">Seleccione Establecimiento</option>
-                                     
-                                     {% for e in establecimiento %}
-                               
-                                        <option value="{{e.id}}">{{e.nombre}}</option>
-                                     {% endfor %}   
-                                    </select>
-                               </div>
-                          </td>
-                          
-                            <td>
-                                
-                            </td>
-                          
-                       </tr>
-                                         #} 
-                     {# <tr><td></td></tr>
-                      <tr><td></td></tr>
-                      <tr><td></td></tr>
-                      <tr><td></td></tr>
-                      <tr>
-                           <td>
-                              <label>Dependencia:</label>
-                          </td>
-                          
-                            <td>
-                                <div class="btn-group">
-                                    <select id="cmb2" name="ComboEstado"  class="btn dropdown-toggle" style="width: 250px">#}
-                                    {#<option value="0">Seleccione Dependencia</option> #}
-                                    {#{% for estado in estados%}#}
-                               
-                                        {#<option value="0">Seleccione una dependencia</option>#}
-                                     {#{% endfor %}   #}
-                               {#     </select>
-                               </div>
-                            </td>
-                      </tr>#}
-                      
-                      
-                      {#<tr><td></td></tr>
-                      <tr><td></td></tr>
-                      <tr><td></td></tr>
-                      <tr><td></td></tr>#}
-                    
-                      <tr>
+                    <tr>
                           <div class="btn-group">
                                     <select id="cmb1" name="ComboEstado"  class="selectpicker" style="width: 200px">
                                      <option value="0">Tipo Servicio</option>
@@ -170,86 +71,9 @@
                     </table>            
                     
                 </div>                   
-                  <div id="seleccion">
-                                         
-                                    
-                {#<table>
-                <tr>#}
-                    {#<td>
-                        <div class="btn-group">
-                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-                        Estado
-                        <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% for estado in estados%}#}
-                            {#<li><a href="{{ path('sifda_solicitudservicio_show_estados_combo', { 'id': estado.id }) }}">{{estado.descripcion}}</a></li>#}
-                           {# <li><a href="">{{estado.descripcion}}</a></li>
-                            {% endfor %}
-                        </ul>
-                        
-                           
-                            
-                        
-                    </div>
-                    </td>  #}  
-                   {# <td>
-                        <label style="align:right">Estados:</label>
-                    </td>   
-                    <td>
-                        
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                        
-                    <td></td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    
-                    <td>
-                       
-                                    
-                                </td>
-                            </tr>
-                        </table>#}
-                        
-                    {#</td>#}
-                    
-                    {#<td style="height: 25px"><input type="radio" name="consulta" id="todos" value="todos" checked>Ingresadas<br></td>
-                   
-                    <td><input type="radio" name="consulta" id="especifico" value="especifico"> Ingresadas Especifico</td>
-                    
-                    <td><input type="radio" name="consulta" id="RechTodos" value="RechTodos" checked>Rechazadas</td>
-                    
-                    <td><input type="radio" name="consulta" id="RechEsp" value="RechEspecifico"> Rechazadas Especifico</td>#}
-                    
-                   {# <td><input type="radio" name="consulta" id="AsigTodos" value="AsigTodos" checked>Asignadas</td>
-                    
-                    <td><input type="radio" name="consulta" id="ProcTodos" value="ProcTodos" checked>En Proceso</td>
-                    
-                    <td><input type="radio" name="consulta" id="FinTodos" value="FinTodos" checked>Finalizadas</td>#}
-                
-                {#</tr>#}
-                {#<div id="rangoTabla"></div>#}
-            {#</table>#}
-            
-                 
-                
-                
-                 {#Cosntruyendo Filtro para Rechazados#}
-                
-               {# <div>
-                    <table id="Rechfechas" style="margin-left: 100px">
-                        <tr>
-                            <td><label>Fecha Inicio: </label></td><td><input type="text" id="Rech_fechaInicio" value=""></td>
-                            <td><label>Fecha Fin: </label></td><td><input type="text" id="Rech_fechaFin" value=""></td>
-                            <td><input type="submit" class="btn btn-primary" id="b2"  value="Buscar" name="Buscar"></td>
-                        </tr>    
-                    </table>    
-                    <div id="rangoRechTabla"></div>
-                </div>#}
-                
-            </div>
+                <div id="seleccion">
+
+                </div>
         </div>    
     </div>
   </div> 
@@ -272,10 +96,10 @@
         <thead>
             <tr>
                 <th><center>N°</center></th>
-                <th><center>Establecimiento</center></th>
                 <th><center>Dependencia solicitante</center></th>
                 <th><center>Tipo de servicio</center></th>
-                <th><center>Descripcion</center></th>
+                <th><center>Persona solicitante</center></th>
+                <th><center>Descripci&oacute;n</center></th>
                 {#<th><center>Fecha de recepcion</center></th>#}
                 <th><center>Fecha que requiere</center></th>
                 <th><center>Acciones</center></th>
@@ -292,9 +116,9 @@
                 {#<td><a href="{{ path('sifda_solicitudservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#} 
                 <td>{{ count }}</td>
                 {#<td>{{ loop.index }}</td>#}
-                <td><justify>{{ entity.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
-                <td align="justify">{{ entity.user.idDependenciaEstablecimiento.idDependencia }}</td>
+                <td><justify>{{ entity.user.idDependenciaEstablecimiento.idDependencia }}, {{ entity.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
                 <td>{{ entity.idTipoServicio }}</td>
+                <td>{{entity.user.idEmpleado}}</td>
                 <td>{{ entity.descripcion }}</td>
                 {#<td>{% if entity.fechaRecepcion %}{{ entity.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>#}
                 <td>{% if entity.fechaRequiere %}{{ entity.fechaRequiere|date('d/m/Y') }}{% endif %}</td>
@@ -311,9 +135,7 @@
                         
                     </li>
                     
-                    <li>
-                        <a  href="{{ path('sifda_solicitudservicio_finalizar', { 'id': entity.id }) }} ">Finalizar solicitud de servicio</a>
-                    </li>
+
                     <li>                        
                         <a  href="{{ path('sifda_reprogramacion_servicio_new', { 'id': entity.id }) }} ">Reprogramar solicitud de servicio</a>
                     </li>
@@ -339,105 +161,14 @@
              <div id="msgIngresados2">
               <center><h4>No se encontraron solicitudes en este Rango</h4></center>
              </div>   
-   </div>              
-    <div id="dialog">
-        
-    </div>
-    <br>
-    
-    
-    {#Cosntruyendo Tabla para Asiganados#} 
-   {# {% if asignados %}
-            
-        <table id="AsigTabla" class="table table-bordered table-hover table-condensed">
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Descripcion</th>
-                <th>Fecha de recepcion</th>
-                <th>Fecha que requiere</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for asignado in asignados %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ asignado.descripcion }}</td>
-                <td>{% if asignado.fechaRecepcion %}{{ asignado.fechaRecepcion|date('d-m-Y H:i:s') }}{% endif %}</td>
-                <td>{% if asignado.fechaRequiere %}{{ asignado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
-                <td>
-                    <ul>
-                        <li>                        
-                            <a href="{{ path('sifda_equipotrabajo_show', { 'id': asignado.id }) }}">Mostrar equipo de trabajo</a>
-                            <input type="hidden" id="txt_{{ loop.index }}"  value="{{asignado.id}}">
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-        x
-    {% else %}
-        <div id="msgAsignados">
-            <center><h4>No se encontraron solicitudes Asignadas</h4></center>
+        </div>              
+        <div id="dialog">
+
         </div>
-    {% endif %}#}
-      
-    
-    
-    
-        {#Cosntruyendo Tabla para Rechazados#} 
-        
-        {#<input type="hidden" id="LenRech"  value="{{rechazados.length()}}">#}
-        {#{% if rechazados%}
-            
-        <table id="RechTabla" class="table table-bordered table-hover table-condensed">
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Descripcion</th>
-                <th>Fecha de recepcion</th>
-                <th>Fecha que requiere</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for rechazado in rechazados %}
-            <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ rechazado.descripcion }}</td>
-                <td>{% if rechazado.fechaRecepcion %}{{ rechazado.fechaRecepcion|date('d-m-Y H:i:s') }}{% endif %}</td>
-                <td>{% if rechazado.fechaRequiere %}{{ rechazado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
-                <td>
-                    <ul>
-                        <li>                        
-                            <a  href="javascript:ShowDialog2({{ loop.index }});">Aceptar solicitud de servicio</a>
-                            <input type="hidden" id="txt_{{ loop.index }}"  value="{{rechazado.id}}">
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-        
-    {% else %}
-        <div id="msgRechazados">
-            <center><h4>No se encontraron solicitudes Rechazadas</h4></center>
-        </div>
-    {% endif %} #}    
-  {#Fin Tabla para Rechazados#}
-        
-  
-    
-   
-  
+        <br>
   
         <div id="dialogConfirm">
             <span id="spanMessage"></span>
-
         </div>
          
         

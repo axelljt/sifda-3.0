@@ -44,7 +44,8 @@ class SifdaOrdenTrabajoController extends Controller
                 inner join ctl_empleado emp on eq.id_empleado = emp.id
                 inner join sifda_orden_trabajo ot on eq.id_orden_trabajo = ot.id
                 where emp.id = ?
-                and ot.id_estado = ?";
+                and ot.id_estado = ?
+                order by ot.fecha_creacion desc, ot.fecha_finalizacion asc";
         
         $rsm->addScalarResult('id','id');
         $rsm->addScalarResult('descripcion','descripcion');

@@ -34,6 +34,10 @@
                             <td>{{ solicitud.idTipoServicio }}</td>
                         </tr>
                         <tr>
+                            <th>Persona solicitante</th>
+                            <td>{{ solicitud.user.idEmpleado }}</td>
+                        </tr>
+                        <tr>
                             <th>Descripcion</th>
                             <td>{{ solicitud.descripcion }}</td>
                         </tr>
@@ -90,7 +94,22 @@
                         
                      {# Si la orden de trabajo actual no ha finalizado #}   
                     {% else%}  
-                        <center><h4>No se puede generar una nueva orden de trabajo porque la actividad {{ ordenActual.dscciclovida }} no ha finalizado</h4></center>
+                        <center><h4>No se puede generar una nueva orden de trabajo porque la actividad "{{ ordenActual.dscciclovida }}" no ha finalizado</h4></center>
+                        <div class="row-fluid">    
+                            <div class="span12">
+                            <br>
+                            <center>
+                                <table id="botones">
+                                <tr> 
+                                   <td>
+                                       <a href="{{ path('sifda_gestionSolicitudes') }}" class="btn">Regresar</a>
+                                   </td>
+                                </tr>    
+                                </table>
+                            </center>
+                            <br>
+                            </div>
+                        </div>
                     {% endif %}          
                     
                 {# Si la solicitud de servicio no tiene ordenes de trabajo generadas #}    
@@ -213,8 +232,8 @@
 			 showAnim:'show',
                          changeMonth: true,
 			 changeYear: true,
-                         minDate: new Date(2015, 0  , 1), 
-//                         maxDate: "+0D",
+                         minDate: new Date( {{ "now"|date('Y') }}, {{ "now"|date('m') }} - 1 , {{ "now"|date('d') }}),
+                         maxDate: new Date( {{solicitud.fechaRequiere|date('Y')}}, {{solicitud.fechaRequiere|date('m')}} - 1 , {{solicitud.fechaRequiere|date('d')}}),
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,
