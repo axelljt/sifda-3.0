@@ -347,6 +347,24 @@ class SifdaOrdenTrabajoController extends Controller
                 }
                 
             }
+            else {
+                $form->add('idEtapa', 'entity', array(
+                        'label'         =>  'Actividad a realizar',
+                        'empty_value'=>'Seleccione una actividad',
+                        'class'         =>  'MinsalsifdaBundle:SifdaRutaCicloVida',
+                        'query_builder' =>  function(EntityRepository $repositorio) use (  $solicitud, $ordenActual ){
+                    return $repositorio
+                            ->createQueryBuilder('rcv')
+                            ->where('rcv.idTipoServicio = :tiposervicio')
+                            ->andWhere('rcv.id != :etapa')
+                            ->andWhere('rcv.jerarquia = :jerarquia')
+                            ->setParameter(':jerarquia', $ordenActual->getJerarCicloVida())
+                            ->setParameter(':etapa', $ordenActual->getIdCicloVida())
+                            ->setParameter(':tiposervicio', $solicitud->getIdTipoServicio());
+                    }));
+                
+                //////
+            }
         }     
         
         $form->add('submit', 'submit', array('label' => 'Crear orden de trabajo'));
@@ -418,6 +436,19 @@ class SifdaOrdenTrabajoController extends Controller
                                                                                 'idEtapa'        => $siguienteEtapa       
                                                                                 ));
                 
+                $dql = "SELECT count(rcv.jerarquia) cantidad
+                                FROM MinsalsifdaBundle:SifdaRutaCicloVida rcv
+                                INNER JOIN rcv.idTipoServicio
+                                WHERE rcv.jerarquia = :jerarquia
+                                andWhere rcv.idTipoServicio = :tiposervicio
+                                andWhere rcv.idEtapa is NULL";
+
+                $em = $this->getDoctrine()->getManager();
+                $cantidad = $em->createQuery($dql)
+                                     ->setParameter(':tiposervicio', $ordenActual->getIdCicloVida())
+                                     ->setParameter(':jerarquia', $ordenActual->getIdCicloVida())
+                                     ->getResult();
+                
                 $form   = $this->createCreateForm($entity, $id);
                 
                 return array(
@@ -430,12 +461,41 @@ class SifdaOrdenTrabajoController extends Controller
                     'ordenActual'      => $ordenActual,
                     'empleados'        => $empleados,
                     'form'             => $form->createView(),
-                    'errors'           => null
+                    'errors'           => null,
+                    'cantidad'         => $cantidad
                 );
             }
             
             // Si la orden de trabajo actual no ha finalizado
             else {
+                
+                //Se obtiene la informacion de la actividad del siguiente nivel o jerarquia        
+                $siguienteEtapa = $em->getRepository('MinsalsifdaBundle:SifdaRutaCicloVida')->findOneBy(array(
+                                                                                'idTipoServicio' => $solicitud->getIdTipoServicio(),
+                                                                                'jerarquia'      => $ordenActual->getJerarCicloVida() + 1,
+                                                                                'idEtapa'        => NULL       
+                                                                                ));        
+                
+                $subetapaEtapa = $em->getRepository('MinsalsifdaBundle:SifdaRutaCicloVida')->findBy(array(
+                                                                                'idTipoServicio' => $solicitud->getIdTipoServicio(),
+                                                                                'idEtapa'        => $ordenActual->getId()       
+                                                                                ));
+                
+                $dql = "SELECT count(rcv.jerarquia) cantidad
+                                FROM MinsalsifdaBundle:SifdaRutaCicloVida rcv
+                                INNER JOIN rcv.idTipoServicio tp
+                                WHERE rcv.jerarquia = :jerarquia
+                                and rcv.idTipoServicio = :tiposervicio
+                                and rcv.idEtapa is NULL";
+
+                $em = $this->getDoctrine()->getManager();
+                $cantidad = $em->createQuery($dql)
+                                     ->setParameter(':tiposervicio', $ordenActual->getIdCicloVida())
+                                     ->setParameter(':jerarquia', $ordenActual->getIdCicloVida())
+                                     ->getResult();
+                
+                $form   = $this->createCreateForm($entity, $id);
+                
                 return array(
                     'entity'           => $entity,
                     'solicitud'        => $solicitud,
@@ -443,8 +503,11 @@ class SifdaOrdenTrabajoController extends Controller
                     'servicioSubetapa' => $servicioSubetapa,
                     'solicitudOrden'   => $solicitudOrden,
                     'ordenActual'      => $ordenActual,
+                    'subetapaEtapa'    => $subetapaEtapa,
                     'empleados'        => $empleados,
-                    'errors'           => null
+                    'form'             => $form->createView(),
+                    'errors'           => null,
+                    'cantidad'         => $cantidad
                 );
             }
         }
@@ -773,8 +836,6 @@ class SifdaOrdenTrabajoController extends Controller
                     //Se obtienen las subetapas de una determinada etapa
                     $idSubetapa = $em->getRepository('MinsalsifdaBundle:SifdaRutaCicloVida')->findByIdEtapa($Etapa);
                 }
-                
-                
              }
              
             else {

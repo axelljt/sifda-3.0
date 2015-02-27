@@ -792,24 +792,20 @@ class SifdaSolicitudServicioController extends Controller
           
           
           if($estado == "Ingresado")
-          
               return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado2.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
-              elseif($vwUltimaEtapa->getIdEstado() == 4)
-                return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado6.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
-          
-                elseif($estado == "Asignado")
-                    return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado3.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
-          
-                    elseif($estado == "Rechazado")
-                        return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado4.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
-          
-                        elseif($estado == "Finalizado")
-                            return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado5.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+                elseif($vwUltimaEtapa->getIdEstado() == 4)
+                  return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado6.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
+                  elseif($estado == "Asignado")
+                      return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado3.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+
+                      elseif($estado == "Rechazado")
+                          return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado4.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+
+                          elseif($estado == "Finalizado")
+                              return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado5.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
     }
-    
-    
        
     /**
      * Controlador para la busqueda de Informacion de la Solicitud.

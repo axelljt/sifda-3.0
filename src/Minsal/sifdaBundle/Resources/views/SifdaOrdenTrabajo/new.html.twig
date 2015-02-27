@@ -54,7 +54,7 @@
                 {% if solicitudOrden %}
                     
                     {# Si la orden de trabajo actual ha finalizado #}
-                    {% if ordenActual.dscestado == 'Finalizado' %}
+                    {% if ordenActual.dscestado == 'Finalizado' or cantidad > 1  %}
                         {{form_start(form)}}
                         {{form_errors(form)}} 
                         <div class="row-fluid">
