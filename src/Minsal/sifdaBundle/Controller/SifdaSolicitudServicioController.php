@@ -778,9 +778,16 @@ class SifdaSolicitudServicioController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Solicitud de Servicio con id: '.$id.'No encontrado');
         }
-
-//        $deleteForm = $this->createDeleteForm($id);
-        
+        $dql = "SELECT MAX(e.id) "
+               . "FROM MinsalsifdaBundle:Vwetapassolicitud e where e.idSolicitud = :idSol";
+               $repositorio = $em->createQuery($dql);
+               $repositorio->setParameter(':idSol', $id);
+               
+               $resultado = $repositorio->getResult();
+             $resultado;
+              
+               $vwUltimaEtapa = $em->getRepository('MinsalsifdaBundle:Vwetapassolicitud')->find($resultado[0][1]);
+              
           $estado=$entity->getIdEstado();
           
           
@@ -788,15 +795,17 @@ class SifdaSolicitudServicioController extends Controller
           
               return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado2.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
-
-          elseif($estado == "Asignado")
-                return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado3.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+              elseif($vwUltimaEtapa->getIdEstado() == 4)
+                return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado6.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
           
-          elseif($estado == "Rechazado")
-                return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado4.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+                elseif($estado == "Asignado")
+                    return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado3.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
           
-          elseif($estado == "Finalizado")
-                return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado5.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+                    elseif($estado == "Rechazado")
+                        return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado4.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+          
+                        elseif($estado == "Finalizado")
+                            return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado5.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
     }
     
