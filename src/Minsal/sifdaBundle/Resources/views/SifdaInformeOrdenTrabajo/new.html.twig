@@ -40,7 +40,7 @@
                 {{form_row(form.detalle, {'attr': {'class':'span12'} })}}
                  {{form_row(form.terminado, {'attr': {'class':'radio'} })}}         
             </div>          
-            <div class="span4 offset1">
+            <div class="span4 offset1 btn-small">
                 {{form_row(form.fechaRealizacion,{'attr': {'readonly':'yes'} })}}
                 
             </div>
@@ -79,8 +79,8 @@
 			 showAnim:'show',
                          changeMonth: true,
 			 changeYear: true,
-//                         minDate: new Date(1980, 11, 1), 
-//                         maxDate: "+0D",
+                         minDate: "-3D", 
+                         maxDate: "+0D",
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,

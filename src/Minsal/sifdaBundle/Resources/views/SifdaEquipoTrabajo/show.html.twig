@@ -10,12 +10,12 @@
                 <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <tbody>
                         <tr>
-                            <th>Establecimiento</th>
-                            <td>{{ ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                            <th>Establecimiento Solicitante</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.user?ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento.nombre:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Dependencia</th>
-                            <td>{{ ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                            <th>Dependencia Solicitante</th>
+                            <td>{{ ordenTrabajo.idSolicitudServicio.user?ordenTrabajo.idSolicitudServicio.user.idDependenciaEstablecimiento.idDependencia.nombre:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
                             <th>Tipo de servicio</th>

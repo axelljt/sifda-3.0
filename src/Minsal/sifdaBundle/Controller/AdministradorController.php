@@ -308,7 +308,7 @@ class AdministradorController extends Controller
      */
     public function PaoAction() {
         $em = $this->getDoctrine()->getEntityManager();
-        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find(1);
+        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($this->getUser()->getId());
         
         $rsm = new ResultSetMapping();
         $rsm->addScalarResult('resultado','resultado');

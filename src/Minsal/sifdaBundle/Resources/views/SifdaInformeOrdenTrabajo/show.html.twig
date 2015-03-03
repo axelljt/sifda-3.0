@@ -40,7 +40,7 @@
     <center>
             <table id="botones">
             <tr>
-                <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
+                {#<td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> #}
                 <td><a href="{{ path('sifdainformeordentrabajo_edit', { 'id': entity.id }) }}" class="btn">Modificar</a></td>
                 <td><a href="{{ path('sifdainformeordentrabajo', { 'idOrd': entity.idOrdenTrabajo.id }) }}" class="btn">Regresar</a></td>
             </tr>    

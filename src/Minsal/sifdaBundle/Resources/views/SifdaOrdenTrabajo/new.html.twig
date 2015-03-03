@@ -23,11 +23,11 @@
                     <tbody>
                         <tr>
                             <th>Establecimiento</th>
-                            <td>{{ solicitud.user.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                            <td>{{ solicitud.user?solicitud.user.idDependenciaEstablecimiento.idEstablecimiento.nombre:"GERADO PAO" }}</td>
                         </tr>
                         <tr>
                             <th>Dependencia solicitante</th>
-                            <td>{{ solicitud.user.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                            <td>{{ solicitud.user?solicitud.user.idDependenciaEstablecimiento.idDependencia.nombre :"GERADO PAO"}}</td>
                         </tr>
                         <tr>
                             <th>Tipo de servicio</th>
@@ -35,7 +35,7 @@
                         </tr>
                         <tr>
                             <th>Persona solicitante</th>
-                            <td>{{ solicitud.user.idEmpleado }}</td>
+                            <td>{{ solicitud.user?solicitud.user.idEmpleado:"GENERADO PAO" }}</td>
                         </tr>
                         <tr>
                             <th>Descripcion</th>

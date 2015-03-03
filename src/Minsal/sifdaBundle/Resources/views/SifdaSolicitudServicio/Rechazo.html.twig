@@ -13,16 +13,24 @@
                 <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <tbody>
                         <tr>
-                            <th>Establecimiento</th>
+                            <th>Establecimiento Atiende</th>
                             <td>{{ entity.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
                         </tr>
                         <tr>
-                            <th>Dependencia</th>
+                            <th>Dependencia Atiende</th>
                             <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
                         </tr>
                         <tr>
-                            <th>Tipo de servicio</th>
+                            <th>Tipo de servicio Solicitado</th>
                             <td>{{ entity.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia Solicitante</th>
+                            <td>{{ entity.user? entity.user.idDependenciaEstablecimiento.idDependencia:"Generado por PAO" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Solicitante</th>
+                            <td>{{ entity.user? entity.user.idEmpleado.nombre ~ " "~ entity.user.idEmpleado.apellido:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
                             <th>Descripcion</th>
@@ -45,6 +53,7 @@
                      <tr>
                          <td><input type="submit" class="btn btn-primary" id="Rechazar" value="Rechazar" name="Rechazar" onclick="ShowDialogRechazar()"></td>
                          <td><input type="submit"  id="Cancelar" value="Cancelar" name="Cancelar"></td>
+                          <td><a href="{{ path('sifda_gestionSolicitudes') }}" class="btn">Regresar</a></td>
                      </tr>    
                  
                   </table>               
@@ -70,7 +79,9 @@
         
      
  function ShowDialogRechazar() {
-      
+     
+        
+        
     var x = document.getElementById("txta1").value;
     if(x!=""){
         
@@ -83,6 +94,8 @@
       title: 'Confirmacion',
       buttons: {
               'Aceptar': function () {
+                  
+                   $.blockUI({message : null});
                    LlamarControlador('{{path('sifda_solicitudservicio_rechazar')}}',document.getElementById("txta1").value,document.getElementById("txt_id").value);
                    $(this).dialog("close");
                 },
@@ -96,18 +109,30 @@
     } //Fin del If
     
    
-    
+    $(document).ajaxStop(function (){
+        $.unblockUI();
+    });
     function LlamarControlador(url,valor,id)
     {
-      $.post(
+      var res="";
+       $.post(
         url,
         {
             id:id,
             texto:valor
-        }).done(function(){
-          window.location='{{path('sifda_gestionSolicitudes')}}';   
-          {#('#dialog').attr('title','Confirmacion').text('Solicitud Rechazada Correctamente').dialog();               #}
-        });
+        },function(data){
+            console.log( data );
+                           
+                            res=data.estado;
+                           
+                           if(res=="0"){
+                               alert("No se ha finalizado la ultima etapa de la solicitud.");
+                            }else if(res==1){
+                               alert("Se Solicitud Rechazada Correctamente");
+                               window.location='{{path('sifda_gestionSolicitudes')}}';
+                            }
+                            }, "json");
+        
     } //Fin de LlamarControlador   
         
         
