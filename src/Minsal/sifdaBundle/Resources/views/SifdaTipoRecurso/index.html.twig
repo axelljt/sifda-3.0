@@ -1,16 +1,16 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecurso list</h1>
+{% block contenido_in -%}
+    <center><h3>Tipos de recurso</h3></center>
 
-    <table class="records_list">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Nombre</th>
                 <th>Descripcion</th>
                 <th>Rrhh</th>
-                <th>Actions</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -34,12 +34,13 @@
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('sifdatiporecurso_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+<center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{ path('sifdatiporecurso_new') }}" class="btn">
+                Agregar
+            </a></td>
+            </tr>    
+            </table>
+        </center>
     {% endblock %}

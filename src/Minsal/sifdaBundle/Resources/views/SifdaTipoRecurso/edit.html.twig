@@ -1,16 +1,19 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecurso edit</h1>
+{% block contenido_in -%}
+    <center><h3>Editar Tipos de Servicio</h3></center>
 
     {{ form(edit_form) }}
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifdatiporecurso') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <center>
+        <table id="botones">
+            <tr>
+                
+                    <td>{{form_row(delete_form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
+                
+                <td>
+                    <a href="{{ path('sifdatiporecurso') }}" class="btn">Regresar</a>
+                </td>
+            </tr>    
+        </table>
+        </center>
 {% endblock %}

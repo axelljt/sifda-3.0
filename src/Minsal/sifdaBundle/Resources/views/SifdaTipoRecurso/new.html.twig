@@ -1,15 +1,18 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecurso creation</h1>
+{% block contenido_in -%}
+    <center><h3>Agregar Tipo de Recurso</h3></center>
 
     {{ form(form) }}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifdatiporecurso') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+        
+    <center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{ path('sifdatiporecurso') }}" class="btn">
+                Regresar
+            </a></td>
+            </tr>    
+            </table>
+        </center>
 {% endblock %}

@@ -1,9 +1,9 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecurso</h1>
+{% block contenido_in -%}
+    <center><h3>Mostrar Tipo Recurso</h3></center>
 
-    <table class="record_properties">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -23,18 +23,24 @@
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifdatiporecurso') }}">
-            Back to the list
+            <center>
+            <table id="botones">
+            <tr>
+                <td>
+                    <a href="{{ path('sifdatiporecurso_edit', { 'id': entity.id }) }}" class="btn">
+            Editar
         </a>
-    </li>
-    <li>
-        <a href="{{ path('sifdatiporecurso_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+                </td>
+                <td>
+                    <a href="{{ path('sifdatiporecurso') }}" class="btn">
+                Regresar
+                    </a>
+                </td>
+                <td>
+                    {{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}
+                    </a>
+                </td>
+            </tr>    
+            </table>
+        </center>
 {% endblock %}

@@ -74,6 +74,16 @@
                                     <li><a tabindex="-5" href={{path('sifda_solicitudservicio')}}>Consultar solicitud de servicio</a></li>#}                        
                             </ul>
                         </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">PAO <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="{{path('sifdatiporecurso')}}">Gestionar Tipo Recurso</a></li>
+                                <li><a tabindex="-1" href="{{path('sifdatiporecursodependencia')}}">Gestionar Tipo Recurso Dependencia</a></li>
+                                {#<li><a tabindex="-2" href="{{path('cargar_solicitudes_pao')}}">Registrar Ordenes PAO</a></li>#}
+                                    {#<li><a tabindex="-4" href="">Gestion de tipo se servicio</a></li>
+                                    <li><a tabindex="-5" href={{path('sifda_solicitudservicio')}}>Consultar solicitud de servicio</a></li>#}                        
+                            </ul>
+                        </li>
                     </ul>
                     <ul class="nav navbar-nav pull-right">
                         <li ><a href="{{ path('fos_user_security_logout') }}" >Cerrar Sesion</a></li>

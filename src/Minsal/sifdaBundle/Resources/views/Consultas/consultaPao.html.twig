@@ -51,7 +51,7 @@
    $(document).ready(function(){
          document.getElementById("cmb1").value="0";
         $("#buscar").click(function(){
-            $.blockUI({ message: null }); 
+            $.blockUI({ message: "Espere un instante" }); 
             var valor = $("#cmb1").val();
             $.post(
                 '{{path('buscar_lineas_estrategicas')}}', 
@@ -62,8 +62,7 @@
                     console.log( data );
                    drawTable(data.query);
                 }, "json");
-         
-        });
+            });
 });
 
 $(document).ajaxStop(function(){

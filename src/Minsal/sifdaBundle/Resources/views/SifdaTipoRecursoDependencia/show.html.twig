@@ -1,13 +1,21 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecursoDependencia</h1>
+{% block contenido_in -%}
+    <h1>Mostrar Tipo de Servicio por Dependencia</h1>
 
-    <table class="record_properties">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Dependencia</th>
+                <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Tipo Recurso</th>
+                <td>{{ entity.idTipoRecurso.nombre }}</td>
             </tr>
             <tr>
                 <th>Costounitario</th>
@@ -15,18 +23,21 @@
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('sifdatiporecursodependencia') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('sifdatiporecursodependencia_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+            
+    <center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{ path('sifdatiporecursodependencia') }}" class="btn">
+                Regresar
+            </a></td>
+                <td><a href="{{ path('sifdatiporecursodependencia_edit', { 'id': entity.id }) }}" class="btn">
+                Edit
+            </a></td>
+            <td>
+                    {{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}
+                   
+                </td>
+            </tr>    
+            </table>
+        </center>
 {% endblock %}

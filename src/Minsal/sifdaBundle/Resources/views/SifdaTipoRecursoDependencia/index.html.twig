@@ -1,20 +1,24 @@
-{% extends '::base.html.twig' %}
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block body -%}
-    <h1>SifdaTipoRecursoDependencia list</h1>
+{% block contenido_in -%}
+    <center><h3>Tipo de Recurso por Dependencia</h3></center>
 
-    <table class="records_list">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Dependencia</th>
+                <th>Tipo Servicio</th>
                 <th>Costounitario</th>
-                <th>Actions</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
         {% for entity in entities %}
             <tr>
                 <td><a href="{{ path('sifdatiporecursodependencia_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                <td>{{ entity.idTipoRecurso.nombre }}</td>
                 <td>{{ entity.costoUnitario }}</td>
                 <td>
                 <ul>
@@ -30,12 +34,13 @@
         {% endfor %}
         </tbody>
     </table>
-
-        <ul>
-        <li>
-            <a href="{{ path('sifdatiporecursodependencia_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
+<center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{ path('sifdatiporecursodependencia_new') }}" class="btn">
+                Agregar
+            </a></td>
+            </tr>    
+            </table>
+        </center>
     {% endblock %}
