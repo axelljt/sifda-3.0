@@ -55,7 +55,7 @@ class SifdaSolicitudServicioController extends Controller
 //                $texto = $this->get('request')->request->get('texto');
 //		$id=$this->get('request')->request->get('id');
        
-        $correos=array('axelljt@gmail.com','karensita8421@gmail.com','anthony.huezo@gmail.com');
+        $correos=array(/*'axelljt@gmail.com','karensita8421@gmail.com',*/'anthony.huezo@gmail.com');
        
         foreach ($correos as $correo){
             

@@ -197,11 +197,25 @@ class SifdaRutaCicloVidaController extends Controller
            $em = $this->getDoctrine()->getManager();
            $tipo = $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->find($id);
         }    
+        
+        $dql = "SELECT SUM(e.peso) AS porcentaje "
+               . "FROM MinsalsifdaBundle:SifdaRutaCicloVida e "
+               . "WHERE e.idTipoServicio = :tiposervicio "
+               . "AND e.idEtapa IS NULL ";
+        
+        $em = $this->getDoctrine()->getManager();
+        $porcentaje= $em->createQuery($dql)
+                             ->setParameter(':tiposervicio', $tipo)
+                             ->getResult();
+                     //ladybug_dump($porcentaje);
+        $cantidad = $porcentaje[0]['porcentaje'];
+        //ladybug_dump($cantidad);
         $form   = $this->createCreateForm($entity, $id);
         
         return array(
             'entity' => $entity,
             'tipo' => $tipo,
+            'cantidad' => $cantidad,
             'form'   => $form->createView(),
         );
     }

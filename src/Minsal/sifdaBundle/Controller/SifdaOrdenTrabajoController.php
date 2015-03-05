@@ -599,14 +599,7 @@ class SifdaOrdenTrabajoController extends Controller
         }
 
         $editForm = $this->createEditForm($entity);
-        $editForm->get('establecimiento')->setData($entity
-                                                    ->getIdDependenciaEstablecimiento()
-                                                    ->getIdEstablecimiento()
-                                                   );
-        $editForm->get('dependencia')->setData($entity
-                                                ->getIdDependenciaEstablecimiento()
-                                                ->getIdDependencia()
-                                               );
+
         //$deleteForm = $this->createDeleteForm($id);
 
         return array(
@@ -629,7 +622,21 @@ class SifdaOrdenTrabajoController extends Controller
             'action' => $this->generateUrl('sifda_ordentrabajo_update', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
-
+        
+//            $form->add('dependencia','entity', array(
+//                    'mapped'=>false,
+//                    'empty_value'=>'Seleccione una dependencia',
+//                    'class'=>'MinsalsifdaBundle:CtlDependencia',
+//                    'choices' => array()
+//                ));
+//                    
+//            $form->add('establecimiento', 'entity', array(
+//                    'label'         =>  'Establecimiento',
+//                    'empty_value'=>'Seleccione un establecimiento',
+//                    'class'         =>  'MinsalsifdaBundle:CtlEstablecimiento',
+//                    'mapped' => false
+//                ));
+                
         $form->add('submit', 'submit', array('label' => 'Modificar'));
 
         return $form;
@@ -655,18 +662,24 @@ class SifdaOrdenTrabajoController extends Controller
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
         
-        //Obtener la dependencia y establecimiento de la orden de trabajo a actualizar
-        $establecimiento = $editForm->get('establecimiento')->getData();
-        $dependencia = $editForm->get('dependencia')->getData();
-        $idDependenciaEstablecimiento = $em->getRepository('MinsalsifdaBundle:CtlDependenciaEstablecimiento')->findOneBy(array(
-                                                           'idEstablecimiento' => $establecimiento,
-                                                           'idDependencia' => $dependencia         
-                                                            ));
+        $user = $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
         
-        if (!$idDependenciaEstablecimiento) {
-            throw $this->createNotFoundException('Unable to find CtlDependenciaEstablecimiento entity.');
-        }
-        $entity->setIdDependenciaEstablecimiento($idDependenciaEstablecimiento);
+        $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user);
+        $entity->setIdDependenciaEstablecimiento($usuario->getIdDependenciaEstablecimiento());
+        
+        //Obtener la dependencia y establecimiento de la orden de trabajo a actualizar
+//        $establecimiento = $editForm->get('establecimiento')->getData();
+//        $dependencia = $editForm->get('dependencia')->getData();
+//        $idDependenciaEstablecimiento = $em->getRepository('MinsalsifdaBundle:CtlDependenciaEstablecimiento')->findOneBy(array(
+//                                                           'idEstablecimiento' => $establecimiento,
+//                                                           'idDependencia' => $dependencia         
+//                                                            ));
+        
+//        if (!$idDependenciaEstablecimiento) {
+//            throw $this->createNotFoundException('Unable to find CtlDependenciaEstablecimiento entity.');
+//        }
+//        $entity->setIdDependenciaEstablecimiento($idDependenciaEstablecimiento);
         
         
         if ($editForm->isValid()) {
