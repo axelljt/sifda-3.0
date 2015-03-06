@@ -1,0 +1,73 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Mostrar los informes de la orden de trabajo</h3></center>
+    </div>
+    <div class="span11">
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <tbody>
+            <tr>
+                <th>C&oacute;digo</th>
+                <td>{{ orden.codigo }}</td>
+            </tr>
+            <tr>
+                <th>Descripci&oacute;n de orden de trabajo</th>
+                <td>{{ orden.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Prioridad</th>
+                <td>{{ orden.idPrioridad }}</td>
+            </tr>
+            <tr>
+                <th>Fecha de finalizaci&oacute;n</th>
+                <td>{% if orden.fechafinalizacion %}{{ orden.fechafinalizacion|date('d/m/Y') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Observaci&oacute;n</th>
+                <td>{% if orden.observacion %}{{ orden.observacion }}{%else%}Sin observaci&oacute;n{%endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    {% if entities %}        
+    <br><br>
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th><center>Detalle del informe</center></th>
+                <th>Fecha de realizaci&oacute;n</th>
+                <th>Fecha de registro</th>
+                <th>Terminado</th>
+                {#<th><center>Acciones</center></th>#}
+            </tr>
+        </thead>
+        <tbody>
+        {% set corr = 1 %}    
+        {% for entity in entities %}
+            <tr>
+                <td>{{ corr }}</td>
+                <td>{{ entity.detalle }}</td>
+                <td><center>{% if entity.fechaRealizacion %}{{ entity.fechaRealizacion|date('d/m/Y') }}{% endif %}</center></td>
+                <td>{% if entity.fechaRegistro %}{{ entity.fechaRegistro|date('d/m/Y H:i:s') }}{% endif %}</td>
+                <td><center>{% if entity.terminado == 1%}Si{%else%}No{%endif %}</center></td>
+                
+            </tr>
+            {% set corr = corr + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <br><br><br><br><br><br><br><br><br>
+        <center><h4>No se han generado informes a la orden de trabajo</h4></center>
+        <br>
+    {% endif %}
+            <center>
+            <table id="botones">
+            <tr>
+                <td><a href="{{ path('sifda_ordentrabajo_gestion') }}" class="btn">Regresar</a></td>
+            </tr>    
+            </table>
+        </center>
+    {% endblock %}

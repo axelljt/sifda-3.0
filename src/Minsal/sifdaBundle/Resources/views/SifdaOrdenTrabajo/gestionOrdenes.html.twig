@@ -1,7 +1,7 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
 {% block contenido_in -%}
-    <center><h3>Gestion de Ordenes de Trabajo</h3></center>
+    <center><h3>Gesti&oacute;n de &oacute;rdenes de trabajo</h3></center>
     <div id="seleccion">
         <div class="row-fluid">
             <div class="span11 offset1">
@@ -17,8 +17,8 @@
 
                     <table id="fechas">
                         <tr>
-                            <td><label>Fecha Inicio: </label></td><td><input type="text" id="fechaInicio" value=""></td>
-                            <td><label>Fecha Fin: </label></td><td><input type="text" id="fechaFin" value=""></td>
+                            <td><label>Fecha de inicio: </label></td><td><input type="text" id="fechaInicio" value=""></td>
+                            <td><label>Fecha fin: </label></td><td><input type="text" id="fechaFin" value=""></td>
                             <td><input type="submit" class="btn btn-primary" id="b1" onclick="mostrarvalores()" value="Buscar" name="Buscar"></td>
                         </tr>    
                     </table>    
@@ -33,10 +33,10 @@
         <thead>
             <tr>
                 <th><center>Correlativo</center></th>
-                <th><center>Codigo</center></th>
-                <th><center>Descripcion</center></th>
-                <th><center>Observacion</center></th>
-                <th><center>Fecha de creacion</center></th>
+                <th><center>C&oacute;digo</center></th>
+                <th><center>Descripci&oacute;n</center></th>
+                <th><center>Observaci&oacute;n</center></th>
+                <th><center>Fecha de creaci&oacute;n</center></th>
                 {#<th><center>Responsable</center></th>#}
                 <th><center>Acciones</center></th>
             </tr>
@@ -48,9 +48,8 @@
                 <td><center>{{ corr }}</center></td>
                 <td>{{ entity.codigo }}</td>
                 <td>{{ entity.descripcion }}</td>
-                <td>{{ entity.observacion }}</td>
+                <td>{% if entity.observacion %}{{ entity.observacion }}{%else%}Sin observaci&oacute;n{%endif %}</td>
                 <td><center>{% if entity.fechaCreacion %}{{ entity.fechaCreacion|date('d/m/Y') }}{% endif %}</center></td>
-                {#<td>{{ entity.observacion }}</td>#}
                 <td>
                 <ul>
                     <li>
@@ -64,7 +63,7 @@
                         <a href="{{ path('sifda_equipotrabajo_show', { 'id': entity.id }) }}">Mostrar equipo de trabajo</a>
                     </li>
                     <li>
-                        <a href="{{ path('sifdainformeordentrabajo', { 'idOrd': entity.id }) }}">listar Informes</a>
+                        <a href="{{ path('sifdainformeordentrabajo_lstInformes', { 'idOrd': entity.id }) }}">Mostrar informes</a>
                     </li>
                 </ul>
                 </td>

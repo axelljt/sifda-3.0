@@ -24,7 +24,7 @@
                                 <td>{{ solicitudServicio.idTipoServicio }}</td>
                             </tr>
                             <tr>
-                                <th>Descripcion de la solicitud de servicio</th>
+                                <th>Descripci&oacute;n de la solicitud de servicio</th>
                                 <td>{{ solicitudServicio.descripcion }}</td>
                             </tr>
                             <tr>
@@ -85,7 +85,7 @@
 			 showAnim:'show',
                          changeMonth: true,
 			 changeYear: true,
-//                         minDate: new Date(1980, 11, 1), 
+                         minDate: new Date( {{ solicitudServicio.fechaRequiere|date('Y') }}, {{ solicitudServicio.fechaRequiere|date('m') }} - 1 , {{ solicitudServicio.fechaRequiere|date('d') }}),
 //                         maxDate: "+0D",
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,

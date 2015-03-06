@@ -73,14 +73,14 @@ class SifdaOrdenTrabajoController extends Controller
      * @Template()
      */
     public function gestionOrdenesAction()
-    {
-        $em = $this->getDoctrine()->getManager();
+     {
+         $em = $this->getDoctrine()->getManager();
         $user=$this->getUser();
 //        $objUser=$em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($user);
         $entities = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->findBy(array('idDependenciaEstablecimiento'=>$user->getIdDependenciaEstablecimiento()->getId()),
-                                                                                       array(
-                                                                                'fechaCreacion' =>  'DESC'
-                                                                               ));
+                                                                                        array(
+                                                                                 'fechaCreacion' =>  'DESC'
+                                                                                ));
         return array(
             'entities' => $entities,
         );
@@ -669,19 +669,10 @@ class SifdaOrdenTrabajoController extends Controller
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user);
         $entity->setIdDependenciaEstablecimiento($usuario->getIdDependenciaEstablecimiento());
         
-        //Obtener la dependencia y establecimiento de la orden de trabajo a actualizar
-//        $establecimiento = $editForm->get('establecimiento')->getData();
-//        $dependencia = $editForm->get('dependencia')->getData();
-//        $idDependenciaEstablecimiento = $em->getRepository('MinsalsifdaBundle:CtlDependenciaEstablecimiento')->findOneBy(array(
-//                                                           'idEstablecimiento' => $establecimiento,
-//                                                           'idDependencia' => $dependencia         
-//                                                            ));
+        $parameters = $request->request->all();
         
-//        if (!$idDependenciaEstablecimiento) {
-//            throw $this->createNotFoundException('Unable to find CtlDependenciaEstablecimiento entity.');
-//        }
-//        $entity->setIdDependenciaEstablecimiento($idDependenciaEstablecimiento);
-        
+        $idEtapa = $parameters['minsal_sifdabundle_sifdaordentrabajo']['idEtapa'];
+        $entity->setIdEtapa($idEtapa);
         
         if ($editForm->isValid()) {
             $em->flush();
@@ -695,6 +686,7 @@ class SifdaOrdenTrabajoController extends Controller
             'delete_form' => $deleteForm->createView(),
         );
     }
+    
     /**
      * Deletes a SifdaOrdenTrabajo entity.
      *

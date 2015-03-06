@@ -41,6 +41,28 @@ class SifdaInformeOrdenTrabajoController extends Controller
     }
 
     /**
+     * Lists all SifdaInformeOrdenTrabajo entities.
+     *
+     * @Route("/lstInformes/{idOrd}", name="sifdainformeordentrabajo_lstInformes")
+     * @Method("GET")
+     * @Template()
+     */
+    public function lstInformesAction($idOrd) {
+        $em = $this->getDoctrine()->getManager();
+
+        $entities = $em->getRepository('MinsalsifdaBundle:SifdaInformeOrdenTrabajo')->findBy(array('idOrdenTrabajo' => $idOrd));
+        
+            $orden = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($idOrd);
+            if (!$orden) {
+                throw $this->createNotFoundException('Unable to find SifdaInformeOrdenTrabajo entity.');
+            }
+            return array(
+            'entities' => $entities,
+            'orden' => $orden,
+        );
+    }
+    
+    /**
      * Creates a new SifdaInformeOrdenTrabajo entity.
      *
      * @Route("/create/{id}", name="sifdainformeordentrabajo_create")

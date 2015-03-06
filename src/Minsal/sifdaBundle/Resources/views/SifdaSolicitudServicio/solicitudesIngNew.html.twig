@@ -3,7 +3,7 @@
  
     <div>
         Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
-        <center><h3>Solicitudes Ingresadas</h3></center>
+        <center><h3>Listado de solicitudes ingresadas</h3></center>
     
     </div>
       <br/>  
@@ -65,13 +65,13 @@
                 <div class="span4">
                     <table id="fechas">
                            <tr>
-                              <td><label>FechaInicio: </label></td>
+                              <td><label>Fecha de inicio: </label></td>
                                <td>
                                    <input type="text" id="fechaInicio" class="input-small" readonly="true">
                                </td>  
                            </tr>
                             <tr>
-                                <td><label>FechaFin: </label></td>
+                                <td><label>Fecha de fin: </label></td>
                                 <td>
                                     <input type="text" id="fechaFin" class="input-small" readonly="true" >
                                 </td>
@@ -91,11 +91,11 @@
                         <tr>
                             <th><center>N°</center></th>
                             <th><center>Establecimiento</center></th>
-                            <th><center>DependenciaSolicitante</center></th>
-                            <th><center>TipoServicio</center></th>
-                            <th><center>Descripcion</center></th>
-                            <th><center>FechaRecepcion</center></th>
-                            <th><center>FechaRequiere</center></th>
+                            <th><center>Dependencia solicitante</center></th>
+                            <th><center>Tipo de servicio</center></th>
+                            <th><center>Descripci&oacute;n</center></th>
+                            <th><center>Fecha de recepci&oacute;n</center></th>
+                            <th><center>Fecha que se requiere</center></th>
 
                         </tr>
                     </thead>
@@ -110,8 +110,8 @@
                             {#<td><a href="{{ path('sifda_solicitudservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#} 
                             <td>{{ count }}</td>
                             {#<td>{{ loop.index }}</td>#}
-                            <td><justify>{{ entity.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
-                            <td align="justify">{{ entity.idDependenciaEstablecimiento.idDependencia }}</td>
+                            <td><justify>{{ entity.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
+                            <td align="justify">{{ entity.user.idDependenciaEstablecimiento.idDependencia }}</td>
                             <td>{{ entity.idTipoServicio }}</td>
                             <td>{{ entity.descripcion }}</td>
                             <td>{% if entity.fechaRecepcion %}{{ entity.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>
