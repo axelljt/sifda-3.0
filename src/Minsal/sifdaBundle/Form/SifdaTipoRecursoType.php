@@ -16,9 +16,13 @@ class SifdaTipoRecursoType extends AbstractType
     {
         $builder
             ->add('nombre')
-            ->add('descripcion')
-            ->add('rrhh')
-        ;
+            ->add('descripcion');
+//            ->add('rrhh','choice',array('multiple'  => false,
+//                    'expanded'  => true, 'required' =>false, 'choices'   => array(
+//                        's' => 'Si',
+//                        'n' => 'No'))
+//                    )
+//        
     }
     
     /**

@@ -75,8 +75,9 @@ class SifdaOrdenTrabajoController extends Controller
     public function gestionOrdenesAction()
     {
         $em = $this->getDoctrine()->getManager();
-
-        $entities = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->findBy(array(),
+        $user=$this->getUser();
+//        $objUser=$em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->find($user);
+        $entities = $em->getRepository('MinsalsifdaBundle:SifdaOrdenTrabajo')->findBy(array('idDependenciaEstablecimiento'=>$user->getIdDependenciaEstablecimiento()->getId()),
                                                                                        array(
                                                                                 'fechaCreacion' =>  'DESC'
                                                                                ));
