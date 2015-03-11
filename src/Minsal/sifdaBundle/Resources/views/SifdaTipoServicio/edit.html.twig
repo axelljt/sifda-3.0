@@ -33,7 +33,7 @@
                 <table id="botones">
                     <tr> 
                        <td>{{form_row(edit_form.submit,{'attr':{'class':'btn btn-primary'}})}}</td>
-                        <td><a href="{{ path('sifdatiposervicio')}}" class="btn">Regresar</a></td>
+                        <td><a href="{{ path('sifdatiposervicio_show', { 'id': entity.id })}}" class="btn">Regresar</a></td>
                     </tr>    
                 </table>
             </center>

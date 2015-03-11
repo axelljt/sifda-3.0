@@ -50,7 +50,7 @@
                            <a href="{{ path('sifda_rutaciclovida_new_subetapa', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar una subetapa</a>
                        </td>
                         <td>
-                            <a href="{#{ path('sifda_rutaciclovida', { 'id': tipo.id })}#}" class="btn">Regresar</a>
+                            <a href="{{ path('sifdatiposervicio_show', { 'id': entity.id })}}" class="btn">Regresar</a>
                         </td>
                     </tr>    
                     </table>

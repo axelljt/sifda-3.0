@@ -54,7 +54,7 @@ $pdf->SetMargins(20,18);
 $pdf->AddPage("P","Letter");
 $pdf->SetFont('Arial','',11);
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda29012015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 if ($temp_ff ==0 and $temp_fi ==0)

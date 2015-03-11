@@ -5,7 +5,7 @@
     
     <div>
         Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
-        <center><h3>Solicitudes Finalizadas </h3></center>
+        <center><h3>Listado de solicitudes de servicio finalizadas </h3></center>
         
         <div id="seleccion">
         <div class="row-fluid">
@@ -64,13 +64,13 @@
                 <div class="span4">
                     <table id="fechas">
                            <tr>
-                              <td><label>FechaInicio: </label></td>
+                              <td><label>Fecha de Inicio: </label></td>
                                <td>
                                    <input type="text" id="fechaInicio" class="input-small" >
                                </td>  
                            </tr>
                             <tr>
-                                <td><label>FechaFin: </label></td>
+                                <td><label>Fecha Fin: </label></td>
                                 <td>
                                     <input type="text" id="fechaFin" class="input-small" >
                                 </td>
@@ -83,18 +83,18 @@
                 </div> 
               </div>
         </div> 
-        
+        <br>
            {% if entities %}       
                 <table id="FinTabla" class="table table-bordered table-hover table-condensed">
                  <thead>
                      <tr>
                          <th><center>N°</center></th>
                          <th><center>Establecimiento</center></th>
-                         <th><center>DependenciaSolicitante</center></th>
-                         <th><center>TipoServicio</center></th>
-                         <th><center>Descripcion</center></th>
-                         <th><center>FechaRecepcion</center></th>
-                         <th><center>FechaRequiere</center></th>
+                         <th><center>Dependencia Solicitante</center></th>
+                         <th><center>Tipo de Servicio</center></th>
+                         <th><center>Descripci&oacute;n</center></th>
+                         <th><center>Fecha de Recepci&oacute;n</center></th>
+                         <th><center>Fecha que se requiere</center></th>
 
                      </tr>
                  </thead>
@@ -105,8 +105,8 @@
                          <tr>
                              <td>{{ count }}</td>
                                      {#<td>{{ loop.index }}</td>#}
-                             <td><justify>{{ finalizado.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
-                             <td>{{ finalizado.idDependenciaEstablecimiento.idDependencia }}</td>
+                             <td><justify>{{ finalizado.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
+                             <td>{{ finalizado.user.idDependenciaEstablecimiento.idDependencia }}</td>
                              <td>{{ finalizado.idTipoServicio }}</td>
                              <td>{{ finalizado.descripcion }}</td>
                              <td>{% if finalizado.fechaRecepcion %}{{ finalizado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>

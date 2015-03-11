@@ -55,7 +55,7 @@ class SifdaSolicitudServicioController extends Controller
 //                $texto = $this->get('request')->request->get('texto');
 //		$id=$this->get('request')->request->get('id');
        
-        $correos=array(/*'axelljt@gmail.com','karensita8421@gmail.com',*/'anthony.huezo@gmail.com');
+        $correos=array('karensita8421@gmail.com','anthony.huezo@gmail.com');
        
         foreach ($correos as $correo){
             
@@ -794,8 +794,8 @@ class SifdaSolicitudServicioController extends Controller
           if($estado == "Ingresado")
               return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado2.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
-                elseif($vwUltimaEtapa->getIdEstado() == 4)
-                  return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado6.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+//                elseif($vwUltimaEtapa->getIdEstado() == 4)
+//                  return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado6.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
 
                   elseif($estado == "Asignado")
                       return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado3.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
@@ -1216,9 +1216,9 @@ class SifdaSolicitudServicioController extends Controller
                     throw $this->createNotFoundException('No encontre el Estado.');
                 }
 
-//                    $entity->setIdEstado($objEstado);
-//                    $em->merge($entity);
-//                    $em->flush();
+                    $entity->setIdEstado($objEstado);
+                    $em->merge($entity);
+                    $em->flush();
 
                     return $response->setData(array('val'=>1));       
                }

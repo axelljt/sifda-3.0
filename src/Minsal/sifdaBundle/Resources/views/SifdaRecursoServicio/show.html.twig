@@ -7,10 +7,10 @@
     
     <table id="tabla" class="table table-bordered table-hover table-condensed">
         <tbody>
-            <tr>
+            {#<tr>
                 <th>Id</th>
                 <td>{{ entity.id }}</td>
-            </tr>
+            </tr>#}
             <tr>
                 <th>Cantidad</th>
                 <td>{{ entity.cantidad }}</td>
@@ -40,6 +40,17 @@
                         <br>
                         </div>
                     </div>
+                                
+                                <center>
+                    <table id="botones">
+                    <tr> 
+                       
+                        <td>
+                            <a href="{{ path('sifdainformeordentrabajo', { 'idOrd': entity.idInformeOrdenTrabajo.idOrdenTrabajo.id })}}" class="btn">Regresar</a>
+                        </td>
+                    </tr>    
+                    </table>
+                </center>
         {#<ul class="record_actions">
     <li>
         <a href="{{ path('sifdarecursoservicio', { 'idInf': entity.idInformeOrdenTrabajo.id }) }}">
