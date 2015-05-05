@@ -3,15 +3,15 @@
 {#{% extends 'MinsalsifdaBundle::layout.html.twig' %}#}
 {% block contenido_in %}
    <div class="page-header">
-            <center><h3>Establecimientos</h3></center>
+            <center><h3>Listado de los establecimientos</h3></center>
         </div>
 
     <table id="tabla" class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Nombre</th>
-                <th>Actions</th>
+                <th><center>Correlativo</center></th>
+                <th><center>Nombre</center></th>
+                <th><center>Acciones</center></th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +22,10 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('sifda_ctlestablecimiento_show', { 'id': entity.id }) }}">mostrar</a>
+                        <a href="{{ path('sifda_ctlestablecimiento_show', { 'id': entity.id }) }}">Mostrar</a>
                     </li>
                     <li>
-                        <a href="{{ path('sifda_ctlestablecimiento_edit', { 'id': entity.id }) }}">modificar</a>
+                        <a href="{{ path('sifda_ctlestablecimiento_edit', { 'id': entity.id }) }}">Modificar</a>
                     </li>
                 </ul>
                 </td>
@@ -34,11 +34,11 @@
         </tbody>
     </table>
 
-        <ul>
+        {#<ul>
         <li>
             <a href="{{ path('sifda_ctlestablecimiento_new') }}">
                 Create a new entry
             </a>
         </li>
-    </ul>
+    </ul>#}
     {% endblock %}

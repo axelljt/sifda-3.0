@@ -12,6 +12,7 @@ $conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost')
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];
+$temp_udep = $_REQUEST['dep'];
 if ($temp_ff ==0 and $temp_fi ==0)
     {$ing = $conexion->get_results("SELECT count(id) as cing FROM public.sifda_solicitud_servicio where id_estado = 1 and id_dependencia_establecimiento = $temp_tdest");
      $asig = $conexion->get_results("SELECT count(id) as casig FROM public.sifda_solicitud_servicio where id_estado = 2 and id_dependencia_establecimiento = $temp_tdest");
@@ -72,8 +73,8 @@ $graph->SetMarginColor('white');
 
 // Setup margin and titles
 
-$graph->title->Set('Estados de solicitudes segun dependencia');
-
+//$graph->title->Set('Estados de solicitudes',$temp_udep);
+$graph->title->Set($temp_udep);
 $p1 = new PiePlot3D($data);
 
 $p1->SetSize(0.35);

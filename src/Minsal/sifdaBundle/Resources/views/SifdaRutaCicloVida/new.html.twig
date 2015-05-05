@@ -40,6 +40,16 @@
                     {{form_end(form)}}
                 {% else %}
                     <center><h4>El tipo de servicio ya tiene configurado el 100% de sus etapas</h4></center>
+                    <center>
+                        <table id="botones">
+                        <tr> 
+
+                            {#<td>{{form_row(form.submit_and_add,{'attr':{'class':'btn btn-primary'}})}}</td> 
+                            <td>{{form_row(form.submit,{'attr':{'class':'btn btn-inverse'}})}}</td> #}
+                            <td><a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Regresar</a></td>
+                        </tr>    
+                        </table>
+                    </center> 
                     {% endif %}
             </div>
         </div>    

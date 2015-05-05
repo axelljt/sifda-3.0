@@ -1,14 +1,16 @@
 {#{% extends '::base.html.twig' %}#}
 
-{% extends 'MinsalsifdaBundle::layoutSolicitante.html.twig' %}
-
-{% block body -%}
-    <h1>CtlTipoDependencia</h1>
-
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    {#{{form_start(edit_form)}}
+    {{form_errors(edit_form)}} #}
+    <div class="page-header">
+        <center><h3><center>Informaci&oacute;n del tipo de dependencia</center></h3></center>
+    </div>
     <table class="table table-bordered table-hover table-condensed">
         <tbody>
             <tr>
-                <th>Id</th>
+                <th>Correlativo</th>
                 <td>{{ entity.id }}</td>
             </tr>
             <tr>
@@ -18,7 +20,23 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
+            <div class="row-fluid">    
+                        <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                            <tr> 
+                               <td><a href="{{ path('sifda_ctltipodependencia_edit', { 'id': entity.id }) }}" class="btn">Editar tipo de dependencia</a>
+                               <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td>
+                               <td><a href="{{ path('sifda_ctltipodependencia') }}" class="btn">Regresar</a>
+                                </td>
+                            </tr>    
+                            </table>
+                        </center>
+                        <br>
+                        </div>
+                    </div>
+        {#<ul class="record_actions">
     <li>
         <a href="{{ path('sifda_ctltipodependencia') }}">
             Back to the list
@@ -30,5 +48,5 @@
         </a>
     </li>
     <li>{{ form(delete_form) }}</li>
-</ul>
+</ul>#}
 {% endblock %}

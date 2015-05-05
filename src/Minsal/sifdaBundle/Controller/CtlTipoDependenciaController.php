@@ -76,7 +76,7 @@ class CtlTipoDependenciaController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Registrar tipo de dependencia'));
 
         return $form;
     }
@@ -165,7 +165,7 @@ class CtlTipoDependenciaController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Actualizar'));
 
         return $form;
     }
@@ -240,7 +240,7 @@ class CtlTipoDependenciaController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('sifda_ctltipodependencia_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Eliminar'))
             ->getForm()
         ;
     }

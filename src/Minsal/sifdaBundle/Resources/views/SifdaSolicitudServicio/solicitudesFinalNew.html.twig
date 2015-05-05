@@ -105,8 +105,10 @@
                          <tr>
                              <td>{{ count }}</td>
                                      {#<td>{{ loop.index }}</td>#}
-                             <td><justify>{{ finalizado.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
-                             <td>{{ finalizado.user.idDependenciaEstablecimiento.idDependencia }}</td>
+                              
+                                                          
+                             <td><justify>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idEstablecimiento:"Sistema" }}</justify></td>
+                             <td>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idDependencia:"Generado PAO"  }}</td>
                              <td>{{ finalizado.idTipoServicio }}</td>
                              <td>{{ finalizado.descripcion }}</td>
                              <td>{% if finalizado.fechaRecepcion %}{{ finalizado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>

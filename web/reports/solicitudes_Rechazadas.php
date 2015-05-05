@@ -46,12 +46,20 @@ if($temp_fi != 0 and $temp_ff !=0){
   $this->Cell(275,15,$fechafi, 0, 0, 'C', false); 
   $this->Cell(-250,15,' al', 0, 0, 'C', false);
   $this->Cell(280,15,$fechaff, 0, 0, 'C', false); 
+  
+  $this->Ln(20);
+  $this->SetFont('Arial','B',11);
+  $this->SetWidths(array(5, 120, 25, 25));
+  $this->Row(array('N',utf8_decode('Descripción'),utf8_decode('Fecha Solicita'),utf8_decode('Fecha Requiere')));
+
+  
 }
+else{
 $this->Ln(20);
 $this->SetFont('Arial','B',11);
 $this->SetWidths(array(5, 30, 36, 48, 25, 25));
 $this->Row(array('N',utf8_decode('Dependencia Solicitante'),utf8_decode('Tipo de servicio'),utf8_decode('Descripción'),utf8_decode('Fecha Solicita'),utf8_decode('Fecha Requiere')));
-
+}//fin del else
 //$this->SetFont('Arial','',11);
 }
 
@@ -189,6 +197,15 @@ inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_depende
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
 where id_estado=3;");
+    
+        foreach ($datos as $value) {
+    $item = $item +1;
+    $pdf->Row(array($item,utf8_decode($value->dependencia),utf8_decode($value->nombre),
+			utf8_decode($value->descripcion),utf8_decode($value->fecha_recepcion),
+                        utf8_decode($value->fecha_requiere)
+          ));  
+    }//fin del foreach
+    
     }
 else
     {//$datos = $conexion->get_results("SELECT descripcion,fecha_requiere,fecha_recepcion FROM public.sifda_solicitud_servicio where where id_estado = 1 and fecha_recepcion between '$temp_fi' and '$temp_ff'"); 
@@ -201,19 +218,21 @@ inner join public.ctl_dependencia de on (de.id = dep.id_dependencia)
 where id_estado=3 
 and ss.id_tipo_servicio = '$temp_tipo'
 and fecha_recepcion >= '$temp_fi' and fecha_recepcion <= '$temp_ff'");
+        
+    foreach ($datos as $value) {
+    $item = $item +1;
+    $pdf->Row(array($item,
+			utf8_decode($value->descripcion),utf8_decode($value->fecha_recepcion),
+                        utf8_decode($value->fecha_requiere)
+          ));  
+    }//fin del foreach
+        
     }
 
 //$datos = $conexion->get_row("SELECT descripcion FROM public.sifda_solicitud_servicio where descripcion = 'test1'");
 //$datos = $conexion->get_results("SELECT descripcion,fecha_requiere,fech                                                                                                                                                   a_recepcion FROM public.sifda_solicitud_servicio"); 
 //$datos = $conexion->get_results("SELECT id,descripcion, fecha_recepcion, fecha_requiere FROM public.sifda_solicitud_servicio where id_estado =2 and fecha_recepcion between '$temp_fi' and '$temp_ff'");                
 
-foreach ($datos as $value) {
-  $item = $item +1;
-  $pdf->Row(array($item,utf8_decode($value->dependencia),utf8_decode($value->nombre),
-			utf8_decode($value->descripcion),utf8_decode($value->fecha_recepcion),
-                        utf8_decode($value->fecha_requiere)
-          ));  
-}
 
 $pdf->Output();
 ?>

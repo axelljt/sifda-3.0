@@ -13,7 +13,7 @@
                 <td>{{ entity.descripcion }}</td>
             </tr>
             <tr>
-                <th>Ref1</th>
+                <th>Referencia</th>
                 <td>{{ entity.ref1 }}</td>
             </tr>
             <tr>
@@ -28,7 +28,7 @@
             <table id="botones" style="margin-left:38%">
                 <tr>
                     <td><a href="{{ path('sifda_catalogodetalle') }}" class="btn">Regresar</a></td>
-                    <td><a href="{{ path('sifda_catalogodetalle_edit', { 'id': entity.id }) }}" class="btn">Edit</a></td>
+                    <td><a href="{{ path('sifda_catalogodetalle_edit', { 'id': entity.id }) }}" class="btn">Editar</a></td>
                     <td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td> 
                 </tr>
             </table>     

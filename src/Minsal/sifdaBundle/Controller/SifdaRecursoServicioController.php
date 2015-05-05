@@ -51,8 +51,19 @@ class SifdaRecursoServicioController extends Controller
         $entity = new SifdaRecursoServicio();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
+        $parameters = $request->request->all();
+        foreach($parameters as $p){
+            $TipoRecursoDependencia = $p['idTipoRecursoDependencia'];
+            $cantidad = $p['cantidad'];
+        }
+        $em = $this->getDoctrine()->getManager();
+        $idTipoRecursoDependencia = $em->getRepository('MinsalsifdaBundle:SifdaTipoRecursoDependencia')->find($TipoRecursoDependencia);
+        //ladybug_dump($idTipoRecursoDependencia);
+        $costoUnitario = $idTipoRecursoDependencia->getCostoUnitario();
+        $costoTotal = $cantidad * $costoUnitario;
 
         if ($form->isValid()) {
+            $entity->setCostoTotal($costoTotal);
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
@@ -80,7 +91,7 @@ class SifdaRecursoServicioController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', 'submit', array('label' => 'Registrar recurso'));
 
         return $form;
     }
@@ -179,7 +190,7 @@ class SifdaRecursoServicioController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Actualizar'));
 
         return $form;
     }
@@ -254,7 +265,7 @@ class SifdaRecursoServicioController extends Controller
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('sifdarecursoservicio_delete', array('id' => $id)))
             ->setMethod('DELETE')
-            ->add('submit', 'submit', array('label' => 'Delete'))
+            ->add('submit', 'submit', array('label' => 'Eliminar'))
             ->getForm()
         ;
     }

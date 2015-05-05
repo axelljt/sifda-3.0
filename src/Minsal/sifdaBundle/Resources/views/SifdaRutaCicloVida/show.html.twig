@@ -3,6 +3,7 @@
 {% block contenido_in -%}
     <div class="page-header">
         <center><h3>Mostrar etapa del tipo servicio</h3></center>
+        <center><h4>{{tipo.nombre}}</h4></center>
     </div>
     <div class="row-fluid">
         <div class="span9 offset1">
@@ -50,7 +51,7 @@
                            <a href="{{ path('sifda_rutaciclovida_new_subetapa', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar una subetapa</a>
                        </td>
                         <td>
-                            <a href="{{ path('sifdatiposervicio_show', { 'id': entity.id })}}" class="btn">Regresar</a>
+                            <a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Regresar</a>
                         </td>
                     </tr>    
                     </table>

@@ -260,11 +260,18 @@ class SifdaRutaCicloVidaController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SifdaRutaCicloVida entity.');
         }
-
+        
+        if ($id != 0) {
+           $em = $this->getDoctrine()->getManager();
+           //$tipo = $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->find($id);
+           $tipo = $entity->getIdTipoServicio();
+        }
+        
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
+            'tipo' => $tipo,
             'subetapas' => $subetapas,
             'delete_form' => $deleteForm->createView(),
         );
@@ -286,12 +293,19 @@ class SifdaRutaCicloVidaController extends Controller
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find SifdaRutaCicloVida entity.');
         }
-
+        
+        if ($id != 0) {
+           $em = $this->getDoctrine()->getManager();
+           $tipo = $entity->getIdTipoServicio();
+        }    
+        
+        
         $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
         return array(
             'entity'      => $entity,
+            'tipo' => $tipo,
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -311,7 +325,7 @@ class SifdaRutaCicloVidaController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Actualizar'));
 
         return $form;
     }

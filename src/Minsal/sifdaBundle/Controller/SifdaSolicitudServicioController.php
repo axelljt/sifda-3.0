@@ -274,7 +274,7 @@ class SifdaSolicitudServicioController extends Controller
     
     
      /**
-     * Metodo Nuevo que Enlaza la Pantalla de SolicitudesRechazadas.
+     * Metodo Nuevo que Enlaza la Pantalla de SolicitudesRechazadas
      *
      * @Route("/solicitudes/finalizadas2", name="sifda_solicitudes_fializadas2")
      * @Method("GET")Lista todas las solicitudes de Servicio.

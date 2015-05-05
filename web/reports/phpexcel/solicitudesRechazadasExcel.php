@@ -114,11 +114,12 @@ $objDrawing->setWorksheet($objPHPExcel->getActiveSheet()); //incluir la imagen
 //establecer titulos de impresion en cada hoja
 $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEnd(1, 6);
 
+if ($temp_ff ==0 and $temp_fi ==0){
 
 $fila=6;
-$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes de Servicio Rechazadas");
-$objPHPExcel->getActiveSheet()->mergeCells("A$fila:I$fila"); //unir celdas
-$objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:I$fila"); //establecer estilo
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Rechazadas");
+$objPHPExcel->getActiveSheet()->mergeCells("A$fila:G$fila"); //unir celdas
+$objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:G$fila"); //establecer estilo
 
 //titulos de columnas
 $fila+=1;
@@ -171,6 +172,56 @@ foreach (range('A', 'B','C','D') as $columnID) {
   //autodimensionar las columnas
   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);  
 }
+
+}//fin del if
+else{
+    
+$fila=7;
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Rechazadas");
+$objPHPExcel->getActiveSheet()->mergeCells("A$fila:H$fila"); //unir celdas
+$objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:H$fila"); //establecer estilo
+
+//titulos de columnas
+$fila+=1;
+
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", 'Num');
+$objPHPExcel->getActiveSheet()->SetCellValue("B$fila", 'Descripción');
+$objPHPExcel->getActiveSheet()->SetCellValue("C$fila", 'Fecha recepción');
+$objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Fecha requiere');
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:B$fila"); //establecer estilo
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila:D$fila");
+$objPHPExcel->getActiveSheet()->getStyle("A$fila:B$fila")->getFont()->setBold(true); //negrita
+$objPHPExcel->getActiveSheet()->getStyle("C$fila:D$fila")->getFont()->setBold(true); //negrita
+
+foreach ($datos as $value) {
+  $item = $item +1;
+  $fila+=1;
+    //$row = $row -1;
+    //$pdf->Cell(15,7,utf8_decode($item),1);
+    //$pdf->Cell(15,7,utf8_decode($value->id),1,0,'C');
+    $objPHPExcel->getActiveSheet()->SetCellValue("A$fila","$item");
+    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->descripcion");
+    $objPHPExcel->getActiveSheet()->SetCellValue("C$fila","$value->fecha_requiere");
+    $objPHPExcel->getActiveSheet()->SetCellValue("D$fila","$value->fecha_recepcion");
+      //Establecer estilo
+  $objPHPExcel->getActiveSheet()->setSharedStyle($bordes, "A$fila:B$fila:C$fila:D$fila"); 
+}
+
+//insertar formula
+//$fila+=2;
+//$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", 'SUMA');
+//$objPHPExcel->getActiveSheet()->SetCellValue("B$fila", '=1+2');
+
+//recorrer las columnas
+foreach (range('A', 'B','C','D') as $columnID) {
+  //autodimensionar las columnas
+  $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);  
+}
+
+    
+    
+}//fin del else
+
 
 //establecer pie de impresion en cada hoja
 $objPHPExcel->getActiveSheet()->getHeaderFooter()->setOddFooter('&R&F página &P / &N');

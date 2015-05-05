@@ -1,12 +1,38 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
 {% block contenido_in -%}
-    <center><h3>Agregar Tipo de Recurso</h3></center>
+    {{form_start(form)}}
+    {{form_errors(form)}}
+    <center><h3>Registrar nuevo tipo de recurso</h3></center>
 
-    {{ form(form) }}
+    {#{{ form(form) }}#}
 
-        
-    <center>
+        <div class="row-fluid">
+                    <div class="span4 offset2">
+                        {{form_row(form.nombre)}}
+                    </div>
+                    <div class="span5 offset1"> 
+                        {{form_row(form.descripcion)}}
+                    </div>
+                </div>
+        <div class="row-fluid">    
+                        <div class="span12">
+                        <br>
+                        <center>
+                            <table id="botones">
+                            <tr> 
+                               {#<td><a href="{{ path('sifda_ctltipodependencia_edit', { 'id': entity.id }) }}" class="btn">Editar tipo de dependencia</a>#}
+                               <td>{{form_row(form.submit,{'attr':{'class':'btn'}})}}</td>
+                               {#<td>{{form_row(delete_form.submit,{'attr':{'class':'btn'}})}}</td>#}
+                               <td><a href="{{ path('sifdatiporecurso') }}" class="btn">Regresar</a>
+                                </td>
+                            </tr>    
+                            </table>
+                        </center>
+                        <br>
+                        </div>
+                    </div>            
+    {#<center>
             <table id="botones">
             <tr>
                 <td><a href="{{ path('sifdatiporecurso') }}" class="btn">
@@ -14,5 +40,6 @@
             </a></td>
             </tr>    
             </table>
-        </center>
+        </center>#}
+    {{form_end(form)}}
 {% endblock %}

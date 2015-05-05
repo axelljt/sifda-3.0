@@ -58,18 +58,18 @@
             <tr>
                 
                 <td>
-                    {% if entity.jerarciclovida != subetapa %}
+                    {#{% if entity.jerarciclovida != subetapa %}#}
                         {{ entity.dscciclovida }}
                         {%set subetapa = subetapa + 1%}
-                    {%endif%}
+                    {#{%endif%}#}
                 </td>
                 
                 <td>{{ entity.dscsubetapa }}</td>
                 <td><center>{{ entity.dscestado }}</center></td>
                 <td>
-                    {% if entity.dscestado != 'Sin Asignar' %}
+                    {#{% if entity.dscestado != 'Sin Asignar' %}#}
                         {{ entity.nomempleado is empty ? "Empleado sin asignar." : entity.nomempleado}}
-                    {% endif %}
+                    {#{% endif %}#}
                 </td>
                 {#<td>
                 <ul>

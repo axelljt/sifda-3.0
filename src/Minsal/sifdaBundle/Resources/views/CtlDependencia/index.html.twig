@@ -4,14 +4,18 @@
 
 
 {% block contenido_in -%}
-    <h2><center>Listado de Dependencias</center></h2>
-
+    <div class="page-header">
+        <center><h3><center>Listado de dependencias</center></h3></center>
+    </div>
+    <div class="row-fluid">
+        <div class="span12">
+    
     <table class="table table-bordered table-hover table-condensed">
         <thead>
             <tr>
-                <th><center>Id</center></th>
+                <th><center>Correlativo</center></th>
                 <th><center>Nombre</center></th>
-                <th><center>Actions</center></th>
+                <th><center>Acciones</center></th>
             </tr>
         </thead>
         <tbody>
@@ -22,10 +26,10 @@
                 <td>
                 <ul>
                     <li>
-                        <a href="{{ path('sifda_ctldependencia_show', { 'id': entity.id }) }}">mostrar</a>
+                        <a href="{{ path('sifda_ctldependencia_show', { 'id': entity.id }) }}">Mostrar</a>
                     </li>
                     <li>
-                        <a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}">editar</a>
+                        <a href="{{ path('sifda_ctldependencia_edit', { 'id': entity.id }) }}">Editar</a>
                     </li>
                 </ul>
                 </td>
@@ -34,11 +38,13 @@
         </tbody>
     </table>
 
-        <ul>
+        {#<ul>
         <li>
             <a href="{{ path('sifda_ctldependencia_new') }}">
                 Create a new entry
             </a>
         </li>
-    </ul>
+    </ul>#}
+                </div>
+    </div> 
     {% endblock %}
