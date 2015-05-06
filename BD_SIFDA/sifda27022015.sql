@@ -51,7 +51,7 @@ EXECUTE 'SELECT dblink_connect(''sidpla'', ''dbname=sidpla'')';
 
     RETURN QUERY SELECT DISTINCT(anio) FROM dblink('sidpla','SELECT le.anio FROM sidpla_linea_estrategica le ') AS t(anio int) 
 WHERE anio NOT IN (SELECT DISTINCT(le.anio) FROM sidpla_linea_estrategica le) 
-AND anio > (SELECT MAX(le.anio) FROM sidpla_linea_estrategica le) ORDER BY anio;
+AND anio > (SELECT coalesce(MAX(le.anio),0) FROM sidpla_linea_estrategica le) ORDER BY anio;
 
 EXECUTE 'SELECT dblink_disconnect(''sidpla'')';    
     RETURN;
@@ -2377,22 +2377,22 @@ COPY ctl_empleado (id, id_cargo, id_dependencia_establecimiento, nombre, apellid
 1	1	4	Juan	Roque	1985-01-12	roquej@gmail.com
 2	2	4	Saul	Aguilar	1991-08-09	saguilar@yahoo.es
 3	2	4	Carolina	Perez	1972-06-11	cperez@salud.gob
-4	2	4	Leticia	Salamanca	1988-04-12	letty.sal@gmail.com
-5	2	4	Oscar	Jimenez	1979-10-21	jimenez.osc979@gmail.com
-6	3	4	Marcos	Rivera	1986-10-24	mrivera@salud.gob
 7	3	4	Mauricio	Castro	1990-03-27	mcastro@salud.gob
 8	3	4	Karla	Guerrero	1984-03-03	kguerrero@salud.gob
 9	3	4	Jose	ponce	1987-05-04	jponce@gmail.com
-10	1	4	Martin	Reyes	1982-01-03	mreyes@gmail.com
 11	1	4	Carlos	Gutierrez	1982-06-01	cgutierres@gmail.com
 12	1	4	Pablo	Peña	1982-03-06	cpeña@gmail.com
 13	1	4	Emilio	Perla	1972-03-04	epeña@gmail.com
-17	1	23	Martin 	Contreras	1985-07-06	axelljt@gmail.com 
-14	1	23	Julio 	Martinez	1985-05-10	makakoioi@gmail.com 
-16	1	23	Paola	Rivas	1985-06-06	karensita8421@gmail.com
-15	1	23	Marta	Reyes	1985-03-12	anthony.huezo@gmail.com 
-18	1	23	Mario	Rivera	1987-05-03	karensita8421@gmail.com
-19	1	23	Carlos	Duque	1988-04-12	makakoioi@gmail.com
+14	1	21	Julio 	Martinez	1985-05-10	karensita8421@gmail.com 
+16	1	21	Paola	Rivas	1985-06-06	karensita8421@gmail.com
+17	1	21	Martin 	Contreras	1985-07-06	axelljt@gmail.com 
+18	1	21	Mario	Rivera	1987-05-03	karensita8421@gmail.com
+19	1	21	Carlos	Duque	1988-04-12	makakoioi@gmail.com
+6	3	4	Hugo 	Jimenez	1986-10-24	karensita8421@gmail.com 
+4	2	4	Carlos	Martin	1988-04-12	anthony.delgado985@gmail.com
+5	2	4	Roberto	Gonzales	1979-10-21	karensita8421@gmail.com
+10	1	4	Martin	Reyes	1982-01-03	makakoioi@gmail.com
+15	1	21	Marta	Reyes	1985-03-12	makakoioi@gmail.com
 \.
 
 
@@ -3107,17 +3107,17 @@ SELECT pg_catalog.setval('fos_user_group_id_seq', 1, false);
 --
 
 COPY fos_user_user (id, id_dependencia_establecimiento, id_empleado, username, username_canonical, email, email_canonical, enabled, salt, password, last_login, locked, expired, expires_at, confirmation_token, password_requested_at, roles, credentials_expired, credentials_expire_at, created_at, updated_at, date_of_birth, firstname, lastname, website, biography, gender, locale, timezone, phone, facebook_uid, facebook_name, facebook_data, twitter_uid, twitter_name, twitter_data, gplus_uid, gplus_name, gplus_data, token, two_step_code) FROM stdin;
-6	4	5	tecnico	tecnico	tecnico@gmail.com	tecnico@gmail.com	t	ox8omybl0j4s4cwcoo0c4ko0cc0gw4s	Xo4x4vwNwt2O+ct6NtpF6jnNA7ugCkZHm+e544TQ3/H4Ya7c/p9pRURTIECH2Izy27p1cCA8hDhyZAgsREgbjA==	2015-02-17 11:35:59	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-9	23	15	tecnico1ucm	tecnico1ucm	antony@gmail.com	antony@gmail.com	t	2ak3h1mp7q1wsww4sswggws0ssogs8s	Fbl7P1+eePi4TYGQU2VIX40cb0CKWMHBL2BiWy2Uhc5XGwF/yJ8HwgssaXtvELGqNmARlVGYl5jEJZhQJWUiKA==	2015-02-22 05:47:14	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 2	4	2	anthony	anthony	anthony.huezo@gmail.com	anthony.huezo@gmail.com	t	44n26usz7740oswcgggg0kk400w8sgc	6sTUfgUKmPOKq0A+UXVHOOAlilTBvx+r6SCWHFgscRbRmn9TdnTCetnNbklRmTNIOBp8r5PVqFC9QVY66tDHYw==	2015-02-07 02:20:54	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-28 23:40:51	2015-01-29 12:51:53	\N	Anthony	Huezo	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
-7	322	6	solicitante	solicitante	solicitante@gmail.com	solicitante@gmail.com	t	893f5smysj8co4gco4c4cgsss4wk4k4	RvWUS53TELbEEl8WARzzFFwW4O3iHTe63T5lG1bpCY5GhE9WQFQ7JIm490PZdfB9aJioDAPksDgtsr5zIs4uKw==	2015-02-19 08:39:46	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 3	4	3	sviana	sviana	sviana@salud.gob.sv	sviana@salud.gob.sv	t	3ik1vjp3h9mo0g4cooos8o00swk808g	a2uCQBSR/lqrmIdgi8+HkvtrklbsY0svXGPp7WkyEVom4MWvr/nNcA/fh4NJKc7LZIKwduDUWsABL+xsiv9RCA==	2015-02-17 11:21:07	f	f	\N	\N	\N	a:0:{}	f	\N	2015-01-29 09:37:24	2015-01-29 11:27:07	\N	Sonia	Viana	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
 1	322	1	Minsal	minsal	minsal@salud.gob.sv	minsal@salud.gob.sv	t	nqc2pq64y9wkwk4o0o8o8ossc00skoc	RYzSYKZJbFvpqIUS7AEyN1vQmix9IKNZoIMUmA3jvZQeEVDlECevcOYlCELWoRingMT36/vAtfBmr9rLEsQXaQ==	2015-02-17 11:21:56	f	f	\N	\N	\N	a:2:{i:0;s:16:"ROLE_SUPER_ADMIN";i:1;s:10:"ROLE_ADMIN";}	f	\N	2015-01-27 21:03:12	2015-01-29 11:45:48	\N	Pedro	Perez	\N	\N	u	\N	\N	\N	\N	\N	null	\N	\N	null	\N	\N	null	\N	\N
-5	4	4	responsable	responsable	responsable@gmail.com	responsable@gmail.com	t	27nh1rszygpw04o4cogwcskwow0ksc0	i+qNN4ExKVYHVgG3vOknJcMt4vTrH+0qRzn8c/hqPUaUKXyiOgs7CQYn3ep6M3i0UPrTpM3xxkq8PmCkJGVEAw==	2015-02-19 12:04:48	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-11	23	16	tecnico2ucm	tecnico2ucm	huezo@gmail.com	huezo@gmail.com	t	owmk6ygpf40woo84c8gcwo8sco08w0o	9vyikSk9xh1A1bG9HJohZkjFEBDZNZ/hk0syYa9NTXFGdqCYj4VeyLVnIZYr9NosZwQKNWtRH8v5pB59BWecUQ==	2015-02-22 05:48:51	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-12	\N	\N	tecnico3ucm	tecnico3ucm	mrivera@gmail.com	mrivera@gmail.com	t	2l6uovdpagisgsg8gccoccksks8wgk0	8ifaCoP6U4evsGix9m5n77McjFv8HHyK21f7MCp8YgqGFiDC9R2TwHIrOb5OvFPIqpfC7NdmW4FPCtQ1v65taw==	\N	f	f	\N	\N	\N	a:0:{}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-8	23	14	solicitanteucm	solicitanteucm	emilio@gmail.com	emilio@gmail.com	t	lqhgxxirzxsog4so8ksgg4wk4gossks	seNPeWY3JXksoDnTtq0KbG7LN5stNW15XWoDW0nEkBtp/qekDJxckg1LzmXn3MSVDRJTCIA7uqnYHr6+ab6bHg==	2015-02-23 02:09:09	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
-10	23	17	responsableucm	responsableucm	axel@gmail.com	axel@gmail.com	t	l3lufubf8ogokk4ogkkc0o0sk0cokgs	87arS95nuqvaPFive4bMThGOY0OH36KptM71irB0xCKH5L3B7lakqlXWF5C72e5vVcRWnDsfBqwhjSBMSVEKTQ==	2015-02-23 02:24:26	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+7	322	6	hjimenez	hjimenez	solicitante@gmail.com	solicitante@gmail.com	t	893f5smysj8co4gco4c4cgsss4wk4k4	RvWUS53TELbEEl8WARzzFFwW4O3iHTe63T5lG1bpCY5GhE9WQFQ7JIm490PZdfB9aJioDAPksDgtsr5zIs4uKw==	2015-04-30 11:23:20	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+10	21	17	mcontreras	mcontreras	axel@gmail.com	axel@gmail.com	t	l3lufubf8ogokk4ogkkc0o0sk0cokgs	87arS95nuqvaPFive4bMThGOY0OH36KptM71irB0xCKH5L3B7lakqlXWF5C72e5vVcRWnDsfBqwhjSBMSVEKTQ==	2015-05-04 22:23:23	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+8	21	14	jmartinez	jmartinez	emilio@gmail.com	emilio@gmail.com	t	lqhgxxirzxsog4so8ksgg4wk4gossks	seNPeWY3JXksoDnTtq0KbG7LN5stNW15XWoDW0nEkBtp/qekDJxckg1LzmXn3MSVDRJTCIA7uqnYHr6+ab6bHg==	2015-02-27 03:09:49	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_SOLICITANTE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+12	21	18	mrivera	mrivera	mrivera@gmail.com	mrivera@gmail.com	t	2l6uovdpagisgsg8gccoccksks8wgk0	8ifaCoP6U4evsGix9m5n77McjFv8HHyK21f7MCp8YgqGFiDC9R2TwHIrOb5OvFPIqpfC7NdmW4FPCtQ1v65taw==	\N	f	f	\N	\N	\N	a:0:{}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+6	4	5	rgonzales	rgonzales	tecnico@gmail.com	tecnico@gmail.com	t	ox8omybl0j4s4cwcoo0c4ko0cc0gw4s	Xo4x4vwNwt2O+ct6NtpF6jnNA7ugCkZHm+e544TQ3/H4Ya7c/p9pRURTIECH2Izy27p1cCA8hDhyZAgsREgbjA==	2015-04-30 09:59:35	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+9	21	15	mreyes	mreyes	antony@gmail.com	antony@gmail.com	t	2ak3h1mp7q1wsww4sswggws0ssogs8s	Fbl7P1+eePi4TYGQU2VIX40cb0CKWMHBL2BiWy2Uhc5XGwF/yJ8HwgssaXtvELGqNmARlVGYl5jEJZhQJWUiKA==	2015-04-30 02:49:07	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+5	4	4	cmartin	cmartin	responsable@gmail.com	responsable@gmail.com	t	27nh1rszygpw04o4cogwcskwow0ksc0	i+qNN4ExKVYHVgG3vOknJcMt4vTrH+0qRzn8c/hqPUaUKXyiOgs7CQYn3ep6M3i0UPrTpM3xxkq8PmCkJGVEAw==	2015-04-30 10:00:28	f	f	\N	\N	\N	a:1:{i:0;s:16:"ROLE_RESPONSABLE";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
+11	21	16	privas	privas	huezo@gmail.com	huezo@gmail.com	t	owmk6ygpf40woo84c8gcwo8sco08w0o	9vyikSk9xh1A1bG9HJohZkjFEBDZNZ/hk0syYa9NTXFGdqCYj4VeyLVnIZYr9NosZwQKNWtRH8v5pB59BWecUQ==	2015-04-30 10:44:07	f	f	\N	\N	\N	a:1:{i:0;s:12:"ROLE_TECNICO";}	f	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N
 \.
 
 
@@ -3153,6 +3153,41 @@ SELECT pg_catalog.setval('role_id_seq', 1, false);
 --
 
 COPY sidpla_actividad (id, id_empleado, id_linea_estrategica, descripcion, codigo, activo, meta_anual, descripcion_meta_anual, indicador, medio_verificacion, generado) FROM stdin;
+6	2	5	Supervisión de desarrollo de sistemas	SUPERV	t	5.00	Supervisión de los 5 sistemas nuevos	Cumplido	Reporte	f
+7	2	7	Monitoreo de peticiones al servidor	MONIT	t	10.00	Monitoreos de sistemas	Cumplido	Reporte	f
+8	2	4	Estudio de fiablidad de los sistemas	ESTFIA	t	2.00	Elaborar 2 estudios de fiabilidad	Cumplido	Reporte	f
+9	3	6	Integración a sistema nivel 1	INTE1	t	5.00	Integrar 5 sistemas a nivel 1	Cumplido	reporte	f
+10	3	8	Integración a sistema nivel 2	INTE2	t	5.00	Integrar 5 sistemas a nivel 2	Cumplido	Reporte	f
+11	3	9	Integración a sistema nivel 3	INTE3	t	5.00	Integrar 5 sistemas a nivel 3	Cumplido	Reporte	f
+12	3	10	Integración ultimo nivel	INTE4	t	5.00	Integrar 5 sistemas a ultimo nivel	Cumplido	Reporte	f
+13	4	2	Soporte a sistema de morbimortalidad	SOPM	t	2.00	Soporte morbimortalidad	Cumplido	Reporte	f
+14	4	3	Soporte a sistema de lesiones de causa	SOPCA	t	3.00	Soporte a sistema de lesiones	Cumplido	Reporte	f
+15	4	2	Soporte a servidores a unidad informatica	SOPDTIC	t	5.00	Soporte a servidores	Cumplido	Reporte	f
+16	4	8	Soporte de centro virtual de documentación	SOPDV	t	7.00	Realizar 5 soportes al centro virtual	Cumplido	Reporte	f
+17	4	7	Soporte de redes	SOPRED	t	6.00	Realizar 6 soportes de redes en la unidad	Cumplido	Reporte	f
+18	4	2	Soporte al sistema estadistico	SOPEST	t	9.00	Realizar 9 soportes a sistema estadistico	Cumplido	Reporte	f
+20	4	12	Soporte de antivirus central	SOPANT	t	17.00	Realizar 17 soportes de antivirus	Cumplido	Reporte	f
+21	4	11	Soporte a la configuracón del firewall	SOPFW	t	15.00	Realizar 15 soportes de configuración	Cumplido	Reporte	f
+22	4	7	Soporte de Hardware	SOPHW	t	20.00	Realizar 20 soportes de hw	Cumplido	Reporte	f
+19	4	11	Soporte de mantenimiento de sw	SOPSW	t	20.00	Realizar 20 soportes a los sistemas	Cumplido	Reporte	f
+25	5	8	Capacitación de sistema de RRHH	CAPRRHH	t	7.00	Realizar 7 capacitaciones 	Cumplido	Reporte	f
+24	5	2	Capacitación de uso de Excel	CAPSER	t	8.00	Realizar 8 capacitaciones de servidores	Cumplido	Reporte	f
+23	5	5	Capacitación sobre reportes en word	CAPPHP	t	6.00	Realizar 6 capacitaciones sobre php	Cumplido	Reporte	f
+26	6	7	Mantenimiento de sistema de Inventario	MANTIN	t	6.00	Realizar 6 mantenimientos de sist de inventario	Cumplido	Reporte	f
+27	6	7	Mantenimiento de sistema de farmacia	MANTFAR	t	7.00	Realizar 7 mantenimientos	Cumplido	Reporte	f
+28	6	3	Mantenimiento de sistema de centro virtual 	MANTCV	t	6.00	Realizar 6 mantenimientos de centros virtuales	Cumplido	Reporte	f
+29	6	8	Mantenimiento de sistema de activo fijo	MANTAF	t	6.00	Realizar 6 mantenimientos al sistema de activo	Cumplido	Reporte	f
+30	6	5	Mantenimiento de sistema de orden de trabajo	MANTO	t	7.00	Realizar 7 mantenimientos	Cumplido	Reporte	f
+31	6	8	Mantenimiento de base de abastecimiento	MATAB	t	7.00	Realizar 7 mantenientos a la base 	Cumplido	Reporte	f
+32	7	9	Mantenimiento de usuario de sitio web	MANTU	t	20.00	Realizar 20 mantenientos de usuario	Cumplido	Reporte	f
+33	7	2	Mantenimiento de reportes de sistema web	MANTR	t	15.00	realizar 15 mantenimientos a reportes	Cumplido	Reporte	f
+34	7	2	Mantenimiento de notificaciones de sistema web	MANT	t	10.00	Realizar 10 mantenimientos de notificaciones	Cumplido	Reporte	f
+35	13	3	Implementación de módulo de identificación	IMPID	t	12.00	Realizar 12 implementaciones de id	Cumplido	Reporte	f
+36	13	8	Implementación de módulo de citas médicas	IMPMED	t	9.00	Realizar 9 implementaciones	Cumplido	Reporte	f
+37	13	5	Implementación de módulo de farmacia	IMPFAR	t	6.00	Realizar 6 implementaciones de farmacia	Cumplido	Reporte	f
+38	13	4	Implementación de módulo de consulta externa	IMPEX	t	4.00	Realizar 4 implementaciones de consulta externa	Cumplido	Reporte	f
+39	18	3	Soporte general	SOPGEN	t	0.00	Realizado	Cumplido	Reporte	f
+5	5	5	Estudio de rendimiento de los sistemas	REND	t	8.00	Estudio de rendimiento de 8 sistemas	Cumplido	Reporte	t
 \.
 
 
@@ -3168,6 +3203,24 @@ SELECT pg_catalog.setval('sidpla_actividad_id_seq', 1, false);
 --
 
 COPY sidpla_linea_estrategica (id, id_dependencia_establecimiento, descripcion, codigo, activo, anio, recurrente) FROM stdin;
+3	4	Sistema de información integrado	SINT14	t	2015	t
+4	4	Soporte Técnico	SOPT15	t	2015	t
+5	4	Fortalecimiento del recurso humando de la DTIC	FORD16	t	2015	t
+6	4	Mantenimiento y supervisión de los sistemas de computo	MANT17	t	2015	t
+7	4	Mantenimiento del sitio web institucional	MWEB18	t	2015	t
+8	4	Administrar los equipos de seguridad	ADSE19	t	2015	t
+9	4	Elaboración de documentación regulatoria	DOCR20	t	2015	t
+10	4	Migración a plataforma libre	MIGR21	t	2015	t
+11	4	Mejora de la red de datos	MEJD22	t	2015	t
+12	4	Integración de los sistemas existentes	INTG23	t	2015	t
+13	4	Ordenamiento de los recursos informáticos	ORDI24	t	2015	t
+14	4	Apoyar la modernización de los sistemas existentes	APOY25	t	2015	t
+15	4	Elaboración de manuales de usuarios	DOCM26	t	2015	t
+16	4	Desarrollo de sistemas nuevos	DESN27	t	2015	t
+17	4	Migración de bases de datos	MIGB28	t	2015	t
+2	4	Fortalecimiento del sistema de seguridad	FORT13	t	2015	t
+19	4	Actualización de sistemas	ACTS30	t	2015	t
+18	4	Lineas adicionales	LADIC29	t	2015	f
 \.
 
 
@@ -3183,6 +3236,104 @@ SELECT pg_catalog.setval('sidpla_linea_estrategica_id_seq', 1, false);
 --
 
 COPY sidpla_subactividad (id, id_actividad, id_empleado, descripcion, codigo, activo, meta_anual, descripcion_meta_anual, indicador, medio_verificacion) FROM stdin;
+20	6	3	Monitoreo de Documentación	MONI9	t	1.00	Realizar documentación de sistema	Cumplido	Reporte
+19	6	2	Monitoreo de Pruebas	MONI8	t	1.00	Realizar pruebas de sistema	Cumplido	Reporte
+18	6	2	Monitoreo de Desarrollo de sistema	MONI7	t	1.00	Realizar análisis para desarrollo	Cumplido	Reporte
+17	6	2	Monitoreo de Análisis y diseño	MONI6	t	1.00	Realizar análisis para desarrollo	Cumplido	Reporte
+22	7	2	Monitoreo de peticiones al servidor	MONI7	t	1.00	Verificar el número de peticiones	Cumplido	Reporte
+21	7	2	Monitoreo de carga al servidor	MONI6	t	1.00	Verificar el comportamiento del servidor	Cumplido	Reporte
+23	8	2	Pruebas de sistema contra requerimientos	FIA6	t	1.00	Pruebas de sistema contra requerimientos	Cumplido	Reporte
+24	9	5	Migración de base de datos	MINBD	t	1.00	Realizar la Migración de base de datos	Cumplido	Reporte
+25	10	5	Migración de capa de presentación	MINCP	t	1.00	Realizar la Migración de capa de presentación	Cumplido	Reporte
+26	11	3	Pruebas de Migración de datos	MINDA	t	1.00	Realizar la Pruebas de Migración de datos	Cumplido	Reporte
+27	12	3	Pruebas de Migración de sistema	MINDA	t	1.00	Realizar la Pruebas de Migración de sistema	Cumplido	Reporte
+30	13	2	Soporte de redes	MONI8	t	1.00	Realizar Soporte de redes	Cumplido	Reporte
+29	13	2	Soporte de Software	MONI7	t	1.00	Realizar revisión de SW	Cumplido	Reporte
+28	13	2	Soporte de Hardware	SOP	t	1.00	Realizar revisión de HW	Cumplido	Reporte
+33	14	9	Soporte de redes	SOPRE	t	1.00	Realizar Soporte de redes	Cumplido	Reporte
+32	14	8	Soporte de Software	SOPSW	t	1.00	Realizar revisión de SW	Cumplido	Reporte
+31	14	8	Soporte de Hardware	SOPHW	t	1.00	Realizar revisión de HW	Cumplido	Reporte
+36	15	2	Soporte de redes	SOPRE	t	1.00	Realizar Soporte de redes	Cumplido	Reporte
+35	15	3	Soporte de Software	SOPSW	t	1.00	Realizar revisión de SW	Cumplido	Reporte
+34	15	9	Soporte de Hardware	SOPHW	t	1.00	Realizar revisión de HW	Cumplido	Reporte
+39	16	4	Soporte de redes	SOPRE	t	1.00	Realizar Soporte de redes	Cumplido	Reporte
+38	16	4	Soporte de Software	SOPSW	t	1.00	Realizar revisión de SW	Cumplido	Reporte
+37	16	1	Soporte de Hardware	SOPHW	t	1.00	Realizar revisión de HW	Cumplido	Reporte
+40	17	1	Evaluar rendimiento	SOPRE	t	1.00	Realizar evaluación con herramienta	Cumplido	Reporte
+43	18	3	Soporte de redes	SOPRE	t	1.00	Realizar Soporte de redes	Cumplido	Reporte
+42	18	3	Soporte de Software	SOPSW	t	1.00	Realizar revisión de SW	Cumplido	Reporte
+41	18	3	Soporte de Hardware	SOPHW	t	1.00	Realizar revisión de HW	Cumplido	Reporte
+48	20	4	Instalación de nueva licencia	INSTLIC	t	1.00	Instalación de nueva licencia	Cumplido	Reporte
+47	20	4	Evaluación licencia actual	LICAC	t	1.00	Evaluación licencia actual	Cumplido	Reporte
+50	21	4	Configuración de nueva versión	FWTEST	t	1.00	Configuración de nueva versión	Cumplido	Reporte
+49	21	4	Evaluación de versión actual	FWACT	t	1.00	Evaluación de versión actual	Cumplido	Reporte
+52	22	4	Reparación de hw	REPHW	t	1.00	Reparación de hw	Cumplido	Reporte
+51	22	4	Evaluación de mal funcionamiento	SOPHW	t	1.00	Evaluación de mal funcionamiento	Cumplido	Reporte
+46	19	3	Pruebas de sw nuevo	SOPRE	t	1.00	Pruebas de sw nuevo	Cumplido	Reporte
+45	19	3	Instalación de sw nuevo	SOPSW	t	1.00	Instalación de sw nuevo	Cumplido	Reporte
+44	19	3	Evaluación sw actual	SOPHW	t	1.00	Evaluación sw actual	Cumplido	Reporte
+64	25	6	Evaluación de capacitación	CAPEVAL	t	1.00	Evaluación	Cumplido	Reporte
+63	25	6	Realizar capacitación	CAP	t	1.00	Realizar capacitación	Cumplido	Reporte
+62	25	6	Coordinación de capacitación	CAPCO	t	1.00	Asignación de lugar y fecha	Cumplido	Reporte
+61	25	6	Preparar material de capacitación	CAPDOC	t	1.00	Elaborar material	Cumplido	Reporte
+60	24	8	Evaluación de capacitación	CAPEVAL	t	1.00	Evaluación	Cumplido	Reporte
+59	24	8	Realizar capacitación	CAP	t	1.00	Realizar capacitación	Cumplido	Reporte
+58	24	8	Coordinación de capacitación	CAPCO	t	1.00	Asignación de lugar y fecha	Cumplido	Reporte
+57	24	8	Preparar material de capacitación	CAPDOC	t	1.00	Elaborar material	Cumplido	Reporte
+55	23	5	Realizar capacitación	CAP	t	1.00	Realizar capacitación	Cumplido	Reporte
+68	26	6	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+67	26	6	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+66	26	6	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+65	26	6	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+72	27	8	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+71	27	8	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+70	27	8	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+69	27	8	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+76	28	3	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+75	28	3	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+74	28	3	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+73	28	3	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+80	29	6	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+79	29	6	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+78	29	6	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+77	29	6	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+84	30	2	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+83	30	2	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+82	30	2	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+81	30	2	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+88	31	3	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+87	31	3	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+86	31	3	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+85	31	3	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+92	32	2	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+91	32	2	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+90	32	2	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+89	32	2	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+96	33	7	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+95	33	7	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+94	33	7	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+93	33	7	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+100	34	7	Documentación de cambios	MANTDOC	t	1.00	Elaborar Documentación de cambios	Cumplido	Reporte
+99	34	7	Pruebas de mantenimiento nuevo	MANTTEST	t	1.00	Realizar Pruebas de mantenimiento nuevo	Cumplido	Reporte
+98	34	7	Implementar mejoras a sistema	MANTIMP	t	1.00	Desarrollo de mejoras en sw	Cumplido	Reporte
+97	34	7	Levantar requerimientos	MANTREQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+104	35	7	Manuales de usuario	MODOC	t	1.00	Elaborar manual de nuevo módulo	Cumplido	Reporte
+103	35	7	Pruebas de módulo	MODTEST	t	1.00	Realizar Pruebas de módulo nuevo	Cumplido	Reporte
+102	35	7	Codificación de módulo	MODMOD	t	1.00	Desarrollo de Codificación de módulo	Cumplido	Reporte
+101	35	7	Levantar requerimientos nuevo modulo	MODLQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+108	36	9	Manuales de usuario	MODOC	t	1.00	Elaborar manual de nuevo módulo	Cumplido	Reporte
+107	36	9	Pruebas de módulo	MODTEST	t	1.00	Realizar Pruebas de módulo nuevo	Cumplido	Reporte
+106	36	9	Codificación de módulo	MODMOD	t	1.00	Desarrollo de Codificación de módulo	Cumplido	Reporte
+105	36	9	Levantar requerimientos nuevo modulo	MODLQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+112	37	8	Manuales de usuario	MODOC	t	1.00	Elaborar manual de nuevo módulo	Cumplido	Reporte
+111	37	6	Pruebas de módulo	MODTEST	t	1.00	Realizar Pruebas de módulo nuevo	Cumplido	Reporte
+110	37	4	Codificación de módulo	MODMOD	t	1.00	Desarrollo de Codificación de módulo	Cumplido	Reporte
+109	37	2	Levantar requerimientos nuevo modulo	MODLQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+116	38	8	Manuales de usuario	MODOC	t	1.00	Elaborar manual de nuevo módulo	Cumplido	Reporte
+115	38	6	Pruebas de módulo	MODTEST	t	1.00	Realizar Pruebas de módulo nuevo	Cumplido	Reporte
+114	38	4	Codificación de módulo	MODMOD	t	1.00	Desarrollo de Codificación de módulo	Cumplido	Reporte
+113	38	2	Levantar requerimientos nuevo modulo	MODLQ	t	1.00	Elaborar material de requerimientos	Cumplido	Reporte
+16	5	5	Monitoreo de servidor	MONI5	t	1.00	Monitoreo de carga del sistem	Cumplido	Reporte
 \.
 
 
@@ -3228,6 +3379,15 @@ SELECT pg_catalog.setval('sifda_detalle_solicitud_servicio_id_seq', 1, false);
 --
 
 COPY sifda_equipo_trabajo (id, id_empleado, id_orden_trabajo, responsable_equipo) FROM stdin;
+40	16	24	t
+41	15	24	f
+42	16	25	t
+43	15	25	f
+44	16	24	t
+45	15	26	t
+47	5	28	t
+48	14	29	t
+49	16	29	f
 \.
 
 
@@ -3235,7 +3395,7 @@ COPY sifda_equipo_trabajo (id, id_empleado, id_orden_trabajo, responsable_equipo
 -- Name: sifda_equipo_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_equipo_trabajo_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_equipo_trabajo_id_seq', 49, true);
 
 
 --
@@ -3243,6 +3403,9 @@ SELECT pg_catalog.setval('sifda_equipo_trabajo_id_seq', 1, false);
 --
 
 COPY sifda_informe_orden_trabajo (id, id_dependencia_establecimiento, id_empleado, id_orden_trabajo, id_subactividad, id_etapa, detalle, fecha_realizacion, fecha_registro, terminado) FROM stdin;
+25	21	15	24	\N	25	Se realizo el cambio	2015-04-28 00:00:00	2015-04-30 02:50:45	t
+26	4	5	28	\N	31	Relizo evaluación del sistema	2015-04-28 00:00:00	2015-04-30 09:57:13	t
+27	21	16	29	\N	27	Se realizo la evaluacion del equipo	2015-04-29 00:00:00	2015-04-30 10:46:50	t
 \.
 
 
@@ -3250,7 +3413,7 @@ COPY sifda_informe_orden_trabajo (id, id_dependencia_establecimiento, id_emplead
 -- Name: sifda_informe_orden_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_informe_orden_trabajo_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_informe_orden_trabajo_id_seq', 27, true);
 
 
 --
@@ -3258,6 +3421,11 @@ SELECT pg_catalog.setval('sifda_informe_orden_trabajo_id_seq', 1, false);
 --
 
 COPY sifda_orden_trabajo (id, id_prioridad, id_estado, id_dependencia_establecimiento, id_solicitud_servicio, id_etapa, descripcion, codigo, fecha_creacion, fecha_finalizacion, observacion) FROM stdin;
+24	10	4	21	34	25	cambio de partes del equipo	MINUN00115	2015-04-30 02:22:43	2015-05-06 00:00:00	\N
+25	10	2	21	36	28	Revisar las condiciones del mueble	MINUN00215	2015-04-30 02:59:42	2015-05-14 00:00:00	\N
+26	12	2	21	34	27	Hacer un diagnostico del equipo	MINUN00315	2015-04-30 04:07:32	2015-05-06 00:00:00	\N
+28	9	4	4	39	31	Realizar el estudio de un sistema	MINDI00115	2015-04-30 09:51:51	\N	\N
+29	10	4	21	40	27	Se realizara un aevaluacion previa	MINUN00415	2015-04-30 10:24:04	2015-05-04 00:00:00	\N
 \.
 
 
@@ -3265,7 +3433,7 @@ COPY sifda_orden_trabajo (id, id_prioridad, id_estado, id_dependencia_establecim
 -- Name: sifda_orden_trabajo_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_orden_trabajo_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_orden_trabajo_id_seq', 29, true);
 
 
 --
@@ -3273,6 +3441,7 @@ SELECT pg_catalog.setval('sifda_orden_trabajo_id_seq', 1, false);
 --
 
 COPY sifda_recurso_servicio (id, id_informe_orden_trabajo, id_tipo_recurso_dependencia, cantidad, costo_total) FROM stdin;
+12	25	6	4	2.20000000000000018
 \.
 
 
@@ -3280,7 +3449,7 @@ COPY sifda_recurso_servicio (id, id_informe_orden_trabajo, id_tipo_recurso_depen
 -- Name: sifda_recurso_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_recurso_servicio_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_recurso_servicio_id_seq', 12, true);
 
 
 --
@@ -3288,6 +3457,7 @@ SELECT pg_catalog.setval('sifda_recurso_servicio_id_seq', 1, false);
 --
 
 COPY sifda_reprogramacion_servicio (id, id_solicitud_servicio, fecha_reprogramacion, fecha_anterior, justificacion) FROM stdin;
+5	41	2015-06-01	2015-04-30	HUbo acuerdo para reprogramar
 \.
 
 
@@ -3295,7 +3465,7 @@ COPY sifda_reprogramacion_servicio (id, id_solicitud_servicio, fecha_reprogramac
 -- Name: sifda_reprogramacion_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_reprogramacion_servicio_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_reprogramacion_servicio_id_seq', 5, true);
 
 
 --
@@ -3326,6 +3496,12 @@ COPY sifda_ruta (id, id_tipo_servicio, descripcion, tipo) FROM stdin;
 --
 
 COPY sifda_ruta_ciclo_vida (id, id_etapa, id_tipo_servicio, descripcion, referencia, jerarquia, ignorar_sig, peso) FROM stdin;
+28	\N	1	Evaluacion del mueble	\N	1	f	40
+27	\N	10	Evaluacion del equipo de aire acondicionado	\N	1	t	50
+30	\N	10	Reparacion del Aire acondicionado	\N	2	t	50
+29	\N	1	Reparacion del mueble	\N	1	t	60
+31	\N	504	Realizar el estudio de un sistema	\N	1	t	100
+32	31	504	Estudio de Sistema.	\N	1	t	100
 \.
 
 
@@ -3333,7 +3509,7 @@ COPY sifda_ruta_ciclo_vida (id, id_etapa, id_tipo_servicio, descripcion, referen
 -- Name: sifda_ruta_ciclo_vida_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_ruta_ciclo_vida_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_ruta_ciclo_vida_id_seq', 32, true);
 
 
 --
@@ -3348,6 +3524,25 @@ SELECT pg_catalog.setval('sifda_ruta_id_seq', 1, false);
 --
 
 COPY sifda_solicitud_servicio (id, id_estado, id_medio_solicita, id_dependencia_establecimiento, user_id, id_tipo_servicio, descripcion, fecha_recepcion, fecha_requiere) FROM stdin;
+35	3	5	21	7	11	Reparacion de celular	2015-04-30 02:29:26	2015-05-05 00:00:00
+36	2	5	21	7	1	Reparacion del escritorio de la oficina	2015-04-30 02:55:48	2015-05-20 00:00:00
+37	1	5	21	7	9	Se necesita raparar la extension telefonica	2015-04-30 03:22:26	2015-05-09 00:00:00
+17	3	5	21	7	8	Se necesita reparar cable de televisores	2015-02-25 03:26:43	2015-04-25 03:26:43
+16	3	5	21	7	7	Se necesita reparar toma corriente en la unidad	2015-02-25 03:26:43	2015-04-25 03:26:43
+11	1	5	21	7	1	Necesito reparación de librero	2015-02-25 03:26:43	2015-04-25 03:26:43
+12	1	5	21	7	1	Necesito reparación de escritorio de sala 3	2015-02-25 03:26:43	2015-04-25 03:26:43
+18	4	5	21	7	8	Se necesita reparar el fax de la secretaria	2015-02-25 03:26:43	2015-04-25 03:26:43
+19	4	5	21	7	8	Se necesita reparar la fotocopiadora del cuarto piso	2015-02-25 03:26:43	2015-04-25 03:26:43
+20	4	5	21	7	8	Se necesita reparar el intercomunicador	2015-02-25 03:26:43	2015-04-25 03:26:43
+21	4	5	21	7	8	Se necesita reparar el telefono	2015-02-25 03:26:43	2015-04-25 03:26:43
+22	4	5	21	7	8	Se necesita reparar las sillas reclinables de sala de reunión	2015-02-25 03:26:43	2015-04-25 03:26:43
+15	2	5	21	7	4	Se necesita pintar la fachada de sala gerencial	2015-02-25 03:26:43	2015-04-25 03:26:43
+14	2	5	21	7	4	Urgente pintar oficina de ministro de salud	2015-02-25 03:26:43	2015-04-25 03:26:43
+13	2	5	21	7	4	Pintar sala de reuniones edificio 7	2015-02-25 03:26:43	2015-04-25 03:26:43
+34	2	5	21	7	10	Reparacion de Aires del edificio 5	2015-04-30 01:46:40	2015-05-09 00:00:00
+39	2	6	4	\N	504	Realizar satisfactoriamente un estudio sobre el desempeño de los sistemas	2015-04-30 09:51:51	\N
+41	3	5	21	7	11	Reparacion de un cañon	2015-04-30 10:11:40	2015-06-01 00:00:00
+40	2	5	21	7	10	Mantenimient preventivo	2015-04-30 10:08:16	2015-05-07 00:00:00
 \.
 
 
@@ -3355,7 +3550,7 @@ COPY sifda_solicitud_servicio (id, id_estado, id_medio_solicita, id_dependencia_
 -- Name: sifda_solicitud_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_solicitud_servicio_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_solicitud_servicio_id_seq', 41, true);
 
 
 --
@@ -3363,6 +3558,16 @@ SELECT pg_catalog.setval('sifda_solicitud_servicio_id_seq', 1, false);
 --
 
 COPY sifda_tipo_recurso (id, nombre, descripcion, rrhh) FROM stdin;
+1	Cable Telefonico	Cable STP 5	f
+2	karen Cornejo	KarenCor	t
+3	Tachi	Arenero	f
+4	Copias	Fotocopias de una pagina	f
+5	CD	Discos en blanco	f
+6	DVD	Discos nuevos	f
+7	Plumones	Plumones para pizarra	f
+8	Bomba	Para el sanitario	f
+9	Tubo PVC	Tubo de 2 pulgs.	f
+10	cinta	para fontaneria	f
 \.
 
 
@@ -3371,6 +3576,13 @@ COPY sifda_tipo_recurso (id, nombre, descripcion, rrhh) FROM stdin;
 --
 
 COPY sifda_tipo_recurso_dependencia (id, id_dependencia_establecimiento, id_tipo_recurso, costo_unitario) FROM stdin;
+1	654	4	0.0200000000000000004
+2	654	5	0.599999999999999978
+3	654	6	0.75
+4	654	7	1.14999999999999991
+5	137	9	4
+6	137	10	0.550000000000000044
+7	137	8	2.25
 \.
 
 
@@ -3378,14 +3590,14 @@ COPY sifda_tipo_recurso_dependencia (id, id_dependencia_establecimiento, id_tipo
 -- Name: sifda_tipo_recurso_dependencia_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_tipo_recurso_dependencia_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_tipo_recurso_dependencia_id_seq', 7, true);
 
 
 --
 -- Name: sifda_tipo_recurso_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_tipo_recurso_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_tipo_recurso_id_seq', 500, true);
 
 
 --
@@ -3414,6 +3626,7 @@ COPY sifda_tipo_servicio (id, id_actividad, id_dependencia_establecimiento, nomb
 19	\N	21	Mantenimiento correctivo de maquinaría	Mantenimiento Correctivo de Maquinaría	t
 20	\N	21	Limpieza en Fotocopiadoras	Limpieza en Fotocopiadoras	t
 21	\N	21	Mantenimiento Automotriz	Mantenimiento Automotriz	t
+504	5	4	Estudio de Rendimientos de los Sistemas	Realizar satisfactoriamente un estudio sobre el desempeño de los sistemas	t
 \.
 
 
@@ -3421,7 +3634,7 @@ COPY sifda_tipo_servicio (id, id_actividad, id_dependencia_establecimiento, nomb
 -- Name: sifda_tipo_servicio_id_seq; Type: SEQUENCE SET; Schema: public; Owner: sifda
 --
 
-SELECT pg_catalog.setval('sifda_tipo_servicio_id_seq', 1, false);
+SELECT pg_catalog.setval('sifda_tipo_servicio_id_seq', 504, true);
 
 
 --
