@@ -1,313 +1,63 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/solicitudesFinalNew.js')}}"></script>
+{% endblock %}   
+
 {% block contenido_in  %}
     
-    
-    <div>
-        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
-        <center><h3>Listado de solicitudes de servicio finalizadas </h3></center>
-        
-        <div id="seleccion">
-        <div class="row-fluid">
-            <div class="span11 offset1">
-           
-            
-                <div class="span3">
-                        <table>
-                            <tr>
-                                <td>
-                                <input type="radio" name="consulta" id="Todos" value="Todos">Todos</td>
-                                
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><input type="radio" name="consulta" id="especifico" value="especifico" >Especifico</td>
-                                <td></td><td></td><td></td><td></td>
-                                
-                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF " name="GenerarPDF " onclick="window.open('/reports/solicitudes_Finalizadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
-                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="Excel" name="GenerarExcel" onclick="window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&user='+mostraruserid())"></td>
-                                
-                            </tr>
-                            <tr><td></td></tr>
-                            <tr><td></td></tr>
-                            <tr><td></td></tr>
-                            
-                        </table>
-                </div>
-            
-                <div class="span4">                 
-                    <table id="combos">
-                      <tr>
-                          <td>
-                              <label>Servicio:</label>
-                          </td>
-                          <td>
-                                <div class="btn-group">
-                                    <select id="cmb1" name="ComboEstado"  class="selectpicker" style="width: 200px">
-                                        <option value="0">Tipo Servicio</option>
-                                     
-                                     {% for e in establecimiento %}
-                               
-                                        <option value="{{e.id}}">{{e.nombre}}</option>
-                                     {% endfor %}   
-                                    </select>
-                               </div>
-                          </td>
-                          
-                            <td>
-                                
-                            </td>
-                          
-                       </tr>
-                    </table>                    
-                </div>
-                <div class="span4">
-                    <table id="fechas">
-                           <tr>
-                              <td><label>Fecha de Inicio: </label></td>
-                               <td>
-                                   <input type="text" id="fechaInicio" class="input-small" >
-                               </td>  
-                           </tr>
-                            <tr>
-                                <td><label>Fecha Fin: </label></td>
-                                <td>
-                                    <input type="text" id="fechaFin" class="input-small" >
-                                </td>
-                                <td></td><td></td>
-                                <td>
-                                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">    
-                                </td>
-                            </tr>        
-                    </table>                     
-                </div> 
-              </div>
-        </div> 
-        <br>
-           {% if entities %}       
-                <table id="FinTabla" class="table table-bordered table-hover table-condensed">
-                 <thead>
-                     <tr>
-                         <th><center>N°</center></th>
-                         <th><center>Establecimiento</center></th>
-                         <th><center>Dependencia Solicitante</center></th>
-                         <th><center>Tipo de Servicio</center></th>
-                         <th><center>Descripci&oacute;n</center></th>
-                         <th><center>Fecha de Recepci&oacute;n</center></th>
-                         <th><center>Fecha que se requiere</center></th>
-
-                     </tr>
-                 </thead>
-                 <tbody>
-                     {%set count=1%}   
-                 {% for finalizado in entities %}
-                    {# {%if rechazado.idDependenciaEstablecimiento == usuario.idDependenciaEstablecmiento%}#}
-                         <tr>
-                             <td>{{ count }}</td>
-                                     {#<td>{{ loop.index }}</td>#}
-                              
-                                                          
-                             <td><justify>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idEstablecimiento:"Sistema" }}</justify></td>
-                             <td>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idDependencia:"Generado PAO"  }}</td>
-                             <td>{{ finalizado.idTipoServicio }}</td>
-                             <td>{{ finalizado.descripcion }}</td>
-                             <td>{% if finalizado.fechaRecepcion %}{{ finalizado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>
-                             <td>{% if finalizado.fechaRequiere %}{{ finalizado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
-
-                         </tr>
-                         {%set count=count+1%}
-                     {#{%endif%}#}
-                 {% endfor %}
-                 </tbody>
-             </table> 
-        
-    {% else %}
-        <div id="Finalizados">
-            <center><h4>No se encontraron solicitudes Finaizadas</h4></center>
-        </div>    
-   {% endif%} 
-   
-   
-   <div id="rangoFinTabla"></div>
-             
-                <div id="msgFinalizado">
-                    <center><h4>No se encontraron solicitudes en ese Rango</h4></center>
-                </div>  
-   
-   
-    </div>    
-        
- {% endblock%}       
-{% block javascripts_step %}
-    {{ parent() }}
-    
-    <script>
-        
-        $(document).ready(function(){
-            
-            document.getElementById('Todos').checked=true;
-            document.getElementById('cmb1').value=0;
-            
-            document.getElementById('fechaInicio').value="";
-            document.getElementById('fechaFin').value="";
-            
-            document.getElementById('fechaInicio').readOnly=true;
-            document.getElementById('fechaFin').readOnly=true;
-            
-             $('#fechas').hide("slow");
-             $('#combos').hide("slow");
-             $('#msgFinalizado').hide("slow");
-             
-             $('#Todos').click(function (){
-                 
-                 $("#FinTabla").show("slow");
-                 $("#fechas").hide("slow");
-                 $("#combos").hide("slow");
-                 $('#rangoFinTabla').hide("slow");
-                 $('#msgFinalizado').hide("slow"); 
-                 $('#Finalizado').show("slow"); 
-                 
-             });//Fin de Todos
-             
-             $('#especifico').click(function(){
-                 
-                 $("#FinTabla").hide("slow");
-                 $("#fechas").show("slow");
-                 $("#combos").show("slow");
-                 $('#rangoFinTabla').show("slow");
-                 $('#msgFinalizado').hide("slow"); 
-                 $('#Finalizado').hide("slow");
-             });//Fin de Especifico
-             
-             
-             
-             
-        $("#buscar").click(function(){
-           
-           var tipoServicio=$("#cmb1").val();
-           var fechaInicio=$("#fechaInicio").val();
-           var fechaFin=$("#fechaFin").val();
-           
-           
-           
-           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
-               
-               $.post(
-                    '{{path('sifda_solicitudservicio_buscar_finalizadas2')}}',    
-                    
-                    { 
-                      fechaInicio: fechaInicio,
-                      fechaFin   : fechaFin,
-                      tipoServicio: tipoServicio
-                    }
-                        , function( data ) {
-                           console.log( data );
-                           
-                            res=data.val;
-                           
-                           if(res=="0"){
-                               
-                                $('#msgFinalizado').show("slow");
-                                $("#rangoFinTabla").hide("slow");
-                            }
-                           else
-                           {
-                               $("#rangoFinTabla").html(data);
-                           }
-                         
-                
-                    }, "json");
-                    
-                   
-                }
-           
-       }); 
-             
-        
-        }); //Fin Jquery
-        
-        
-        //Funcion para Calendarios
-        
-        $.datepicker.regional['es'] = {
-			 closeText: 'Cerrar',
-			 prevText: '<Ant',
-			 nextText: 'Sig>',
-			 currentText: 'Hoy',
-			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
-			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
-			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
-			 weekHeader: 'Sm',
-			 showButtonPanel:false,
-			 showAnim:'show',
-                         changeMonth: true,
-			 changeYear: true,
-                         {#minDate: new Date(2014, 1, 1), 
-                         maxDate: "1D",#}
-                         dateFormat: 'yy-mm-dd',
-			 firstDay: 1,
-			 isRTL: false,
-			 showMonthAfterYear: false,
-			 			                         
-                         onClose: function (selectedDate) {
-                         
-                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
-                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
-                          
-                         },
-                         
-                         yearSuffix: ''
-                         
-			 };
-			$.datepicker.setDefaults($.datepicker.regional['es']);
-			$(function() {
-				$( "#fechaInicio" ).datepicker(
-					
-					);
-                                
-                                $( "#fechaFin" ).datepicker(
-					
-					);
-                                
-                                
-				}); 
-        
-        //Fin de funcion Calendario
-        
-        
-     //Funcion de Busqueda de Solicitudes   
-        
-        
-       
-     //Fin funcion de Busqueda   
-        
-        
-         //Funciones para reporteria
+     <center><h4>Listado de solicitudes de servicio finalizadas </h4></center>
      
-      function mostrarfi(){ 
-            return $("#fechaInicio").val();
-      }
-    
-      function mostrarff(){ 
-            return $("#fechaFin").val();
-      }
-      
-      function mostrartipo(){ 
-            return $("#cmb1").val();
-      } 
-      
-      function mostraruserid(){ 
-            return "{{usuario.id}}";
-      }
-      function mostrarusername(){ 
-            return "{{usuario.username}}";
-      }
-      function mostraruserdep(){ 
-            return "{{usuario.idDependenciaEstablecimiento.idDependencia.nombre}}";
-      }
-        
-        
-    </script>
-{%endblock%}
+     <div id="seleccion">
+         <div class="row-fluid">
+             <div class="span11 offset1">
+                 <div class="span2">
+                     <table>
+                         <tr><td><input type="radio" name="consulta" id="pdf" value="1">pdf</td></tr>
+                         <tr><td><input type="radio" name="consulta" id="excel" value="2">excel</td></tr>
+                         <tr><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td></tr>                           
+                     </table>
+                 </div>
+                 
+                 <div class="span9">
+                     
+                     <table id="combos">
+                         <tr>
+                             <td><label>Establecimiento:</label></td>
+                             <td>
+                                 <div class="btn-group">
+                                     <select id="cmb1" name="comboEstablecimiento"  class="selectpicker" style="width: 200px" onchange="buscarDependencia('{{path('sifda_solicitudservicio_find_dependencia')}}')">
+                                       <option value="0">seleccione Establecimiento</option>
+                                       
+                                        {% for e in establecimiento%}
+                                            <option value="{{e.id}}">{{e.nombre}}</option>
+                                        {% endfor %}    
+                                     </select>
+                                 </div>
+                             </td>
+                             <td><label>FechaInicio:</label></td>                             
+                             <td><input type="text" id="txt_fechaInicio" class="input-small" readonly="true"></td>  
+                             <td><label>FechaFin:</label></td>
+                             <td><input type="text" id="txt_fechaFin" class="input-small" readonly="true"></td>
+                         </tr>
+                         <tr>
+                             <td><label>Dependencia:</label></td>
+                             <td colspan="3">
+                                 <div class="btn-group">
+                                     <select id="cmb2" name="comboDependencia" class="selectpicker" style="width: 200px">
+                                         <option value="0">seleccione Dependencia</option>
+                                     </select>
+                                 </div>
+                             </td>
+                             
+                             <td><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar"></td>
+                             <td><input type="submit" class="btn btn-primary" id="buscar" value="Exportar" name="Exportar" onclick="exportfile()"></td>
+                            
+                         </tr>
+                     </table>
+                 </div>           
+             </div>
+         </div>
+     </div>
+ {% endblock%}       

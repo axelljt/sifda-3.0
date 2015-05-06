@@ -293,6 +293,8 @@ class SifdaSolicitudServicioController extends Controller
          
          
          $tiposervicio= $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->findBy(array('idDependenciaEstablecimiento'=>$usuario->getIdDependenciaEstablecimiento()));
+        
+         $establecimiento= $em->getRepository('MinsalsifdaBundle:CtlEstablecimiento')->findAll();
          
         $objEstado2 = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->find(4);
         $finalizadas = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->findBy(array(
@@ -303,7 +305,8 @@ class SifdaSolicitudServicioController extends Controller
         return array(
             'entities' => $finalizadas,
             'usuario'=>$usuario,
-            'establecimiento'=>$tiposervicio,
+            'tiposervicio'=>$tiposervicio,
+            'establecimiento'=>$establecimiento,
             'vista'=>$vista,
         );
         
