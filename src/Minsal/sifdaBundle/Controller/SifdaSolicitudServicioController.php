@@ -455,10 +455,10 @@ class SifdaSolicitudServicioController extends Controller
         if($isAjax){
              $fechaInicio = $this->get('request')->request->get('fechaInicio');
              $fechaFin = $this->get('request')->request->get('fechaFin');
-             $tipoServicio=$this->get('request')->request->get('tipoServicio');
+             $tipoServicio=$this->get('request')->request->get('dependencia');
              $em = $this->getDoctrine()->getManager();
              
-             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
+             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$dependencia,$estado);
             
               $tam= Count($solicitudes);
              if($tam>0)

@@ -22,7 +22,7 @@
                  
                  <div class="span9">
                      
-                     <table id="combos">
+                     <table id="combos" border="0">
                          <tr>
                              <td><label>Establecimiento:</label></td>
                              <td>
@@ -36,13 +36,13 @@
                                      </select>
                                  </div>
                              </td>
-                             <td><label>FechaInicio:</label></td>                             
-                             <td><input type="text" id="txt_fechaInicio" class="input-small" readonly="true"></td>  
-                             <td><label>FechaFin:</label></td>
-                             <td><input type="text" id="txt_fechaFin" class="input-small" readonly="true"></td>
+                             <td style="width: 80px; height:30px "><label>FechaInicio:</label></td>                             
+                             <td style="width: 110px; height:30px "><input type="text" id="txt_fechaInicio" class="input-small" readonly="true"></td>  
+                             <td style="width: 50px; height:30px "><label>FechaFin:</label></td>
+                             <td style="width: 110px; height:30px "><input type="text" id="txt_fechaFin" class="input-small" readonly="true"></td>
                          </tr>
                          <tr>
-                             <td><label>Dependencia:</label></td>
+                             <td ><label>Dependencia:</label></td>
                              <td colspan="3">
                                  <div class="btn-group">
                                      <select id="cmb2" name="comboDependencia" class="selectpicker" style="width: 200px">
@@ -51,8 +51,8 @@
                                  </div>
                              </td>
                              
-                             <td><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar"></td>
-                             <td><input type="submit" class="btn btn-primary" id="buscar" value="Exportar" name="Exportar" onclick="exportfile()"></td>
+                             <td style="width: 50px; height:30px"><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar" onclick="buscarSolicitudesFinal('{{path('sifda_solicitudservicio_buscar_finalizadas2')}}')"></td>
+                             <td><input type="submit" class="btn btn-primary" id="buscar" value="Exportar" name="Exportar" onclick="exportfile({{usuario.idDependenciaEstablecimiento.idDependencia.nombre}})"></td>
                             
                          </tr>
                      </table>
@@ -60,4 +60,52 @@
              </div>
          </div>
      </div>
+                             
+     {% if entities%}                        
+          <table id="FinTabla" class="table table-bordered table-hover table-condensed">
+                 <thead>
+                     <tr>
+                         <th><center>N°</center></th>
+                         <th><center>Establecimiento</center></th>
+                         <th><center>Dependencia Solicitante</center></th>
+                         <th><center>Tipo de Servicio</center></th>
+                         <th><center>Descripci&oacute;n</center></th>
+                         <th><center>Fecha de Recepci&oacute;n</center></th>
+                         <th><center>Fecha que se requiere</center></th>
+
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {%set count=1%}   
+                 {% for finalizado in entities %}
+                        <tr>
+                             <td>{{ count }}</td>                                           
+                             <td><justify>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idEstablecimiento:"Sistema" }}</justify></td>
+                             <td>{{ finalizado.user?finalizado.user.idDependenciaEstablecimiento.idDependencia:"Generado PAO"  }}</td>
+                             <td>{{ finalizado.idTipoServicio }}</td>
+                             <td>{{ finalizado.descripcion }}</td>
+                             <td>{% if finalizado.fechaRecepcion %}{{ finalizado.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>
+                             <td>{% if finalizado.fechaRequiere %}{{ finalizado.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+
+                         </tr>
+                         {%set count=count+1%}
+                  {% endfor %}
+                 </tbody>
+             </table> 
+   
+     {% else %}
+        <div id="Finalizados">
+            <center><h4>No se encontraron solicitudes Finaizadas</h4></center>
+        </div>    
+   {% endif%}    
+   
+    <div id="rangoFinTabla"></div>
+             
+                <div id="msgFinalizado">
+                    <center><h4>No se encontraron solicitudes en ese Rango</h4></center>
+                </div>  
+   
+   
+    
+                            
  {% endblock%}       
