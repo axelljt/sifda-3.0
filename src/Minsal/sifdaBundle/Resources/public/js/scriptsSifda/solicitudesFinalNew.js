@@ -38,22 +38,23 @@ function buscarDependencia(ruta){
 }//Fin de buscarDependencia
 
 
-function exportfile(){
+function exportfile(user){
     
     var pdf=document.getElementById('pdf').checked;
     var excel=document.getElementById('excel').checked;
     var graf=document.getElementById('grafico').checked;
-    
-    
+    var user=document.getElementById('txtuser').value;
+    var iduser=document.getElementById('txtiduser').value;
+       
     if(pdf !==false)
     {
       alert('llamada pdf');  
-      window.open('/reports/phpexcel/solicitudesFinalizadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+'mcontreras'+'&user='+mostrarusername());  
+      window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);  
     }
        
     
     if(excel !== false)
-        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+'mcontreras'+'&user='+mostrarusername());
+        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);
 //       alert('excel:'+excel);
     
     if(graf!== false)   

@@ -460,6 +460,7 @@ class SifdaSolicitudServicioController extends Controller
 //             $em = $this->getDoctrine()->getManager();
              
              $idusuario=  $this->getUser()->getId();
+             $username=  $this_>getUser()->getNombre();
              $rsm = new ResultSetMapping();
              
 //             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
@@ -488,7 +489,7 @@ class SifdaSolicitudServicioController extends Controller
               $tam= Count($solicitudes);
              if($tam>0)
                  {
-                     $mensaje = $this->renderView('MinsalsifdaBundle:SifdaSolicitudServicio:solicitudesRechShow.html.twig' , array('solicitudes' =>$solicitudes));
+                     $mensaje = $this->renderView('MinsalsifdaBundle:SifdaSolicitudServicio:solicitudesRechShow.html.twig' , array('solicitudes' =>$solicitudes,'user'=>$idusuario));
                      $response = new JsonResponse();
                      return $response->setData($mensaje);
                  }

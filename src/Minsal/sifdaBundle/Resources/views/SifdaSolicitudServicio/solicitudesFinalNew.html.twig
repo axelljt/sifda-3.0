@@ -7,7 +7,15 @@
 
 {% block contenido_in  %}
     
-     <center><h4>Listado de solicitudes de servicio finalizadas </h4></center>
+    <center><h4>Listado de solicitudes de servicio finalizadas </h4></center>
+    {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>usuario:</td><td style="width: 60px;height:14px;">{{usuario.username}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+        
      
      <div id="seleccion">
          <div class="row-fluid">
