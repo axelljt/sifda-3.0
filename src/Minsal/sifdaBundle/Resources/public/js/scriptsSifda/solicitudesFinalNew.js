@@ -38,17 +38,22 @@ function buscarDependencia(ruta){
 }//Fin de buscarDependencia
 
 
-function exportfile(userDepend){
+function exportfile(){
     
     var pdf=document.getElementById('pdf').checked;
     var excel=document.getElementById('excel').checked;
     var graf=document.getElementById('grafico').checked;
     
-    if(pdf!==false)
-       window.open('/reports/phpexcel/solicitudesFinalizadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+userDepend+'&user='+mostrarusername());
     
-    if(excel!== false)
-        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+userDepend+'&user='+mostrarusername());
+    if(pdf !==false)
+    {
+      alert('llamada pdf');  
+      window.open('/reports/phpexcel/solicitudesFinalizadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+'mcontreras'+'&user='+mostrarusername());  
+    }
+       
+    
+    if(excel !== false)
+        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+'mcontreras'+'&user='+mostrarusername());
 //       alert('excel:'+excel);
     
     if(graf!== false)   
@@ -59,12 +64,12 @@ function exportfile(userDepend){
 
 function buscarSolicitudesFinal(ruta){
     
-    var dependencia=$("#cmb1").val();
-    var fechaInicio=$("#fechaInicio").val();
-    var fechaFin=$("#fechaFin").val();
+    var dependencia=$("#cmb2").val();
+    var fechaInicio=$("#txt_fechaInicio").val();
+    var fechaFin=$("#txt_fechaFin").val();
     
-    alert(ruta);
-       
+    alert(dependencia);
+    
     if(fechaFin !=="" && fechaInicio!=="" && dependencia!=="0"){
                
                $.post(
@@ -91,9 +96,7 @@ function buscarSolicitudesFinal(ruta){
                            }
                          
                 
-                    }, "json");
-               
-               
+                    }, "json"); 
     }
 }
 

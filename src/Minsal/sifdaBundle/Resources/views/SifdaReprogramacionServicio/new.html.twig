@@ -28,7 +28,12 @@
                                 <td>{{ solicitudServicio.descripcion }}</td>
                             </tr>
                             <tr>
-                                <th>Fecha que se requiere</th>
+                                <th>Fecha de recepci&oacute;n</th>
+                                <td>{{ solicitudServicio.fechaRecepcion|date('d/m/Y') }}</td>
+                                <td><input type="hidden" id="txtfechaRequiere"  value="{{ solicitudServicio.fechaRecepcion|date('Y-m-d') }}"></td>
+                            </tr>
+                            <tr>
+                                <th>Fecha que se requiere el servicio</th>
                                 <td>{{ solicitudServicio.fechaRequiere|date('d/m/Y') }}</td>
                                 <td><input type="hidden" id="txtfechaRequiere"  value="{{ solicitudServicio.fechaRequiere|date('Y-m-d') }}"></td>
                             </tr>

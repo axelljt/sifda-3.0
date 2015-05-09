@@ -439,10 +439,10 @@ class SifdaOrdenTrabajoController extends Controller
                 
                 $dql = "SELECT count(rcv.jerarquia) cantidad
                                 FROM MinsalsifdaBundle:SifdaRutaCicloVida rcv
-                                INNER JOIN rcv.idTipoServicio
+                                INNER JOIN rcv.idTipoServicio tp
                                 WHERE rcv.jerarquia = :jerarquia
-                                andWhere rcv.idTipoServicio = :tiposervicio
-                                andWhere rcv.idEtapa is NULL";
+                                and rcv.idTipoServicio = :tiposervicio
+                                and rcv.idEtapa is NULL";
 
                 $em = $this->getDoctrine()->getManager();
                 $cantidad = $em->createQuery($dql)
@@ -491,8 +491,8 @@ class SifdaOrdenTrabajoController extends Controller
 
                 $em = $this->getDoctrine()->getManager();
                 $cantidad = $em->createQuery($dql)
-                                     ->setParameter(':tiposervicio', $ordenActual->getIdCicloVida())
-                                     ->setParameter(':jerarquia', $ordenActual->getIdCicloVida())
+                                     ->setParameter(':tiposervicio', $ordenActual->getIdTipoServicio())
+                                     ->setParameter(':jerarquia', $ordenActual->getJerarCicloVida())
                                      ->getResult();
                 
                 $form   = $this->createCreateForm($entity, $id);

@@ -13,12 +13,12 @@
                 <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <tbody>
                         <tr>
-                            <th>Establecimiento</th>
-                            <td>{{ entity.idSolicitudServicio.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                            <th>Establecimiento solicitante</th>
+                            <td>{{ entity.idSolicitudServicio.user?entity.idSolicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento.nombre:"GERADO PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Dependencia</th>
-                            <td>{{ entity.idSolicitudServicio.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
+                            <th>Dependencia solicitante</th>
+                            <td>{{ entity.idSolicitudServicio.user?entity.idSolicitudServicio.user.idDependenciaEstablecimiento.idDependencia.nombre :"GERADO PAO"}}</td>
                         </tr>
                         <tr>
                             <th>Tipo de servicio</th>

@@ -32,10 +32,10 @@ class SifdaSolicitudServicioRepository extends EntityRepository
     
     /*Repositorio Generico que consulta las solicitudes por rango de Fechas*/
     
-    public  function buscarFechasSolicitudGenerico($fechaInicio,$fechaFin,$dependencia,$estado){
+    public  function buscarFechasSolicitudGenerico($fechaInicio,$fechaFin,$tipoServicio,$estado){
         $fechaFinFormato = $fechaFin.' 23:59:59';
         
-        $dql = "SELECT s FROM MinsalsifdaBundle:SifdaSolicitudServicio s WHERE s.fechaRecepcion >= '$fechaInicio' AND s.fechaRecepcion<='$fechaFinFormato' AND s.idDependenciaEstablecimiento='$dependencia' AND s.idEstado='$estado' ORDER BY s.fechaRecepcion DESC";	     
+        $dql = "SELECT s FROM MinsalsifdaBundle:SifdaSolicitudServicio s WHERE s.fechaRecepcion >= '$fechaInicio' AND s.fechaRecepcion<='$fechaFinFormato' AND s.idTipoServicio='$tipoServicio' AND s.idEstado='$estado' ORDER BY s.fechaRecepcion DESC";	     
         $repositorio = $this->getEntityManager()->createQuery($dql);      
         return $repositorio->getResult();
         

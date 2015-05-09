@@ -5,21 +5,23 @@
             <thead>
                 <tr>
                     <th>N°</th>
-                    <th>Descripcion</th>
-                    <th>Fecha de recepcion</th>
-                    <th>Fecha requerida</th>
-                    <th>Actions</th>
+                    <th>Tipo Servicio</th>
+                    <th>Cuenta</th>
+                    {#<th>Fecha requerida</th>
+                    <th>Actions</th>#}
                 </tr>
             </thead>
             
             <tbody>{%for s in solicitudes%}
                 <tr>
                     <td>{{loop.index}}</td>
-                    <td>{{s.descripcion}}</td>
+                    <td>{{s.nombre}}</td>
+                    <td>{{s.cuenta}}</td>
+                    {#<td>{{s.descripcion}}</td>
                     <td>{{s.fechaRecepcion|date('d-m-Y H:i:s')}}</td>
-                    <td>{{s.fechaRequiere|date('d-m-Y')}}</td>
+                    <td>{{s.fechaRequiere|date('d-m-Y')}}</td>#}
                     
-                    <td><a href="{{ path('sifda_solicitudservicio_buscar_estado', { 'id': s.id }) }}">Aceptar Solicitud</a> </td>
+                    {#<td><a href="{{ path('sifda_solicitudservicio_buscar_estado', { 'id': s.id }) }}">Aceptar Solicitud</a> </td>#}
                 </tr>
                    {%endfor%}
             </tbody>

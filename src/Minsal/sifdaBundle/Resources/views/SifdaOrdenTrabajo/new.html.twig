@@ -22,7 +22,7 @@
                 <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <tbody>
                         <tr>
-                            <th>Establecimiento</th>
+                            <th>Establecimiento solicitante</th>
                             <td>{{ solicitud.user?solicitud.user.idDependenciaEstablecimiento.idEstablecimiento.nombre:"GERADO PAO" }}</td>
                         </tr>
                         <tr>
@@ -30,19 +30,23 @@
                             <td>{{ solicitud.user?solicitud.user.idDependenciaEstablecimiento.idDependencia.nombre :"GERADO PAO"}}</td>
                         </tr>
                         <tr>
-                            <th>Tipo de servicio</th>
-                            <td>{{ solicitud.idTipoServicio }}</td>
-                        </tr>
-                        <tr>
                             <th>Persona solicitante</th>
                             <td>{{ solicitud.user?solicitud.user.idEmpleado:"GENERADO PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Descripcion</th>
+                            <th>Servicio solicitado</th>
+                            <td>{{ solicitud.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripci&oacute;n de solicitud de servicio</th>
                             <td>{{ solicitud.descripcion }}</td>
                         </tr>
                         <tr>
-                            <th>Fecha que se requiere</th>
+                            <th>Fecha de recepci&oacute;n de solicitud</th>
+                            <td>{{ solicitud.fechaRecepcion|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere el servicio</th>
                             <td>{{ solicitud.fechaRequiere|date('d/m/Y') }}</td>
                         </tr>
                     </tbody>

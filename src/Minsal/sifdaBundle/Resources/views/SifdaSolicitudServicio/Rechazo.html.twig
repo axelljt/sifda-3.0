@@ -13,28 +13,28 @@
                 <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <tbody>
                         <tr>
-                            <th>Establecimiento Atiende</th>
-                            <td>{{ entity.idDependenciaEstablecimiento.idEstablecimiento.nombre }}</td>
+                            <th>Establecimiento solicitante</th>
+                            <td>{{ entity.user? entity.user.idDependenciaEstablecimiento.idEstablecimiento:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Dependencia Atiende</th>
-                            <td>{{ entity.idDependenciaEstablecimiento.idDependencia.nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Tipo de servicio Solicitado</th>
-                            <td>{{ entity.idTipoServicio }}</td>
-                        </tr>
-                        <tr>
-                            <th>Dependencia Solicitante</th>
+                            <th>Dependencia solicitante</th>
                             <td>{{ entity.user? entity.user.idDependenciaEstablecimiento.idDependencia:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Solicitante</th>
+                            <th>Persona solicitante</th>
                             <td>{{ entity.user? entity.user.idEmpleado.nombre ~ " "~ entity.user.idEmpleado.apellido:"Generado por PAO" }}</td>
                         </tr>
                         <tr>
-                            <th>Descripcion</th>
+                            <th>Servicio solicitado</th>
+                            <td>{{ entity.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion de solicitud del servicio</th>
                             <td>{{ entity.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de recepcion</th>
+                            <td>{{ entity.fechaRecepcion|date('d/m/Y') }}</td>
                         </tr>
                         <tr>
                             <th>Fecha que se requiere</th>
@@ -42,7 +42,7 @@
                         </tr>
                         
                         <tr>
-                            <th>Motivo de Rechazo</th>
+                            <th>Motivo de rechazo</th>
                             <td><textarea id="txta1" name="comment" rows="3" class="span10" text=""></textarea></td>
                         </tr>
                     </tbody>

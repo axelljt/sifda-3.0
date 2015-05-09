@@ -13,6 +13,7 @@ use Minsal\sifdaBundle\Entity\SifdaSolicitudServicio;
 use Minsal\sifdaBundle\Form\SifdaSolicitudServicioType;
 use Symfony\Component\Validator\Constraints\Count;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 /**
  * SifdaSolicitudServicio controller.
@@ -283,8 +284,8 @@ class SifdaSolicitudServicioController extends Controller
     
     public function solicitudesFinalNewAction()
     {
-            
-        $id_usuario=$this->getUser()->getId();
+         
+       $id_usuario=$this->getUser()->getId();
         $em = $this->getDoctrine()->getManager();
         
          $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
@@ -309,7 +310,6 @@ class SifdaSolicitudServicioController extends Controller
             'establecimiento'=>$establecimiento,
             'vista'=>$vista,
         );
-        
     }
     
      /**
@@ -451,15 +451,40 @@ class SifdaSolicitudServicioController extends Controller
     public function buscarSolicitudesFinalNewAction()
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
-        $estado=4;
+//        $estado=4;
+        
         if($isAjax){
              $fechaInicio = $this->get('request')->request->get('fechaInicio');
              $fechaFin = $this->get('request')->request->get('fechaFin');
-             $tipoServicio=$this->get('request')->request->get('dependencia');
-             $em = $this->getDoctrine()->getManager();
+             $dependencia=$this->get('request')->request->get('dependencia');
+//             $em = $this->getDoctrine()->getManager();
              
-             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$dependencia,$estado);
-            
+             $idusuario=  $this->getUser()->getId();
+             $rsm = new ResultSetMapping();
+             
+//             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
+             $sql = "SELECT sts.nombre nombre, count(sts.nombre) as cuenta
+                        FROM sifda_solicitud_servicio ss
+                        inner join fos_user_user us on (us.id = ss.user_id)
+                        inner join ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
+                        inner join sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+                        inner join ctl_dependencia de on (de.id = dep.id_dependencia)
+                        where id_estado=4
+                        and de.id=?
+                        and to_char(ss.fecha_recepcion, 'YYYY-MM-DD') >= ? and to_char(ss.fecha_recepcion, 'YYYY-MM-DD') <= ?
+                        group by (sts.nombre)";
+        
+                        $rsm->addScalarResult('cuenta','cuenta');
+                        $rsm->addScalarResult('nombre','nombre');
+                        $query = $this->getDoctrine()->getEntityManager();
+                        
+                        $solicitudes = $query->createNativeQuery($sql, $rsm)
+                
+                                    ->setParameter(1,$dependencia)
+                                    ->setParameter(2,$fechaInicio)
+                                    ->setParameter(3,$fechaFin)
+                                    ->getResult();
+                        
               $tam= Count($solicitudes);
              if($tam>0)
                  {

@@ -28,6 +28,10 @@
                             <td>{{ orden.idSolicitudServicio }}</td>
                         </tr>
                         <tr>
+                            <th>Fecha que se requiere el servicio</th>
+                            <td>{% if orden.idSolicitudServicio.fechaRequiere %}{{ orden.idSolicitudServicio.fechaRequiere|date('d-m-Y') }}{% endif %}</td>
+                        </tr>
+                        <tr>
                             <th>Codigo de orden de trabajo</th>
                             <td>{{ orden.codigo }}</td>
                         </tr>
