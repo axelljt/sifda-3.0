@@ -4,6 +4,8 @@ $(document).ready(function (){
     document.getElementById("pdf").checked=false;
     document.getElementById("excel").checked=false;
     document.getElementById("grafico").checked=false;
+    document.getElementById('txt_fechaInicio').readOnly=true;
+    document.getElementById('txt_fechaFin').readOnly=true;
 
     document.getElementById("cmb1").value=0;
     document.getElementById('txt_fechaInicio').value="";
@@ -49,6 +51,8 @@ function exportfile(user){
     if(pdf !==false)
     {
       alert('llamada pdf');  
+      alert(mostrarfi());
+      alert(mostrarff());
       window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);  
     }
        
@@ -105,11 +109,11 @@ function buscarSolicitudesFinal(ruta){
  //Funciones para reporteria
      
       function mostrarfi(){ 
-            return $("#fechaInicio").val();
+            return $("#txt_fechaInicio").val();
       }
     
       function mostrarff(){ 
-            return $("#fechaFin").val();
+            return $("#txt_fechaFin").val();
       }
       
       function mostrarDependencia(){ 

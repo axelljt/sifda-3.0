@@ -103,6 +103,11 @@
                 <tr><td aling="right"><strong>Usuario Solicitante:</strong></center></td>
                     <td>{{entity.user}}</td>
                 </tr>
+                <tr>
+                    <td aling="right"><strong>Fecha Recepcion:</strong></center></td>
+                    <td>{{ entity.fechaRecepcion|date('Y-m-d H:i:s') }}</td>
+                </tr>
+                
                 <tr><td aling="right"><strong>Descripcion:</strong></center></td>
                     <td>{{entity.descripcion}}</td>
                 </tr>    
