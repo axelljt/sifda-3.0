@@ -15,28 +15,62 @@ $(document).ready(function(){
     
     $('#minsal_sifdabundle_ctlferiado_tipoFecha_1').click(function(){
         $('#fechaInicio_ctlferiado').show("slow");
-        $('#fechaFin_ctlferiado').show("slow");        
+        $('#fechaFin_ctlferiado').show("slow");
+        
+       
     });
     
 });
+
+
+function asignarFeriado(){
+    
+    var r1=document.getElementById('minsal_sifdabundle_ctlferiado_tipoFecha_0').checked;
+    var r2=document.getElementById('minsal_sifdabundle_ctlferiado_tipoFecha_1').checked;
+    
+    if(r1===false && r2 ===false)
+        alert('Debe seleccionar un tipo de Fecha');
+        
+    if(r1)    
+        asignarFechasFeriadas();
+    
+    if(r2)
+        asignarRangoFechasFeriadas();
+    
+    return false;
+}
 
 function asignarFechasFeriadas(){
      
    var texto=$("#minsal_sifdabundle_ctlferiado_fechaInicio").val();
    var lista=document.getElementById('minsal_sifdabundle_ctlferiado_fechaFestiva');
    
+    
    if(texto !=="")
         buscarFechaFeriada(texto,lista);
    else
        alert('Debe seleccionar una fecha');
-//   if(texto !==""){
-//       lista.options.add(new Option(texto));
-//        $("#txt_fechaEspecifica").val("");
-//   }
-//   else
-//       alert('Debe seleccionar una fecha');
-//    
+ 
 }
+
+
+function asignarRangoFechasFeriadas(){
+    
+    var date1=$("#minsal_sifdabundle_ctlferiado_fechaInicio").val();
+    var date2=$("#minsal_sifdabundle_ctlferiado_fechaFin").val();
+    var lista=document.getElementById('minsal_sifdabundle_ctlferiado_fechaFestiva');
+    
+    
+    if(date1 !=="" && date2 !=="")
+        {
+            var texto= '['+date1+','+date2+']'
+            buscarRangoFechaFeriada(texto,lista);
+        } 
+    else
+       alert('Debe seleccionar fecha de inicio y Fin');
+}
+
+
 
 function eliminarFecha(){
     
@@ -51,29 +85,100 @@ function eliminarFecha(){
 function buscarFechaFeriada(texto,lista){
     
     var num = lista.length;
-   
+    var aux=0;
+//   alert(num);
     if(num === 0){
         lista.options.add(new Option(texto));
         $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
+            
      }
     else
     {
       for(var i=0;i<lista.length; i++){
           var itemLs= lista[i];
-          
-          if(texto===(itemLs.value))
+                
+          if(texto === (itemLs.value))
             {
               alert('La Fecha ya fue elegida');
+              aux=1;
               break;
             }
-          else
-            {
-                lista.options.add(new Option(texto));
-                $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
-            }
+
+      }
+      
+      if(aux===0){
+          
+          lista.options.add(new Option(texto));
+          OrdenarListBoox(lista);
+          $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
+          
       }
     }     
     
-//    for(var i=0;i<sel.length; i++);
     
 }
+
+function buscarRangoFechaFeriada(texto,lista){
+    
+    var num = lista.length;
+    var aux=0;
+    if(num === 0){
+        lista.options.add(new Option(texto));
+        $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");            
+     }
+    else
+    {
+      for(var i=0;i<lista.length; i++){
+          var itemLs= lista[i];
+         
+          if(texto === (itemLs.value))
+            {
+              alert('La Fecha ya fue elegida');
+              aux=1;
+              break;
+            }
+      }
+      
+      if(aux===0){
+          
+          lista.options.add(new Option(texto));
+          OrdenarListBoox(lista);
+          $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
+          $("#minsal_sifdabundle_ctlferiado_fechaFin").val("");
+          
+      }
+    }         
+}
+
+
+//Funcion Ordenar Elementos de Listbox
+
+function OrdenarListBoox(lista){
+    
+
+    var arrTexts = new Array();
+    var arrTextsNew = new Array();
+    
+    for(var i=0; i<lista.length; i++)  {
+        arrTexts[i] = lista.options[i].text;
+    }
+    
+    arrTextsNew=arrTexts.sort();
+    
+    for(i=0; i<lista.length; i++)  {
+    lista.options[i].text = arrTextsNew[i];
+    lista.options[i].value = arrTextsNew[i];
+   }
+   
+}
+
+/*****************************************************************************************/
+
+
+
+
+
+
+
+
+

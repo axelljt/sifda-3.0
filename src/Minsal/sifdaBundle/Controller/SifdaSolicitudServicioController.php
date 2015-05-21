@@ -12,7 +12,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Minsal\sifdaBundle\Entity\SifdaSolicitudServicio;
 use Minsal\sifdaBundle\Form\SifdaSolicitudServicioType;
 use Symfony\Component\Validator\Constraints\Count;
-use Doctrine\ORM\EntityRepository;
+//use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 /**

@@ -17,6 +17,7 @@ $(document).ready(function (){
      $('#rangoFinTabla').show("slow");
     
     calendarEnlazado('txt_fechaInicio','txt_fechaFin');
+    calendarEnlazadoVacaciones('txt_fechaInicio','txt_fechaFin')
 });
 
 
