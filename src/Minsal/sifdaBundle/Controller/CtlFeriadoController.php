@@ -89,7 +89,7 @@ class CtlFeriadoController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Registrar dias festivos'));
+        $form->add('submit', 'submit', array('label' => 'Registrar'));
 
         return $form;
     }
