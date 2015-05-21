@@ -1,0 +1,61 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in  %}
+    
+    
+    <div>
+        {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
+        <center><h3>Listado de solicitudes rechazadas </h3></center>
+    
+    </div>
+
+    {% if entities %}       
+                <table id="RechTabla" class="table table-bordered table-hover table-condensed">
+                 <thead>
+                     <tr>
+                         <th><center>N°</center></th>
+                         {#<th><center>Establecimiento</center></th>#}
+                         <th><center>Dependencia solicitante</center></th>
+                         <th><center>Tipo de servicio</center></th>
+                         <th><center>Descripci&oacute;n</center></th>
+                         <th><center>Raz&oacute;n de rechazo</center></th>
+                         {#<th><center>Fecha que se requiere</center></th>#}
+
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {%set count=1%}   
+                 {% for rechazado in entities %}
+                    {# {%if rechazado.idDependenciaEstablecimiento == usuario.idDependenciaEstablecimiento%}#}
+                         <tr>
+                             <td>{{ count }}</td>
+                                     {#<td>{{ loop.index }}</td>#}
+                             {#<td><justify>{{ rechazado.idSolicitudServicio.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>#}
+                             <td><justify>{{ rechazado.idSolicitudServicio.user.idDependenciaEstablecimiento.idDependencia }}, {{ rechazado.idSolicitudServicio.user.idDependenciaEstablecimiento.idEstablecimiento }}</justify></td>
+                             <td>{{ rechazado.idSolicitudServicio.idTipoServicio }}</td>
+                             <td>{{ rechazado.idSolicitudServicio.descripcion }}</td>
+                             <td>{{ rechazado.idRazonRechazo }}</td>
+                             {#<td>{% if rechazado.idSolicitudServicio.fechaRecepcion %}{{ rechazado.idSolicitudServicio.fechaRecepcion|date('d-m-Y') }}{% endif %}</td>#}
+                             {#<td>{% if rechazado.idSolicitudServicio.fechaRequiere %}{{ rechazado.idSolicitudServicio.fechaRequiere|date('d-m-Y') }}{% endif %}</td>#}
+
+                         </tr>
+                         {%set count=count+1%}
+                     {#{%endif%}#}
+                 {% endfor %}
+                 </tbody>
+             </table> 
+    
+        <ul>
+        <li>
+            <a href="{{ path('sifda_consolidado_razon_rechazo') }}">
+                Consolidado por razon de rechazo
+            </a>
+        </li>
+    </ul>
+    {% else %}
+        <div id="msgRechazados">
+            <center><h4>No se encontraron solicitudes rechazadas</h4></center>
+        </div>    
+   {% endif%}
+        
+    {% endblock %}

@@ -129,6 +129,21 @@ class SifdaInformeOrdenTrabajoController extends Controller
                     $orden->setIdEstado($objEstado);
                     $em->merge($orden);
                     $em->flush();
+                    
+                    //Se obtiene el correo electronico de la persona que realizo la solicitud de servicio
+                    $correo = $orden->getUser()->getIdEmpleado()->getCorreoElectronico();
+
+                    //Se almacena el texto del correo electronico a enviar
+                    $texto = "";
+                    $texto.= 'Descripcion solicitud de servicio: '.$entity->getIdOrdenTrabajo()->getIdSolicitudServicio()->getDescripcion().' Descripcion de orden de trabajo: '.$entity->getIdOrdenTrabajo()->getDescripcion().' Detalle del informe final: '.$entity->getDetalle();
+                    
+                    //Se envia el correo electronico a la persona solicitante
+                    $message = \Swift_Message::newInstance()
+                                   ->setSubject('Finalizacion de orden de trabajo')
+                                   ->setFrom('tesis.flujotrabajo@gmail.com')
+                                   ->setTo($correo)
+                                   ->setBody($texto);
+                    $this->get('mailer')->send($message);     // then we send the message.
                 } 
             }
                 

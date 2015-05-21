@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SifdaOrdenTrabajo
  *
- * @ORM\Table(name="sifda_orden_trabajo", indexes={@ORM\Index(name="crea_fk", columns={"id_solicitud_servicio"}), @ORM\Index(name="define_etapa_fk", columns={"id_etapa"}), @ORM\Index(name="atiende_fk", columns={"id_dependencia_establecimiento"}), @ORM\Index(name="define_estado_fk", columns={"id_estado"}), @ORM\Index(name="define_prioridad_fk", columns={"id_prioridad"})})
+ * @ORM\Table(name="sifda_orden_trabajo", indexes={@ORM\Index(name="crea_fk", columns={"id_solicitud_servicio"}), @ORM\Index(name="define_etapa_fk", columns={"id_etapa"}), @ORM\Index(name="atiende_fk", columns={"id_dependencia_establecimiento"}), @ORM\Index(name="define_estado_fk", columns={"id_estado"}), @ORM\Index(name="define_prioridad_fk", columns={"id_prioridad"}), @ORM\Index(name="designa_actividad_fk", columns={"user_id"})})
  * @ORM\Entity
  */
 class SifdaOrdenTrabajo
@@ -103,6 +103,16 @@ class SifdaOrdenTrabajo
      * })
      */
     private $idSolicitudServicio;
+    
+    /**
+     * @var \FosUserUser
+     *
+     * @ORM\ManyToOne(targetEntity="FosUserUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $user;
 
 
 
@@ -344,6 +354,29 @@ class SifdaOrdenTrabajo
     public function getIdSolicitudServicio()
     {
         return $this->idSolicitudServicio;
+    }
+    
+    /**
+     * Set user
+     *
+     * @param \Minsal\sifdaBundle\Entity\FosUserUser $user
+     * @return SifdaOrdenTrabajo
+     */
+    public function setUser(\Minsal\sifdaBundle\Entity\FosUserUser $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \Minsal\sifdaBundle\Entity\FosUserUser 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
     
      public function __toString()

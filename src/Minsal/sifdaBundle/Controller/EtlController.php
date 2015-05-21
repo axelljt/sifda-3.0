@@ -101,6 +101,8 @@ class EtlController extends Controller{
                             foreach ($lstSubCicloVida as $subetapa) {
                                 $etapa = new \Minsal\sifdaBundle\Entity\SifdaRutaCicloVida();
                                 $orden = new SifdaOrdenTrabajo();
+                                $idUser=$this->getUser()->getId();
+                                $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idUser);
                                 $orden->setIdEtapa($subetapa->getId());
                                 $orden->setDescripcion($subetapa->getDescripcion());
                                 $orden->setCodigo($this->generarCodigoOrden($objDepEst));
@@ -108,6 +110,7 @@ class EtlController extends Controller{
                                 $orden->setIdDependenciaEstablecimiento($objDepEst);
                                 $orden->setIdEstado($objEstado);
                                 $orden->setIdSolicitudServicio($solicitud);
+                                $orden->setUser($usuario);
                                 $objPrioridad = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->find(9);
                                 $orden->setIdPrioridad($objPrioridad);
                                 $nOr++;
@@ -123,6 +126,8 @@ class EtlController extends Controller{
                             }
                         } else {
 //                      $etapa = new \Minsal\sifdaBundle\Entity\SifdaRutaCicloVida();
+                            $idUser=$this->getUser()->getId();
+                            $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idUser);
                             $orden = new SifdaOrdenTrabajo();
                             $orden->setIdEtapa($etapa->getId());
                             $orden->setDescripcion($etapa->getDescripcion());
@@ -131,6 +136,7 @@ class EtlController extends Controller{
                             $orden->setIdDependenciaEstablecimiento($objDepEst);
                             $orden->setIdEstado($objEstado);
                             $orden->setIdSolicitudServicio($solicitud);
+                            $orden->setUser($usuario);
                             $objPrioridad = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->find(9);
                             $orden->setIdPrioridad($objPrioridad);
                             $nOr++;

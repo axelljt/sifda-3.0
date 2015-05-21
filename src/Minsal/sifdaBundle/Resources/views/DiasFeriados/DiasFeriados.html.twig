@@ -1,0 +1,65 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/diasFeriados.js')}}"></script>
+{% endblock %}   
+
+{% block contenido_in  %}
+    <center><h4>Registro de dias Festivos </h4></center>
+    
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>usuario:</td><td style="width: 60px;height:14px;">{{usuario.username}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+    
+            
+     <div id="seleccion">
+         <div class="row-fluid">
+             <div class="span11 offset1">
+                 <div class="span2">
+                     
+                     <table>
+                         <tr><td><input type="radio" name="tipoFecha" id="pdf" value="1">Fecha Especifica</td></tr>
+                         <tr><td><input type="radio" name="tipoFecha" id="excel" value="2">Rango de Fecha</td></tr>
+                     </table>
+                     
+                 </div>
+                 
+                 <div class="span5">
+                     <table border="1">
+                         <tr>
+                              <td style="width: 55px; height:30px "><label>Festivo:</label></td>                             
+                              <td style="width: 80px; height:30px "><input type="text" id="txt_fechaEspecifica" class="input-small"></td>                  
+                                                      
+                              <td>
+                                  <table border="1">
+                                      <tr>
+                                          <td>
+                                              <center><img height="30px" width="30px" src="{{ asset('bundles/minsalsifda/images/Flecha5.png') }}" onclick="asignarFechasFeriadas()"/></center>
+                                          </td>
+                                      </tr>
+                                      <tr>
+                                          <td>
+                                             <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarFecha()"/></center>
+                                          </td>
+                                      </tr>
+                                  </table>
+                                   
+                              </td>
+                              
+                             <td>
+                                 <select id="ls1" name="Fechas" size="3" style="width: 105px; height:110px; ">
+                                  
+                                  </select>
+                             </td>
+                         </tr>
+                     </table>
+                 </div>
+                 
+                 
+             </div> 
+         </div>       
+     </div>
+{% endblock %}

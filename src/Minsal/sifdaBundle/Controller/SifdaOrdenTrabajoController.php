@@ -171,6 +171,11 @@ class SifdaOrdenTrabajoController extends Controller
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($user);
         $entity->setIdDependenciaEstablecimiento($usuario->getIdDependenciaEstablecimiento());
         
+//        $idUser=$this->getUser()->getId();
+//        $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idUser);
+        
+        $entity->setUser($usuario);
+        
         //Obtener la solicitud de servicio que se va a atender
         $idSolicitudServicio = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->find($id);
         $entity->setIdSolicitudServicio($idSolicitudServicio);

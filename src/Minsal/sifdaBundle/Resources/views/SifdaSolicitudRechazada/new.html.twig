@@ -1,0 +1,76 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h3>Rechazar la solicitud de servicio</h3></center>
+    </div>
+    {{form_start(form)}}
+    {{form_errors(form)}}
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            
+            <table id="tabla" class="table table-bordered table-hover table-condensed">
+                    <tbody>
+                        <tr>
+                            <th>Establecimiento solicitante</th>
+                            <td>{{ solicitud.user? solicitud.user.idDependenciaEstablecimiento.idEstablecimiento:"Generado por PAO" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Dependencia solicitante</th>
+                            <td>{{ solicitud.user? solicitud.user.idDependenciaEstablecimiento.idDependencia:"Generado por PAO" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Persona solicitante</th>
+                            <td>{{ solicitud.user? solicitud.user.idEmpleado.nombre ~ " "~ solicitud.user.idEmpleado.apellido:"Generado por PAO" }}</td>
+                        </tr>
+                        <tr>
+                            <th>Servicio solicitado</th>
+                            <td>{{ solicitud.idTipoServicio }}</td>
+                        </tr>
+                        <tr>
+                            <th>Descripcion de solicitud del servicio</th>
+                            <td>{{ solicitud.descripcion }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha de recepci&oacute;n</th>
+                            <td>{{ solicitud.fechaRecepcion|date('d/m/Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Fecha que se requiere</th>
+                            <td>{{ solicitud.fechaRequiere|date('d/m/Y') }}</td>
+                        </tr>
+                        
+                        {#<tr>
+                            <th>Motivo de rechazo</th>
+                            <td><textarea id="txta1" name="comment" rows="3" class="span10" text=""></textarea></td>
+                        </tr>#}
+                    </tbody>
+                </table>
+                <br>
+                <div class="row-fluid">
+                    <div class="span6 offset3">
+                        {{form_row(form.idRazonRechazo, {'attr': {'class':'span10'} })}}
+                    </div>
+                </div>
+                <br>
+                
+            <center>
+                <table id="botones">
+                <tr> 
+
+                    <td>{{form_row(form.submit, {'attr':{'class':'btn btn-primary', 'onclick': 'return confirm("¿Está seguro(a) de rechazar la solicitud?")'} } ) }}</td> 
+                    <td><a href="{{ path('sifda_gestionSolicitudes')}}" class="btn">Regresar</a></td>
+                </tr>    
+                </table>
+            </center> 
+            {#<ul class="record_actions">
+            <li>
+                <a href="{{ path('sifda_solicitudrechazada') }}">
+                    Back to the list
+                </a>
+            </li>
+            </ul>#}
+        </div>
+    </div>  
+{{form_end(form)}}       
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in -%}
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>Usuario:</td><td style="width: 120px;height:14px;">{{usuario.IdEmpleado}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+    <div class="page-header">
+        <center><h3>Listado de d&iacute;as festivos del a&ntilde;o actual</h3></center>
+    </div>
+        
+    <table id="tabla" class="table table-bordered table-hover table-condensed">
+        <thead>
+            <tr>
+                <th><center>Correlativo</center></th>
+                {#<th>Nombre</th>
+                <th>Descripcion</th>#}
+                <th><center>Fecha de inicio</center></th>
+                <th><center>Fecha de fin</center></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% set corr = 1 %}        
+        {% for entity in entities %}
+            <tr>
+                <td><center>{{ corr }}</center></td>
+                {#<td>{{ entity.nombre }}</td>#}
+                {#<td>{{ entity.descripcion }}</td>#}
+                {#<td>{{ entity.anio }}</td>#}
+                <td><center>{% if entity.fechaInicio %}{{ entity.fechaInicio|date('d-m-Y') }}{% endif %}</center></td>
+                <td><center>{% if entity.fechaFin %}{{ entity.fechaFin|date('d-m-Y') }}{% endif %}</center></td>             
+            </tr>
+            {% set corr = corr + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+
+        {#<ul>
+        <li>
+            <a href="{{ path('sifda_ctlferiado_new') }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>#}
+    {% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+
+{% block contenido_in  %}
+    
+    
+    <div>
+        {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
+        <center><h3>Consolidado de solicitudes rechazadas por raz&oacute;n de rechazo </h3></center>
+    
+    </div>
+    
+    {% if entities %}  
+        <div class="row-fluid">
+            <div class="span8 offset2">
+                <table id="RechTabla" class="table table-bordered table-hover table-condensed">
+                 <thead>
+                     <tr>
+                         <th><center>N°</center></th>
+                         <th><center>Raz&oacute:n de rechazo</center></th>
+                         <th><center>Total</center></th>
+                     </tr>
+                 </thead>
+                 <tbody>
+                     {%set count=1%}   
+                 {% for rechazado in entities %}
+                    {# {%if rechazado.idDependenciaEstablecimiento == usuario.idDependenciaEstablecimiento%}#}
+                         <tr>
+                             <td>{{ count }}</td>
+                             <td>{{ rechazado.descripcion }}</td>
+                             <td>{{ rechazado.total }}</td>
+                         </tr>
+                         {%set count=count+1%}
+                     {#{%endif%}#}
+                 {% endfor %}
+                 </tbody>
+             </table> 
+    
+        {#<ul>
+        <li>#}
+            {#<a href="{{ path('sifda_solicitudrechazada_new') }}">
+                Create a new entry
+            </a>#}
+        {#</li>
+    </ul>#}
+            </div>
+        </div>
+    {% else %}
+        <div id="msgRechazados">
+            <center><h4>No se encontraron solicitudes rechazadas</h4></center>
+        </div>    
+   {% endif%}
+        
+    {% endblock %}

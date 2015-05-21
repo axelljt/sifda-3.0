@@ -70,6 +70,21 @@ class SifdaReprogramacionServicioController extends Controller
             $idSolicitudServicio->setFechaRequiere($entity->getFechaReprogramacion());
             $em->merge($idSolicitudServicio);
             $em->flush();
+            
+            //Se obtiene el correo electronico de la persona que realizo la solicitud de servicio
+            $correo = $idSolicitudServicio->getUser()->getIdEmpleado()->getCorreoElectronico();
+            
+            //Se almacena el texto del correo electronico a enviar
+            $texto = "";
+            $texto.= 'Descripcion solicitud de servicio: '.$idSolicitudServicio->getDescripcion().' Justificacion de reprogramacion: '.$entity->getJustificacion();
+            
+            //Se envia el correo electronico a la persona solicitante
+            $message = \Swift_Message::newInstance()
+                           ->setSubject('Reprogramacion del servicio solicitado')
+                           ->setFrom('tesis.flujotrabajo@gmail.com')
+                           ->setTo($correo)
+                           ->setBody($texto);
+            $this->get('mailer')->send($message);     // then we send the message.
 
             return $this->redirect($this->generateUrl('sifda_gestionSolicitudes'));
         }
