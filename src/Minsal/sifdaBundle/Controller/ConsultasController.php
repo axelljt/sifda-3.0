@@ -150,4 +150,151 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
                     ));
             return $response;
     }
+    /**
+     * Consulta de solicitudes atendidas por linea estrategica.
+     *
+     * @Route("/conact", name="sifda_consulta_actividad")
+     * @Method("GET")
+     * @Template()
+     */
+    public function solAtendPaoAction()
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($this->getUser()->getId());
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('resultado','resultado');
+        $fecha = new \DateTime();
+        $lineas= $em->getRepository('MinsalsifdaBundle:SidplaLineaEstrategica')->findBy(array('idDependenciaEstablecimiento'=>$user->getIdDependenciaEstablecimiento(),'anio'=>$fecha->format('Y')));
+        $bool = null;
+        return $this->render('MinsalsifdaBundle:Consultas:solAtendPao.html.twig',array('lineas'=>$lineas,'user' => $user));
+    }
+    
+    /**
+    * Ajax utilizado para buscar las dependencias segun su establecimiento
+    *  
+    * @Route("/find_actividad_pao", name="sifda_consulta_find_acividad")
+    */
+    public function findActividadesAction()
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+             $idLinea = $this->get('request')->request->get('idLinea');
+             $em = $this->getDoctrine()->getManager();
+             $actividades_linea = $em->getRepository('MinsalsifdaBundle:SidplaActividad')->findBy(array('idLineaEstrategica'=>$idLinea));
+             $actividades=array();   
+             
+             foreach($actividades_linea as $a)
+             {
+                 $actividades[] = $a->getDescripcion();
+                  
+             }
+             
+             
+             
+             $activs = $em->getRepository('MinsalsifdaBundle:SidplaActividad')->findBy(array('descripcion'=>$actividades),array('descripcion' => 'ASC'));
+             
+             
+//             ladybug_dump($dependencia);
+             
+             $mensaje = $this->renderView('MinsalsifdaBundle:Consultas:actividadesShow.html.twig' , array('actividades' =>$activs));
+             $response = new JsonResponse();
+             return $response->setData($mensaje);
+        }else
+            {   return new Response('0');   }       
+    }
+    
+    /**
+     * Busca una lista de las solicitudes atendidas para las actividades estrategicas.
+     *
+     * @Route("/buscsolact", name="buscar_solicitudes_actividad")
+     */
+    public function buscarSolicitudesLinea()
+    {
+            $lin = $this->get('request')->request->get('linea');
+            $em = $this->getDoctrine()->getEntityManager();
+        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($this->getUser()->getId());
+        $temp_tdest = $user->getIdDependenciaEstablecimiento()->getId();
+            $fecha = new \DateTime();
+            $anio = $fecha->format('Y');
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id','id');
+        $rsm->addScalarResult('descripcion','descripcion');
+        $rsm->addScalarResult('codigo','codigo');
+        $rsm->addScalarResult('activo','activo');
+        $rsm->addScalarResult('recurrente','recurrente');
+        $sql = "select id,descripcion,codigo,activo,recurrente from sidpla_linea_estrategica a where anio = ? ";
+        $sql.="and id_dependencia_establecimiento = ?";
+        if ($lin != 0){
+        $sql.="and id = ?";
+        }
+        $query = $em->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $anio);
+        $query->setParameter(2, $temp_tdest);
+        if ($lin != 0){
+        $query->setParameter(3, $lin);
+        }
+        $resultado = $query->getResult();
+        $response = new JsonResponse();
+            $response->setData(array(
+            'query' => $resultado
+                    ));
+            return $response;
+    }
+    
+    /**
+     * Lists all Vwetapassolicitud entities.
+     *
+     * @Route("/buscact", name="buscar_actividades")
+     */
+    public function buscarActividadesPao()
+    {
+            $em = $this->getDoctrine()->getEntityManager();
+        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($this->getUser()->getId());
+        $temp_tdest = $user->getIdDependenciaEstablecimiento()->getId();
+            $act = $this->get('request')->request->get('actividad');
+            $ln = $this->get('request')->request->get('idln');
+            $temp_fi = $this->get('request')->request->get('fechaIni');
+            $temp_ff = $this->get('request')->request->get('fechaFin');
+        $rsm = new ResultSetMapping();
+        $rsm->addScalarResult('id','id');
+        $rsm->addScalarResult('descripcion','descripcion');
+        $rsm->addScalarResult('meta_anual','meta_anual');
+        $rsm->addScalarResult('indicador','indicador');
+        $rsm->addScalarResult('generado','generado');        
+        $rsm->addScalarResult('finalizadas','finalizadas');
+        $sql = "select a.id as id,a.descripcion as descripcion,a.meta_anual as meta_anual,a.indicador as indicador,a.generado as generado,count(ss.id) as finalizadas
+                from sidpla_actividad a 
+                left outer join sifda_tipo_servicio s on a.id = s.id_actividad
+                left outer join sifda_solicitud_servicio ss on ss.id_tipo_servicio = s.id and ss.id_estado = 4 ";
+        if ( $temp_fi != null && $temp_ff != null){
+        $sql.=" and fecha_finaliza between ? and ?";
+        }
+               $sql.=" where id_linea_estrategica = ?";
+        
+        if ( $act != 0){
+        $sql.= " and a.id = ?";
+        }
+        $sql.=" group by a.id,a.descripcion,a.meta_anual,a.indicador,a.generado,s.id,s.nombre;";
+//        $sql = "select id,descripcion,meta_anual,indicador,generado from sidpla_actividad where id_linea_estrategica=?";
+//select a.id,a.descripcion,a.meta_anual,a.indicador,a.generado,s.id,s.nombre,count(ss.id) as finalizadas
+//from sidpla_actividad a 
+//left outer join sifda_tipo_servicio s on a.id = s.id_actividad
+//left outer join sifda_solicitud_servicio ss on ss.id_tipo_servicio = s.id and ss.id_estado = 4 and fecha_finaliza between '2015-05-15' and '2015-05-15'
+//group by a.id,a.descripcion,a.meta_anual,a.indicador,a.generado,s.id,s.nombre;
+        $query = $em->createNativeQuery($sql, $rsm);
+        if ( $temp_fi != null && $temp_ff != null){
+            $query->setParameter(1, $temp_fi);
+            $query->setParameter(2, $temp_ff);
+        }
+        $query->setParameter(3, $ln);
+        if ( $act != 0){
+        $query->setParameter(4, $act);
+        }
+        $resultado = $query->getResult();
+        $response = new JsonResponse();
+            $response->setData(array(
+            'query' => $resultado
+                    ));
+            return $response;
+    }
 }

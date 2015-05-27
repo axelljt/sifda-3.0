@@ -1,0 +1,8 @@
+{% spaceless %}
+<select id="dependencia">
+<option value="0" selected>Seleccione...</option>    
+    {% for a in actividades %}
+        <option value="{{a.id}}">{{a.descripcion}}</option>
+    {% endfor %}     
+</select>        
+{% endspaceless %}
