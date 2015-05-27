@@ -44,7 +44,12 @@ class SifdaSolicitudServicio
      * @ORM\Column(name="fecha_requiere", type="datetime", nullable=true)
      */
     private $fechaRequiere;
-
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_finaliza", type="datetime", nullable=true)
+     */
+    private $fechaFinaliza;
     /**
      * @var \CatalogoDetalle
      *
@@ -145,7 +150,13 @@ class SifdaSolicitudServicio
 
         return $this;
     }
+    public function getFechaFinaliza() {
+        return $this->fechaFinaliza;
+    }
 
+    public function setFechaFinaliza(\DateTime $fechaFinaliza) {
+        $this->fechaFinaliza = $fechaFinaliza;
+    }
     /**
      * Get fechaRecepcion
      *
