@@ -2,24 +2,21 @@
 $(document).ready(function(){
     
     document.getElementById('minsal_sifdabundle_ctlferiado_fechaInicio').value="";
-    $('#fechaInicio_ctlferiado').hide("slow");
-    $('#fechaFin_ctlferiado').hide("slow");
-    
-    calendarNormal('minsal_sifdabundle_ctlferiado_fechaInicio');
-    calendarNormal('minsal_sifdabundle_ctlferiado_fechaFin');
-    
+    document.getElementById('minsal_sifdabundle_ctlferiado_tipoFecha_0').checked = true;
+    $('#fechaFin_ctlferiado').hide("slow");    
+    calendarAnioActual('minsal_sifdabundle_ctlferiado_fechaInicio');
+        
     $('#minsal_sifdabundle_ctlferiado_tipoFecha_0').click(function(){
         $('#fechaFin_ctlferiado').hide("slow");
         $('#fechaInicio_ctlferiado').show("slow");
+        calendarAnioActual('minsal_sifdabundle_ctlferiado_fechaInicio');
     });
     
     $('#minsal_sifdabundle_ctlferiado_tipoFecha_1').click(function(){
         $('#fechaInicio_ctlferiado').show("slow");
-        $('#fechaFin_ctlferiado').show("slow");
-        
-       
-    });
-    
+        $('#fechaFin_ctlferiado').show("slow"); 
+        calendarEnlazado('minsal_sifdabundle_ctlferiado_fechaInicio', 'minsal_sifdabundle_ctlferiado_fechaFin');
+    });    
 });
 
 
@@ -44,8 +41,7 @@ function asignarFechasFeriadas(){
      
    var texto=$("#minsal_sifdabundle_ctlferiado_fechaInicio").val();
    var lista=document.getElementById('minsal_sifdabundle_ctlferiado_fechaFestiva');
-   
-    
+       
    if(texto !=="")
         buscarFechaFeriada(texto,lista);
    else
@@ -63,7 +59,7 @@ function asignarRangoFechasFeriadas(){
     
     if(date1 !=="" && date2 !=="")
         {
-            var texto= '['+date1+','+date2+']'
+            var texto= date1+', '+date2;
             buscarRangoFechaFeriada(texto,lista);
         } 
     else
@@ -82,15 +78,26 @@ function eliminarFecha(){
     
 }
 
+function limpiarListbox(){
+     var lista=document.getElementById("minsal_sifdabundle_ctlferiado_fechaFestiva");
+     if (lista.options.length>0){
+         
+         for(var i=lista.options.length-1;i>=0;i--){
+             lista.remove(i);
+         }
+     }
+               
+      else
+          alert('No hay fechas para remover');    
+}
+
 function buscarFechaFeriada(texto,lista){
     
     var num = lista.length;
     var aux=0;
-//   alert(num);
     if(num === 0){
         lista.options.add(new Option(texto));
-        $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
-            
+        $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");            
      }
     else
     {
@@ -106,16 +113,14 @@ function buscarFechaFeriada(texto,lista){
 
       }
       
-      if(aux===0){
+        if(aux===0){
           
-          lista.options.add(new Option(texto));
-          OrdenarListBoox(lista);
-          $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
+           lista.options.add(new Option(texto));
+           OrdenarListBoox(lista);
+           $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");
           
-      }
-    }     
-    
-    
+        }
+    }         
 }
 
 function buscarRangoFechaFeriada(texto,lista){
@@ -124,7 +129,8 @@ function buscarRangoFechaFeriada(texto,lista){
     var aux=0;
     if(num === 0){
         lista.options.add(new Option(texto));
-        $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");            
+        $("#minsal_sifdabundle_ctlferiado_fechaInicio").val("");  
+        $("#minsal_sifdabundle_ctlferiado_fechaFin").val("");
      }
     else
     {
@@ -150,12 +156,9 @@ function buscarRangoFechaFeriada(texto,lista){
     }         
 }
 
-
 //Funcion Ordenar Elementos de Listbox
-
 function OrdenarListBoox(lista){
     
-
     var arrTexts = new Array();
     var arrTextsNew = new Array();
     
@@ -166,19 +169,35 @@ function OrdenarListBoox(lista){
     arrTextsNew=arrTexts.sort();
     
     for(i=0; i<lista.length; i++)  {
-    lista.options[i].text = arrTextsNew[i];
-    lista.options[i].value = arrTextsNew[i];
-   }
-   
+        lista.options[i].text = arrTextsNew[i];
+        lista.options[i].value = arrTextsNew[i];
+   }   
+}
+
+function recuperarFechasElegidas(){
+    
+    var lista=document.getElementById("minsal_sifdabundle_ctlferiado_fechaFestiva");
+    var fechaFestiva = new Array();
+    
+   if(lista.length>0)
+    {
+        for(var i=0; i<lista.length; i++)  {
+        fechaFestiva[i] = lista.options[i].text;
+        }   
+        
+        for ( var i = 0, l = lista.options.length, o; i < l; i++ )
+        {
+            o = lista.options[i];
+            if ( fechaFestiva.indexOf( o.text ) != -1 )
+            {
+                o.selected = true;                
+            }
+        } 
+        return false; 
+    } 
+    else {
+          return false;  
+    }
 }
 
 /*****************************************************************************************/
-
-
-
-
-
-
-
-
-

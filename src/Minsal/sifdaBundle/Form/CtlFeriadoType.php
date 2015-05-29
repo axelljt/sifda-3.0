@@ -15,9 +15,6 @@ class CtlFeriadoType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-//            ->add('nombre')
-//            ->add('descripcion')
-            //->add('anio')
             ->add('fechaInicio','date',array('input'=>'datetime','widget'=>'single_text', 'required'  => false,
                   'label'=>'Fecha festiva','format'=>'yyyy-MM-dd','attr'=>array('class'=>'date')))
             ->add('fechaFin','date',array('input'=>'datetime','widget'=>'single_text',

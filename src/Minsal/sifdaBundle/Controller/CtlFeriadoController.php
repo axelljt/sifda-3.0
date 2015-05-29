@@ -9,6 +9,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Minsal\sifdaBundle\Entity\CtlFeriado;
 use Minsal\sifdaBundle\Form\CtlFeriadoType;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * CtlFeriado controller.
@@ -27,8 +29,11 @@ class CtlFeriadoController extends Controller
      */
     public function indexAction()
     {
+        $fechaActual = new \DateTime();
         $em = $this->getDoctrine()->getManager();
-        $entities = $em->getRepository('MinsalsifdaBundle:CtlFeriado')->findAll();
+        $entities = $em->getRepository('MinsalsifdaBundle:CtlFeriado')->findBy(array(
+                                                                             'anio' => $fechaActual->format('Y')  
+                                                                            ));
         
         $idusuario=  $this->getUser()->getId();
         $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
@@ -38,6 +43,40 @@ class CtlFeriadoController extends Controller
             'usuario' => $usuario,
         );
     }
+    
+    /**
+     * Buscar todas las fechas de asueto del anio actual
+     *
+     * @Route("/llenarCalendario", name="sifda_ctlferiado_llenar_calendario")
+     * @Method("POST")
+     * @Template()
+     */
+    public function llenarCalendarioAction()
+    {
+        
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+            $anio = $this->get('request')->request->get('anio');
+            $em = $this->getDoctrine()->getEntityManager();
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('fecha','fecha');
+            $sql = "select descripcion as fecha from ctl_feriado where anio = '$anio'";
+            $query = $em->createNativeQuery($sql, $rsm);
+            $resultado = $query->getResult();
+            
+            $response = new JsonResponse();
+            $response->setData(array(
+                                'query' => $resultado
+                                ));
+            
+            return $response; 
+            
+        }else
+        {   
+            return new Response('0');              
+        } 
+    }
+    
     /**
      * Creates a new CtlFeriado entity.
      *
@@ -61,8 +100,7 @@ class CtlFeriadoController extends Controller
             $data = $p['fechaFestiva'];
         }
         
-        //if ($form->isValid()) {            
-            
+        //if ($form->isValid()) {                        
             if($data){
                 $this->establecerFechaFestiva($data);
                 return $this->redirect($this->generateUrl('sifda_ctlferiado'));
@@ -275,10 +313,16 @@ class CtlFeriadoController extends Controller
         {
             $entity = new CtlFeriado();
             $fechaActual = new \DateTime();
+            $entity->setDescripcion($fecha);
+            $entity->setAnio($fechaActual->format('Y'));                        
             
-            $entity->setAnio($fechaActual->format('Y'));
-            $entity->setFechaInicio(new \DateTime($fecha));
-            
+            if (strlen($fecha) > 10){
+                $entity->setFechaInicio(new \DateTime(substr($fecha, 0, 10)));
+                $entity->setFechaFin(new \DateTime(substr($fecha, 12)));
+            }
+            else   { 
+                $entity->setFechaInicio(new \DateTime($fecha));               
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();

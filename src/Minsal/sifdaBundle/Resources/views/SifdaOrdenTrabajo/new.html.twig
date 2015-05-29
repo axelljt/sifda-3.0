@@ -63,7 +63,7 @@
                         {{form_errors(form)}} 
                         <div class="row-fluid">
                             <div class="span4 offset2">
-                                {{form_row(form.idEtapa, {'attr': {'class':'span8'} })}}
+                                {{form_row(form.idEtapa, {'attr': {'class':'span8', 'onchange':'buscarEtapa("ordenActualId", "find_subetapa_orden", "find_vacio_subetapa")'} })}}
                                 {% if subetapaEtapa %}
                                     {{form_row(form.idSubEtapa, {'attr': {'class':'span8'} })}}
                                 {% endif %}
@@ -120,21 +120,21 @@
                 {% else%}  
                     {{form_start(form)}}
                     {{form_errors(form)}} 
+                    {#{{ ordenActualId }}#}
+                    {#{% set ruta1, ruta2 = path('sifda_sifdaordentrabajo_find_subetapa'), path('sifda_sifdaordentrabajo_select_subetapa')%}#}
                     <div class="row-fluid">
                         <div class="span4 offset2">
-                            {{form_row(form.idEtapa, {'attr': {'class':'span8'} })}}
+                            {{form_row(form.idEtapa, {'attr': {'class':'span8', 'onchange':'buscarEtapa("ordenActualId", "find_subetapa_orden", "find_vacio_subetapa")'} })}}
                             {% if servicioSubetapa %}
                                 {{form_row(form.idSubEtapa, {'attr': {'class':'span8'} })}}
                             {% endif %}
-                            {#{{form_row(form.establecimiento, {'attr': {'class':'span10'} })}}
-                            {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}#}
                             {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la orden de trabajo'} })}}
                             
                         </div>
                         <div class="span5 offset1"> 
                             {{form_row(form.idPrioridad)}}
                             {{form_row(form.observacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
-                            {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes'} })}}
+                            {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario")'} })}}
                         </div>
                     </div>
                     <br><br>
@@ -157,70 +157,14 @@
                 {% endif %}                
             </div>
         </div> 
-                {{ ordenActualId }}
+               {# {{ ordenActualId }}#}
 {% endblock %}
 
 {% block javascripts_step %}
     {{ parent() }}
-    <script>
-    $(document).ready(function(){
-        
-        document.getElementById("minsal_sifdabundle_sifdaordentrabajo_idEtapa").value="";
-                
-        $("#minsal_sifdabundle_sifdaordentrabajo_idEtapa").change(function(){ 
-
-            var idEtapa = $("#minsal_sifdabundle_sifdaordentrabajo_idEtapa").val();
-            var ordenActualId = "{{ ordenActualId }}";
-           // idEtapa = idEtapa;
-            //alert(idEtapa);
-;            if(idEtapa !="")
-            {
-                //alert(idEtapa);
-                $.post(
-                '{{path('sifda_sifdaordentrabajo_find_subetapa')}}', 
-                  { 
-                    idEtapa:idEtapa,
-                    ordenActualId:ordenActualId
-                  }
-                  //alert(ordenActualId);
-                  , function( data ) {
-                    console.log( data );
-                    //alert(ordenActualId);
-                        $("#minsal_sifdabundle_sifdaordentrabajo_idSubEtapa").html(data);
-
-                 }, "json");
-            }
-            else 
-            {
-                $.post(
-                '{{path('sifda_sifdaordentrabajo_select_subetapa')}}', 
-                    function( data ) {
-                    console.log( data );
-                        $("#minsal_sifdabundle_sifdaordentrabajo_idSubEtapa").html(data);
-
-                 }, "json");
-            }
-        });
-    });
+    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/ordenTrabajoNew.js')}}"></script>
     
-    $(document).ready(function(){
-    
-        $("#minsal_sifdabundle_sifdaordentrabajo_establecimiento").change(function(){
-            
-            var IdEstablecimiento = $("#minsal_sifdabundle_sifdaordentrabajo_establecimiento").val();
-            $.post(
-            '{{path('sifda_ordentrabajo_find_dependencia')}}', 
-              { 
-                idEstablecimiento:IdEstablecimiento
-              }
-              , function( data ) {
-                console.log( data );
-                    $("#minsal_sifdabundle_sifdaordentrabajo_dependencia").html(data);
-                
-             }, "json");
-        });
-    });    
-
+{#    <script>        
         $.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
 			 prevText: '<Ant',
@@ -256,5 +200,5 @@
 					);
 				});
      
-    </script>
+    </script>#}
     {% endblock%}

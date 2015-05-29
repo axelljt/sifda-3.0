@@ -16,10 +16,8 @@ $(document).ready(function (){
      $('#msgFinalizado').hide("slow");
      $('#rangoFinTabla').show("slow");
     
-    calendarEnlazado('txt_fechaInicio','txt_fechaFin');
-    calendarEnlazadoVacaciones('txt_fechaInicio','txt_fechaFin')
+     calendarEnlazado('txt_fechaInicio','txt_fechaFin');
 });
-
 
 function buscarDependencia(ruta){
     

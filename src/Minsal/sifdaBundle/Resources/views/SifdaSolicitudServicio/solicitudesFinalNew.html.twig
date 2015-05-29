@@ -3,6 +3,27 @@
 {% block javascripts_step %}
     {{parent()}}
         <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/solicitudesFinalNew.js')}}"></script>
+
+        <script>
+                //var anio=2015;
+                {#var fecha = new Date();
+                var anio = fecha.getFullYear();
+                
+                $("#txt_fechaInicio").click(function (){
+
+                $.post('{{path('sifda_ctlferiado_llenar_calendario')}}',
+                    {
+                        anio: anio
+                        },function(data){
+                            console.log( data );
+                            calendarEnlazadoVacaciones('txt_fechaInicio','txt_fechaFin', data.query)
+                        }, "json"
+                    );
+                    
+                });//Fin prueba#}
+            
+        </script>
+
 {% endblock %}   
 
 {% block contenido_in  %}

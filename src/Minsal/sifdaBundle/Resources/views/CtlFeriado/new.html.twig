@@ -11,61 +11,67 @@
     <div class="page-header">
         <center><h3>Registro de d&iacute;as festivos</h3></center>
     </div>
-    {#<div class="row-fluid">
-        <div class="span10 offset1">
-            <div class="row-fluid">
-                <div class="span5">
-                    {{form_row(form.nombre, {'attr': {'class':'input-xlarge', 'placeholder': 'Nombre de la fecha festiva'} })}}
-                    {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la fecha festiva'} })}}
-                    {{form_row(form.fechaInicio, {'attr':{'readonly':'yes','class':'input-large'}} )}}
-                    {{form_row(form.fechaFin, {'attr':{'readonly':'yes','class':'input-large'}} )}}
-                </div>
-            </div>     
-        </div>
-    </div>#} 
+    
     <div id="seleccion">
          <div class="row-fluid">
-             <div class="span11 offset1">
-                 <div class="span2">
-                    {{form_row(form.tipoFecha, {'attr': {'class':'radio'} })}}                      
-                 </div>
-                 
-                 <div class="span3">
-                     <div id="fechaInicio_ctlferiado">
-                        {{form_row(form.fechaInicio, {'attr':{'readonly':'yes','class':'span8'} } ) }}
+             <div class="span10 offset1">
+                 <div class="row-fluid">   
+                     <div class="span3">
+                        {{form_row(form.tipoFecha, {'attr': {'class':'radio'} })}}                      
                      </div>
-                     <div id="fechaFin_ctlferiado">
-                       {# {{form_row(form.fechaInicio, {'attr':{'readonly':'yes','class':'span8'} } ) }}#}
-                        {{form_row(form.fechaFin, {'attr':{'readonly':'yes','class':'span8'} } ) }}
-                     </div>
-                 </div> 
-                 <div class="span1">
-                     <table border="1">
-                                      <tr>
-                                          <td>
-                                              <center><img height="30px" width="30px" src="{{ asset('bundles/minsalsifda/images/Flecha5.png') }}" onclick="asignarFeriado()"/></center>
-                                          </td>
-                                      </tr>
-                                      <tr>
-                                          <td>
-                                             <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarFecha()"/></center>
-                                          </td>
-                                      </tr>
-                                  </table>
-                 </div>
-                <div class="span3">   
-                    {{form_row(form.fechaFestiva)}}
-                </div> 
-                
-                <div class="span2"> 
-                    <br><br>
-                    <center>{{form_row(form.submit,{'attr':{'class':'btn btn-primary'} })}}</center>
-                </div>    
+
+                     <div class="span3 offset1">
+                         <div id="fechaInicio_ctlferiado">
+                             <center>{{form_row(form.fechaInicio, {'attr':{'readonly':'yes','class':'span8'} } ) }}</center>
+                         </div>
+                         <div id="fechaFin_ctlferiado">
+                             <center>{{form_row(form.fechaFin, {'attr':{'readonly':'yes','class':'span8'} } ) }}</center>
+                         </div>
+                     </div> 
+
+                     <div class="span1">
+                         <br>
+                         <table border="1">
+                              <tr>
+                                  <td>
+                                      <center><img height="30px" width="30px" src="{{ asset('bundles/minsalsifda/images/Flecha5.png') }}" onclick="asignarFeriado()"/></center>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                     <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarFecha()"/></center>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                     <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/deleteTodos.png') }}" onclick=" limpiarListbox()"/></center>
+                                  </td>
+                              </tr>
+                          </table>
+                         </div>
+                        <div class="span4">   
+                            {#{{form_row(form.fechaFestiva)}}#}
+                            {{form_row(form.fechaFestiva)}}
+                        </div> 
+                    </div>
+                </div>                  
+             </div>
+            <br>
+            <div class="row-fluid">    
+                <div class="span12">
+                    <br>
+                    <center>
+                        <table id="botones">
+                            <tr> 
+                               <td>{{form_row(form.submit,{'attr':{'class':'btn btn-primary', 'onclick':'recuperarFechasElegidas()'} })}}</td>                                   
+{#                               <input type="submit" class="btn" value="Aceptar" onclick="recuperarFechasElegidas()"/>#}
+                            </tr>    
+                        </table>
+                    </center>
+                    <br>
                 </div>
-                 
-                 
-             </div> 
-         </div>       
+            </div>                
+        </div>       
     {{form_end(form)}}
 {% endblock %}
 {% block javascripts_step %}
