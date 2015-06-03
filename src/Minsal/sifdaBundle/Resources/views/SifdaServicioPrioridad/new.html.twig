@@ -19,7 +19,7 @@
                 </div>
             </div>
             <div class="row-fluid">    
-                <div class="span4 offset1">
+                <div class="span4">
                     <br>
                     {{form_row(form.establecimiento, {'attr': {'class':'span10', 'onchange':'buscarEstablecimientoDependencia("../solicitudservicio/find_dependencia_solicitud", "../solicitudservicio/find_select_dependencia")'} })}}
                     {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}
@@ -35,7 +35,7 @@
                         </tr>
                         <tr>
                             <td>
-                                 <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarFecha()"/></center>
+                                 <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarPrioridadServicio()"/></center>
                             </td>
                         </tr>
                         <tr>
@@ -45,7 +45,7 @@
                         </tr>
                     </table>
                 </div>
-                <div class="span5">
+                <div class="span6">
                     <br>
                     {{form_row(form.servicioPrioridad, {'attr': {'class':'span11'} })}}
                 </div>
@@ -54,7 +54,7 @@
                 
                     <div class="span2 offset4">
                         <br>
-                        <center>{{form_row(form.submit,{'attr':{'class':'btn btn-primary', 'onclick':'recuperarElegidas()'} })}}</center>
+                        <center>{{form_row(form.submit,{'attr':{'class':'btn btn-primary', 'onclick':'getPrioridadServicioElegidos()'} })}}</center>
                     </div>
                     <div class="span2">
                         <br>
@@ -65,13 +65,6 @@
         </div>
     </div>
 
-        {#<ul class="record_actions">
-    <li>
-        <a href="{{ path('sifda_servicioprioridad') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>#}
     {{form_end(form)}}        
 {% endblock %}
 {% block javascripts_step %}

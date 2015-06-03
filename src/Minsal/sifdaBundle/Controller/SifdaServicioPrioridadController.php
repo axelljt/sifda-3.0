@@ -55,13 +55,21 @@ class SifdaServicioPrioridadController extends Controller
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        $data=array(); 
+        $parameters = $request->request->all();
+        foreach($parameters as $p){
+            $data = $p['servicioPrioridad'];
+        }
+        
+//        if ($form->isValid()) {
+        if($data){
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('sifda_servicioprioridad_show', array('id' => $entity->getId())));
-        }
+        //    return $this->redirect($this->generateUrl('sifda_servicioprioridad_show', array('id' => $entity->getId())));
+        }    
+//        }
 
         return array(
             'entity' => $entity,
