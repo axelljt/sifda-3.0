@@ -234,7 +234,7 @@ function calendarEnlazadoVacaciones(id_txt1,id_txt2, data){
     
 } //Fin de Fecha Enlazada Vacaciones
 
-function calendarAsuetoOrden(id_txt1, data){
+function calendarAsuetoOrden(id_txt1, anio, mes, dia, data){
     
     var fecha = new Date();
     
@@ -253,8 +253,8 @@ function calendarAsuetoOrden(id_txt1, data){
 			 showAnim:'show',
                          changeMonth: true,
 			 changeYear: true,
-                         minDate: new Date(fecha.getFullYear(), fecha.getMonth() - 1, fecha.getDate()), 
-//                         maxDate: "+0D",
+                         minDate: new Date(fecha.getFullYear(), fecha.getMonth(), fecha.getDate()), 
+                         maxDate: new Date(anio, mes - 1, dia), 
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,

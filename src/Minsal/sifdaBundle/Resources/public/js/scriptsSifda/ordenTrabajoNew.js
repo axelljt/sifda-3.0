@@ -5,15 +5,19 @@ $(document).ready(function (){
         
 });
 
-function buscarFechasFeriado(ruta){
+function buscarFechasFeriado(ruta, anio, mes, dia){
     var fecha = new Date();
     var anio = fecha.getFullYear();
+    
+//    alert(anio);
+//    alert(mes);
+//    alert(dia);
     $.post(ruta,
         {
             anio: anio
             },function(data){
                 console.log( data );
-                calendarAsuetoOrden('minsal_sifdabundle_sifdaordentrabajo_fechaFinalizacion', data.query)
+                calendarAsuetoOrden('minsal_sifdabundle_sifdaordentrabajo_fechaFinalizacion', anio, mes, dia, data.query)
             }, "json"
         );
                 

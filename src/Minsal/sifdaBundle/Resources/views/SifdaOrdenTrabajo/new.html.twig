@@ -52,7 +52,9 @@
                     </tbody>
                 </table>
             </div>
-                        
+                {% set anioRequiere = solicitud.fechaRequiere|date('Y') %}  
+                {% set mesRequiere = solicitud.fechaRequiere|date('m') %}
+                {% set diaRequiere = solicitud.fechaRequiere|date('d') %}
                 <br>
                 {# Si la solicitud de servicio tiene ordenes de trabajo generadas #}
                 {% if solicitudOrden %}
@@ -67,15 +69,13 @@
                                 {% if subetapaEtapa %}
                                     {{form_row(form.idSubEtapa, {'attr': {'class':'span8'} })}}
                                 {% endif %}
-                                {#{{form_row(form.establecimiento, {'attr': {'class':'span10'} })}}
-                                {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}#}
                                 {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la orden de trabajo'} })}}
                                 
                             </div>
                             <div class="span5 offset1"> 
                                 {{form_row(form.idPrioridad)}}
                                 {{form_row(form.observacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
-                                {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes'} })}}
+                                {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario",' ~  anioRequiere ~ ',' ~  mesRequiere ~ ',' ~  diaRequiere ~ ') '} })}}
                             </div>
                         </div>
                         <br><br>
@@ -134,7 +134,7 @@
                         <div class="span5 offset1"> 
                             {{form_row(form.idPrioridad)}}
                             {{form_row(form.observacion, {'attr': {'class':'input-xlarge', 'placeholder': 'Observacion sobre la orden de trabajo'} })}}
-                            {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario")'} })}}
+                            {{form_row(form.fechaFinalizacion,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario",' ~  anioRequiere ~ ',' ~  mesRequiere ~ ',' ~  diaRequiere ~ ') '} })}}
                         </div>
                     </div>
                     <br><br>
@@ -157,7 +157,6 @@
                 {% endif %}                
             </div>
         </div> 
-               {# {{ ordenActualId }}#}
 {% endblock %}
 
 {% block javascripts_step %}

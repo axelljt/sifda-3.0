@@ -1,0 +1,80 @@
+{% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    {{form_start(form)}}
+    {#{{form_errors(form)}} #}
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>Usuario:</td><td style="width: 120px;height:14px;">{{usuario.IdEmpleado}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+    <div class="page-header">
+        <center><h3>Asignacion de prioridad a tipo de servicio</h3></center>
+    </div>
+    <div class="row-fluid">
+        <div class="span10 offset1">
+            <div class="row-fluid">   
+                <div class="span12">
+                    <center>{{form_row(form.idTipoServicio, {'attr': {'class':'span4'} })}}</center>
+                </div>
+            </div>
+            <div class="row-fluid">    
+                <div class="span4 offset1">
+                    <br>
+                    {{form_row(form.establecimiento, {'attr': {'class':'span10', 'onchange':'buscarEstablecimientoDependencia("../solicitudservicio/find_dependencia_solicitud", "../solicitudservicio/find_select_dependencia")'} })}}
+                    {{form_row(form.dependencia, {'attr': {'class':'span10'} })}}
+                    {{form_row(form.idPrioridad, {'attr': {'class':'span10'} })}}
+                </div>
+                <div class="span1">
+                    <br><br>
+                    <table class="record_properties">
+                        <tr>
+                            <td>
+                                  <center><img height="30px" width="30px" src="{{ asset('bundles/minsalsifda/images/Flecha5.png') }}" onclick="asignarPrioridad()"/></center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                 <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/delete2.png') }}" onclick=" eliminarFecha()"/></center>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                 <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/deleteTodos.png') }}" onclick=" limpiarListbox()"/></center>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="span5">
+                    <br>
+                    {{form_row(form.servicioPrioridad, {'attr': {'class':'span11'} })}}
+                </div>
+            </div>    
+            <div class="row-fluid">  
+                
+                    <div class="span2 offset4">
+                        <br>
+                        <center>{{form_row(form.submit,{'attr':{'class':'btn btn-primary', 'onclick':'recuperarElegidas()'} })}}</center>
+                    </div>
+                    <div class="span2">
+                        <br>
+                        <center><a href="{{ path('sifdatiposervicio')}}" class="btn">Regresar</a></center>
+                    </div>
+                    
+            </div>
+        </div>
+    </div>
+
+        {#<ul class="record_actions">
+    <li>
+        <a href="{{ path('sifda_servicioprioridad') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>#}
+    {{form_end(form)}}        
+{% endblock %}
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/servicioPrioridadNew.js')}}"></script>
+{% endblock %} 

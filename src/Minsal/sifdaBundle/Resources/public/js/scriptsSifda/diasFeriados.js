@@ -17,6 +17,10 @@ $(document).ready(function(){
         $('#fechaFin_ctlferiado').show("slow"); 
         calendarEnlazado('minsal_sifdabundle_ctlferiado_fechaInicio', 'minsal_sifdabundle_ctlferiado_fechaFin');
     });    
+    
+//    $("#buscar").click(function(){
+//        $.blockUI({ message: "Espere un instante" }); 
+//   });         
 });
 
 
@@ -176,6 +180,7 @@ function OrdenarListBoox(lista){
 
 function recuperarFechasElegidas(){
     
+    $.blockUI({ message: "Espere un instante" }); 
     var lista=document.getElementById("minsal_sifdabundle_ctlferiado_fechaFestiva");
     var fechaFestiva = new Array();
     
