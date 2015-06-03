@@ -460,7 +460,7 @@ class SifdaSolicitudServicioController extends Controller
 //             $em = $this->getDoctrine()->getManager();
              
              $idusuario=  $this->getUser()->getId();
-             $username=  $this_>getUser()->getNombre();
+//             $username=  $this->getUser()->getNombre();
              $rsm = new ResultSetMapping();
              
 //             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);

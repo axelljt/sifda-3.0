@@ -15,6 +15,8 @@ $(document).ready(function (){
      $('#Finalizado').hide("slow");
      $('#msgFinalizado').hide("slow");
      $('#rangoFinTabla').show("slow");
+     
+     
     
     calendarEnlazado('txt_fechaInicio','txt_fechaFin');
 });

@@ -22,6 +22,7 @@ function calendarNormal(id_txt1){
 			 firstDay: 1,
 			 isRTL: false,
 			 showMonthAfterYear: false,
+                         beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
 			 yearSuffix: '',
                         
 			 
@@ -62,6 +63,7 @@ function calendarAnioActual(id_txt1){
 			 firstDay: 1,
 			 isRTL: false,
 			 showMonthAfterYear: false,
+                         beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
 			 yearSuffix: '',
                         
 			 
@@ -98,8 +100,10 @@ function calendarEnlazado(id_txt1,id_txt2){
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,
+                         
 			 showMonthAfterYear: false,
-			 			                         
+			 beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },			                         
+                         
                          onClose: function (selectedDate) {
                          
                           $("#"+id_txt1).datepicker("option", "maxDate", selectedDate);
@@ -152,7 +156,8 @@ function calendarEnlazadoVacaciones(id_txt1,id_txt2, data){
          firstDay: 1,
          isRTL: false,
          showMonthAfterYear: false,
-
+         
+         beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
          onClose: function (selectedDate) {
 
           $("#"+id_txt1).datepicker("option", "maxDate", selectedDate);
@@ -259,6 +264,7 @@ function calendarAsuetoOrden(id_txt1, anio, mes, dia, data){
 			 firstDay: 1,
 			 isRTL: false,
 			 showMonthAfterYear: false,
+                         beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
 			 yearSuffix: '',
                          beforeShowDay: DisableDays
 			 
