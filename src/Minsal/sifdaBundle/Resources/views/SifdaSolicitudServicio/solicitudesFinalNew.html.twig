@@ -4,27 +4,7 @@
     {{parent()}}
         <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/solicitudesFinalNew.js')}}"></script>
 
-        <script>
-                //var anio=2015;
-                {#var fecha = new Date();
-                var anio = fecha.getFullYear();
-                
-                $("#txt_fechaInicio").click(function (){
-
-                $.post('{{path('sifda_ctlferiado_llenar_calendario')}}',
-                    {
-                        anio: anio
-                        },function(data){
-                            console.log( data );
-                            calendarEnlazadoVacaciones('txt_fechaInicio','txt_fechaFin', data.query)
-                        }, "json"
-                    );
-                    
-                });//Fin prueba#}
-            
-        </script>
-
-{% endblock %}   
+    {% endblock %}   
 
 {% block contenido_in  %}
     
@@ -81,7 +61,7 @@
                              </td>
                              
                              <td style="width: 50px; height:30px"><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar" onclick="buscarSolicitudesFinal('{{path('sifda_solicitudservicio_buscar_finalizadas2')}}')"></td>
-                             <td><input type="submit" class="btn btn-primary" id="export" value="Exportar" name="Exportar" onclick="mostrarDependencia()"></td>
+                             <td><input type="submit" class="btn btn-primary" id="export" value="Exportar" name="Exportar" onclick="exportfile()"></td>
                             
                          </tr>
                      </table>

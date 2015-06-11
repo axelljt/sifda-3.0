@@ -18,19 +18,21 @@ class SifdaServicioPrioridadType extends AbstractType
         $builder
             ->add('idTipoServicio')
             ->add('establecimiento', 'entity', array(
+                    'required'      =>  false,
                     'label'         =>  'Establecimiento',
                     'empty_value'=>'Seleccione un establecimiento',
                     'class'         =>  'MinsalsifdaBundle:CtlEstablecimiento',
                     'mapped' => false
                 ))
             ->add('dependencia','entity', array(
+                    'required'      =>  false,
                     'mapped'=>false,
                     'empty_value'=>'Seleccione una dependencia',
                     'class'=>'MinsalsifdaBundle:CtlDependencia',
                     'choices' => array()
                 ))    
             ->add('idPrioridad', 'entity', array(
-                    'required'      =>  true,
+                    'required'      =>  false,
                     'label'         =>  'Prioridad',    
                     'empty_value'=>'Seleccione una prioridad',
                     'class'         =>  'MinsalsifdaBundle:CatalogoDetalle',

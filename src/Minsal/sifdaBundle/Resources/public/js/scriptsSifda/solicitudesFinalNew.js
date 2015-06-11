@@ -48,17 +48,19 @@ function exportfile(user){
     var graf=document.getElementById('grafico').checked;
     var user=document.getElementById('txtuser').value;
     var iduser=document.getElementById('txtiduser').value;
+    var idestab=document.getElementById('cmb1').value;
+    var iddep=document.getElementById('cmb2').value;
        
     if(pdf !==false)
     {
-      alert('llamada pdf');  
+     //alert('llamada pdf');  
       
-      window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);  
+      window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user+'&estab='+idestab+'&dep='+iddep);  
     }
        
     
     if(excel !== false)
-        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);
+        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user+'&dep='+mostrarDependencia());
 //       alert('excel:'+excel);
     
     if(graf!== false)   
@@ -121,7 +123,8 @@ function buscarSolicitudesFinal(ruta){
           
           var posicion=document.getElementById('cmb2').options.selectedIndex;
           var valor=document.getElementById('cmb2').options[posicion].text;
-          alert(valor);  
+          alert(valor); 
+          return valor.val();
       } 
       
       function mostraruserid(){ 

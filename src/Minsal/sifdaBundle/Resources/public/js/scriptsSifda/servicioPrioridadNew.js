@@ -105,7 +105,7 @@ function eliminarPrioridadServicio(){
     if (lista.options.selectedIndex !== -1)
         lista.options[lista.selectedIndex]=null;
     else
-        alert('No hay elementos para remover');
+        alert('No hay elemento seleccionado para remover');
     
 }//  Fin de eliminarPrioridadServicio
 
@@ -124,7 +124,7 @@ function limpiarListbox(){
 
 function getPrioridadServicioElegidos(){
     
-//    $.blockUI({ message: "Espere un instante" }); 
+    $.blockUI({ message: "Espere un instante" }); 
     var lista=document.getElementById("minsal_sifdabundle_sifdaservicioprioridad_servicioPrioridad");
     var servicioPrioridad = new Array();
     

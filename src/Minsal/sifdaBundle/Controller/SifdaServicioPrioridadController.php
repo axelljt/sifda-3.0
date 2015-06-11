@@ -54,25 +54,30 @@ class SifdaServicioPrioridadController extends Controller
         $entity = new SifdaServicioPrioridad();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
-        $data=array(); 
+        
+        $idusuario=  $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
+        
+        $idTipoServicio = $form->get('idTipoServicio')->getData(); 
+        
         $parameters = $request->request->all();
+
         foreach($parameters as $p){
             $data = $p['servicioPrioridad'];
         }
-        
+
 //        if ($form->isValid()) {
         if($data){
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
-
-        //    return $this->redirect($this->generateUrl('sifda_servicioprioridad_show', array('id' => $entity->getId())));
+            $this->establecerServicioPrioridad($data, $idTipoServicio);
+//            return $this->redirect($this->generateUrl('sifda_servicioprioridad'));
+            return $this->redirect($this->generateUrl('sifdatiposervicio'));
         }    
 //        }
 
         return array(
             'entity' => $entity,
+            'usuario' => $usuario,
             'form'   => $form->createView(),
         );
     }
@@ -280,5 +285,51 @@ class SifdaServicioPrioridadController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+    
+        /**
+     * Metodo que sirve para establecer las fechas festivas del anio.
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $data
+     *
+     */
+    private function establecerServicioPrioridad(array $data, 
+                                                 \Minsal\sifdaBundle\Entity\SifdaTipoServicio $idTipoServicio)
+    {
+        foreach ($data as $prioridadServicio)
+        {
+            $entity = new SifdaServicioPrioridad();
+            $entity->setIdTipoServicio($idTipoServicio);
+            
+            $elem = explode(" - ", $prioridadServicio);
+            $dependencia = $elem[0];
+            $establecimiento = $elem[1];
+            $prioridad = $elem[2];
+            
+            $em = $this->getDoctrine()->getManager();
+            $idPrioridad = $em->getRepository('MinsalsifdaBundle:CatalogoDetalle')->findOneBy(array('descripcion' => $prioridad));
+            $entity->setIdPrioridad($idPrioridad);
+            
+            $idEstablecimiento = $em->getRepository('MinsalsifdaBundle:CtlEstablecimiento')->findBy(array(
+                                                                                            'nombre' => $establecimiento
+                                                                                          ));
+            
+            $idDependencia = $em->getRepository('MinsalsifdaBundle:CtlDependencia')->findBy(array(
+                                                                                            'nombre' => $dependencia
+                                                                                          ));
+            
+            $idDependenciaEstablecimiento = $em->getRepository('MinsalsifdaBundle:CtlDependenciaEstablecimiento')->findOneBy(array(
+                                                           'idEstablecimiento' => $idEstablecimiento,
+                                                           'idDependencia' => $idDependencia,
+                                                            ));
+            
+            if (!$idDependenciaEstablecimiento) {
+                throw $this->createNotFoundException('Unable to find CtlDependenciaEstablecimiento entity.');
+            }
+            $entity->setIdDependenciaEstablecimiento($idDependenciaEstablecimiento);
+
+            $em->persist($entity);
+            $em->flush();
+        }    
     }
 }

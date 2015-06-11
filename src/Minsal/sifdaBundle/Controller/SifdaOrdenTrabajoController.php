@@ -890,26 +890,85 @@ class SifdaOrdenTrabajoController extends Controller
     }
     
     /**
-    * Ajax utilizado para buscar rango de fechas, dependencia y tipo de servicio
+    * Ajax utilizado para buscar rango de fechas, dependencia y establecimiento
     *  
-    * @Route("/buscar/seguimiento", name="sifda_seguimiento_buscar_solicitud")
+    * @Route("/buscarSeguimientoSolicitudFiltro", name="sifda_seguimiento_buscar_solicitud")
     */
     public function buscarSeguimientoAction()
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
         if($isAjax){
-             $fechaInicio = $this->get('request')->request->get('fechaInicio');
-             $fechaFin = $this->get('request')->request->get('fechaFin');
-             $establecimiento = $this->get('request')->request->get('establecimiento');
-             $dependencia = $this->get('request')->request->get('dependencia');
-             $tipoServicio = $this->get('request')->request->get('tipoServicio');
-             
-             $em = $this->getDoctrine()->getManager();
-             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->FechaSeguimiento($fechaInicio, $fechaFin, $establecimiento, $dependencia, $tipoServicio);
-             $mensaje = $this->renderView('MinsalsifdaBundle:SifdaOrdenTrabajo:seguimientoShow.html.twig' , array('solicitudes' =>$solicitudes));
-             $response = new JsonResponse();
-             return $response->setData($mensaje);
+            $establecimiento = $this->get('request')->request->get('establecimiento');
+            $dependencia = $this->get('request')->request->get('dependencia');
+            $fechaInicio = $this->get('request')->request->get('fechaInicio');
+            $fechaFin = $this->get('request')->request->get('fechaFin');
+            $em = $this->getDoctrine()->getEntityManager();
+
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('corr','corr');
+            $rsm->addScalarResult('descripcion','descripcion');
+            $rsm->addScalarResult('fecha_requiere','fecha_requiere');
+            $rsm->addScalarResult('fecha_recepcion','fecha_recepcion');
+            $rsm->addScalarResult('tipo_servicio','tipo_servicio');
+            $rsm->addScalarResult('solicitante','solicitante');
+            $rsm->addScalarResult('dependencia','dependencia');
+            $rsm->addScalarResult('prioridad','prioridad');
+            
+            $sql = "select distinct ss.id as corr, ss.descripcion as descripcion, "
+                      . "ss.fecha_requiere as fecha_requiere, "
+                      . "ss.fecha_recepcion as fecha_recepcion, "
+                      . "ser.servicio as tipo_servicio, "
+                      . "em.nombre|| ' ' ||em.apellido as solicitante, "
+                      . "dep.nombre|| ' ' ||est.nombre as dependencia, "
+                      . "ser.prioridad as prioridad "
+                 . "from sifda_solicitud_servicio ss "
+                      . "inner join fos_user_user us on ss.user_id = us.id "
+                      . "inner join ctl_empleado em on us.id_empleado = em.id "
+                      . "inner join ctl_dependencia_establecimiento de on us.id_dependencia_establecimiento = de.id "
+                      . "inner join ctl_dependencia dep on de.id_dependencia = dep.id "
+                      . "inner join ctl_establecimiento est on de.id_establecimiento = est.id "
+                      . "inner join (select ts.id id_servicio, "
+                                   . "ts.nombre servicio, "
+                                   . "sp.id_dependencia_establecimiento dependencia, "
+                                   . "case when cd.descripcion = 'Urgente' then 1 "
+                                           . "when cd.descripcion = 'Alta' then 2 "
+                                           . "when cd.descripcion = 'Media' then 3 "
+                                           . "else 4 "
+                                   . "end prioridad "
+                                   . "from sifda_tipo_servicio ts "
+	                           . "left outer join sifda_servicio_prioridad sp "
+                                       . "on sp.id_tipo_servicio = ts.id"
+                                   . " left outer join catalogo_detalle cd "
+                                       . "on sp.id_prioridad = cd.id) ser on ser.id_servicio = ss.id_tipo_servicio "
+                 . "where  ss.id_estado = 2 and ser.dependencia = us.id_dependencia_establecimiento";
+
+            if ($establecimiento != 0){
+                $sql.= " and de.id_establecimiento = '$establecimiento'";
+            }
+            
+            if ($dependencia != 0){
+                " and de.id_dependencia = '$dependencia'";
+            }
+            
+            if ( $fechaInicio != null && $fechaFin != null){
+                $sql.=" and ss.fecha_recepcion >= '$fechaInicio' and ss.fecha_recepcion <= '$fechaFin'";
+            }
+            
+            $sql.= " order by ser.prioridad, ss.fecha_recepcion";
+            
+            $query = $em->createNativeQuery($sql, $rsm);
+            $resultado = $query->getResult();
+            
+            $response = new JsonResponse();
+            $response->setData(array(
+                                'query' => $resultado
+                                ));
+            
+            return $response; 
+            
         }else
-            {   return new Response('0');   }       
+        {   
+            return new Response('0');              
+        } 
     }
 }

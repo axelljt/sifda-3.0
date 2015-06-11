@@ -18,6 +18,7 @@ function Header()
 $temp_un = $_REQUEST['un'];
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
+$temp_estab = $_REQUEST['estab'];
 $temp_dep = $_REQUEST['dep'];
 
 $fechafi = date("d-m-Y", strtotime($temp_fi));
@@ -193,12 +194,13 @@ $temp_tipo = $_REQUEST['tp'];
 $datos = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
-inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
-inner join public.ctl_dependencia de on (de.id = $dep)
-where id_estado=4 
-and fecha_recepcion >= $temp_fi and fecha_recepcion <=$temp_ff
-group by (sts.nombre)");
+    inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
+    inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+    inner join public.ctl_establecimiento est on (dep.id_establecimiento = est.id)
+        inner join public.ctl_dependencia de on (dep.id_dependencia = de.id)
+    where id_estado=4 
+    and fecha_recepcion >= $temp_fi and fecha_recepcion <=$temp_ff
+    group by (sts.nombre)");
 
     $suma = 0;
         

@@ -72,7 +72,7 @@ class SifdaServicioPrioridad
      * @param \Minsal\sifdaBundle\Entity\CtlDependenciaEstablecimiento $idDependenciaEstablecimiento
      * @return SifdaServicioPrioridad
      */
-    public function setIdDependenciaEstablecimiento(\Minsal\sifdaBundle\Entity\CtlDependenciaEstablecimiento $idDependenciaEstablecimiento = null)
+    public function setIdDependenciaEstablecimiento(\Minsal\sifdaBundle\Entity\CtlDependenciaEstablecimiento $idDependenciaEstablecimiento)
     {
         $this->idDependenciaEstablecimiento = $idDependenciaEstablecimiento;
 
