@@ -92,7 +92,7 @@ function buscarSolicitudesFinal(ruta){
                            
                             res=data.val;
                            
-                           if(res=="0"){
+                           if(res==="0"){
                                
                                 $('#msgFinalizado').show("slow");
                                 $("#rangoFinTabla").hide("slow");

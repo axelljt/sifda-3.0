@@ -1,38 +1,51 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
-{% block contenido_in -%}
-    <div class="page-header">
-        <center><h4>Consolidado de solicitudes de servicio por tipo de servicio</h4></center>
-    </div>     
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/Vencimiento.js')}}"></script>
+
+    {% endblock %}   
+   
+
+{% block contenido_in %}
+   
+     <center><h4>Listado de solicitudes Proximas a Vencer </h4></center>
+    {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
     <table style="margin-left: 70%;" border="0">
         <tr>
-            <td>Usuario:</td><td style="width: 120px;height:14px;">{{usuario.IdEmpleado}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+            <td>usuario:</td><td style="width: 60px;height:14px;">{{usuario.username}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
         </tr>
         <tr></tr>
-    </table>
+    </table>  
+     
     <div class="row-fluid">
         <div class="span11 offset1">
             <div class="row-fluid">
                 <div class="span2">
-                    <table>
+                    <table class="table table-bordered table-hover table-condensed">
                         <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="pdf" value="1">pdf</td>
+                            <th><center>Prioridad</center></th>                           
                         </tr>
-                        <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="excel" value="2">excel</td>
+                        <tr class="error">
+                            <td><center>Urgente</center></td>
                         </tr>
-                        <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td>
-                        </tr>    
+                        <tr class="warning">
+                            <td><center>Alta</center></td>
+                        </tr>
+                        <tr class="success">
+                            <td><center>Media</center></td>
+                        </tr>
+                        
                     </table>    
                 </div> 
                 <div class="span4" >
+                    <br><br>
                     <table>
                         <tr>
                             <td><label>Establecimiento:</label></td>
                             <td>
                                 <div class="btn-group">
-                                    <select id="cmb1" name="comboEstablecimiento"  class="selectpicker" style="width: 200px" onchange="buscarDependencia('{{path('sifda_solicitudservicio_find_dependencia')}}')">
+                                    <select id="cmb1" name="comboEstablecimiento"  class="selectpicker" style="width: 200px" onchange="buscarDependencia('{{path('sifda_solicitudservicio_find_dependencia')}}');">
                                         <option value="0">Seleccione...</option>                                       
                                         {% for e in establecimiento %}
                                             <option value="{{e.id}}">{{e.nombre}}</option>
@@ -54,7 +67,8 @@
                     </table> 
                     <br>                
                 </div>
-                <div class="span3" > 
+                <div class="span4" > 
+                    <br><br>
                     <table>
                         <tr>
                             <td><label>Fecha de inicio:</label></td>
@@ -63,14 +77,15 @@
                         <tr>
                             <td><label>Fecha de fin:</label></td>
                             <td><input type="text" id="txt_fechaFin" class="input-small" ></td>
+                            <td style="width: 8px; height: 16px;"></td>
+                            <td><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar"></td>
                         </tr>
                     </table> 
                     <br>
                 </div> 
                 <div class="span2 ">
-                    <br><br>
-                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
-                    <br><br>
+
+                    
                 </div>    
             </div>        
         </div>
@@ -87,10 +102,5 @@
             <center><h4>No se encontraron solicitudes de servicio</h4></center>
     </div>
     <br>
-{% endblock %}
-
-{% block javascripts_step %}
-    {{ parent() }}
-    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/consolidadoTipoServicio.js')}}"></script>
-    
-{% endblock%}   
+     
+{% endblock %}    

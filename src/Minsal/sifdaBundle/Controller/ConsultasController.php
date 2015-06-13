@@ -312,8 +312,9 @@ class ConsultasController extends Controller
         if($isAjax){
             $establecimiento = $this->get('request')->request->get('establecimiento');
             $dependencia = $this->get('request')->request->get('dependencia');
-//            $fechaInicio = $this->get('request')->request->get('fechaInicio');
-//            $fechaFin = $this->get('request')->request->get('fechaFin');
+            $fechaInicio = $this->get('request')->request->get('fechaInicio');
+            $fechaFin = $this->get('request')->request->get('fechaFin');
+//            $fecha = $this->get('request')->request->get('fechaSistema');
             $em = $this->getDoctrine()->getEntityManager();
 
             $rsm = new ResultSetMapping();
@@ -338,12 +339,15 @@ class ConsultasController extends Controller
                     . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15 "
                     . "and ss.id_estado NOT IN (3, 4)";
 
-//            if ($establecimiento != 0){
+            if ($establecimiento != 0){
                 $sql.= " and depest.id_establecimiento = '$establecimiento'";
-//            }
-//            if ($dependencia != 0){
+            }
+            if ($dependencia != 0){
                 $sql.= " and depest.id_dependencia = '$dependencia'";
-//            }                        
+            }              
+            if ( $fechaInicio != null && $fechaFin != null){
+                $sql.=" and ss.fecha_recepcion >= '$fechaInicio' and ss.fecha_recepcion <= '$fechaFin'";
+            }
             $sql.= " order by ss.fecha_requiere";
             
             $query = $em->createNativeQuery($sql, $rsm);
@@ -371,12 +375,14 @@ class ConsultasController extends Controller
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
         if($isAjax){
-            $establecimiento = $this->get('request')->request->get('establecimiento');
-            $dependencia = $this->get('request')->request->get('dependencia');
+//            $establecimiento = $this->get('request')->request->get('establecimiento');
+//            $dependencia = $this->get('request')->request->get('dependencia');
 //            $fechaInicio = $this->get('request')->request->get('fechaInicio');
 //            $fechaFin = $this->get('request')->request->get('fechaFin');
+             $fecha = $this->get('request')->request->get('fechaSistema');
             $em = $this->getDoctrine()->getEntityManager();
 
+            
             $rsm = new ResultSetMapping();
 //            $rsm->addScalarResult('corr','corr');
 //            $rsm->addScalarResult('dependencia','dependencia');
@@ -397,10 +403,10 @@ class ConsultasController extends Controller
                     . "and ss.id_estado NOT IN (3, 4)";
             
 //            if ($establecimiento != 0){
-                $sql.= " and depest.id_establecimiento = '$establecimiento'";
+//                $sql.= " and depest.id_establecimiento = '$establecimiento'";
 //            }            
 //            if ($dependencia != 0){
-                $sql.= " and depest.id_dependencia = '$dependencia'";
+//                $sql.= " and depest.id_dependencia = '$dependencia'";
 //            }                        
 //            $sql.= " order by ss.fecha_requiere";
             

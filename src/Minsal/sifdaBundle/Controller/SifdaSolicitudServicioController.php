@@ -1419,6 +1419,29 @@ class SifdaSolicitudServicioController extends Controller
             ->getForm()
         ;
     }
-     
+   
+    
+    /**
+     * Lists all SifdaSolicitudServicio entities.
+     *
+     * @Route("/sifda/vencimiento", name="sifda_solicitudservicio_vencimiento")
+     * @Method("GET")
+     * @Template()
+     */
+    
+    public function vencimientoAction()
+    {
+        $id_usuario=$this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario=$em->getRepository('MinsalsifdaBundle:FosUserUser')->find($id_usuario);
+        
+        $establecimiento= $em->getRepository('MinsalsifdaBundle:CtlEstablecimiento')->findAll();
+        $tiposervicio= $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->findBy(array('idDependenciaEstablecimiento'=>$usuario->getIdDependenciaEstablecimiento()));
+        
+        return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:Vencimiento.html.twig',array('usuario'=>$usuario, 
+            'tiposervicio'=>$tiposervicio,
+            'establecimiento'=>$establecimiento));   
+        
+    }
     
 }
