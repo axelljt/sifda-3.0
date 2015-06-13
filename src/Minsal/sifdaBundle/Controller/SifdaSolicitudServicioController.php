@@ -541,33 +541,27 @@ class SifdaSolicitudServicioController extends Controller
             $rsm->addScalarResult('dependencia','dependencia');
             $rsm->addScalarResult('prioridad','prioridad');
             
-            $sql = "select distinct ss.id as corr, ss.descripcion as descripcion, "
-                      . "ss.fecha_requiere as fecha_requiere, "
-                      . "ss.fecha_recepcion as fecha_recepcion, "
-                      . "ser.servicio as tipo_servicio, "
-                      . "em.nombre|| ' ' ||em.apellido as solicitante, "
-                      . "dep.nombre|| ' ' ||est.nombre as dependencia, "
-                      . "ser.prioridad as prioridad "
-                 . "from sifda_solicitud_servicio ss "
-                      . "inner join fos_user_user us on ss.user_id = us.id "
-                      . "inner join ctl_empleado em on us.id_empleado = em.id "
-                      . "inner join ctl_dependencia_establecimiento de on us.id_dependencia_establecimiento = de.id "
-                      . "inner join ctl_dependencia dep on de.id_dependencia = dep.id "
-                      . "inner join ctl_establecimiento est on de.id_establecimiento = est.id "
-                      . "inner join (select ts.id id_servicio, "
-                                   . "ts.nombre servicio, "
-                                   . "sp.id_dependencia_establecimiento dependencia, "
-                                   . "case when cd.descripcion = 'Urgente' then 1 "
-                                           . "when cd.descripcion = 'Alta' then 2 "
-                                           . "when cd.descripcion = 'Media' then 3 "
-                                           . "else 4 "
-                                   . "end prioridad "
-                                   . "from sifda_tipo_servicio ts "
-	                           . "left outer join sifda_servicio_prioridad sp "
-                                       . "on sp.id_tipo_servicio = ts.id"
-                                   . " left outer join catalogo_detalle cd "
-                                       . "on sp.id_prioridad = cd.id) ser on ser.id_servicio = ss.id_tipo_servicio "
-                 . "where  ss.id_estado = 1 and ser.dependencia = us.id_dependencia_establecimiento";
+            $sql = "select distinct ss.id as corr, ss.descripcion as descripcion, 
+                            ss.fecha_requiere as fecha_requiere,
+                            ss.fecha_recepcion as fecha_recepcion,
+                            em.nombre|| ' ' ||em.apellido as solicitante,
+                            dep.nombre|| ', ' ||est.nombre as dependencia,
+                            sts.nombre as tipo_servicio,
+                            case when cd.descripcion = 'Urgente' then 1
+                                 when cd.descripcion = 'Alta' then 2
+                                 when cd.descripcion = 'Media' then 3
+                                 else 4
+                            end prioridad
+                    from sifda_solicitud_servicio ss
+                            inner join fos_user_user us on ss.user_id = us.id
+                            inner join ctl_empleado em on us.id_empleado = em.id
+                            inner join ctl_dependencia_establecimiento de on us.id_dependencia_establecimiento = de.id
+                            inner join ctl_dependencia dep on de.id_dependencia = dep.id
+                            inner join ctl_establecimiento est on de.id_establecimiento = est.id
+                            left outer join sifda_tipo_servicio sts on ss.id_tipo_servicio = sts.id
+                            left outer join sifda_servicio_prioridad ser on ser.id_tipo_servicio = sts.id and ser.id_dependencia_establecimiento = us.id_dependencia_establecimiento
+                            left outer join catalogo_detalle cd on ser.id_prioridad = cd.id
+                    where  ss.id_estado = 1 ";
 
             if ($establecimiento != 0){
                 $sql.= " and de.id_establecimiento = '$establecimiento'";
@@ -581,7 +575,7 @@ class SifdaSolicitudServicioController extends Controller
                 $sql.=" and ss.fecha_recepcion >= '$fechaInicio' and ss.fecha_recepcion <= '$fechaFin'";
             }
             
-            $sql.= " order by ser.prioridad, ss.fecha_recepcion";
+            $sql.= " order by prioridad, ss.fecha_recepcion";
             
             $query = $em->createNativeQuery($sql, $rsm);
             $resultado = $query->getResult();

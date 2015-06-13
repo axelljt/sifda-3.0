@@ -297,4 +297,123 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
                     ));
             return $response;
     }
+    
+    /**
+    * Ajax utilizado para buscar solicitudes proximas a vencer
+    *  
+    * @Route("/buscarSolicitudesVencer", name="sifda_buscar_solicitudes_vencer")
+    */
+    public function buscarSolicitudesVencerAction()
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+            $establecimiento = $this->get('request')->request->get('establecimiento');
+            $dependencia = $this->get('request')->request->get('dependencia');
+//            $fechaInicio = $this->get('request')->request->get('fechaInicio');
+//            $fechaFin = $this->get('request')->request->get('fechaFin');
+            $em = $this->getDoctrine()->getEntityManager();
+
+            $rsm = new ResultSetMapping();
+            $rsm->addScalarResult('corr','corr');
+            $rsm->addScalarResult('dependencia','dependencia');
+            $rsm->addScalarResult('establecimiento','establecimiento');
+            $rsm->addScalarResult('descripcion','descripcion');
+            $rsm->addScalarResult('fecha_requiere','fecha_requiere');
+            $rsm->addScalarResult('dias_vencer','dias_vencer');
+            
+            $sql = "select ss.id as corr, de.nombre as dependencia, "
+                    . "est.nombre as establecimiento, "
+                    . "ss.descripcion as descripcion, "
+                    . "ss.fecha_requiere as fecha_requiere, "
+                    . "EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) as dias_vencer "
+                . "from sifda_solicitud_servicio ss "
+                    . "inner join fos_user_user us on ss.user_id = us.id "
+                    . "inner join ctl_dependencia_establecimiento depest on us.id_dependencia_establecimiento = depest.id "
+                    . "inner join ctl_establecimiento est on depest.id_establecimiento = est.id "
+                    . "inner join ctl_dependencia de on depest.id_dependencia = de.id "
+                . "where EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) >= 0 "
+                    . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15 "
+                    . "ss.id_estado NOT IN (3, 4)";
+
+//            if ($establecimiento != 0){
+                $sql.= " and depest.id_establecimiento = '$establecimiento'";
+//            }
+//            if ($dependencia != 0){
+                $sql.= " and depest.id_dependencia = '$dependencia'";
+//            }                        
+            $sql.= " order by ss.fecha_requiere";
+            
+            $query = $em->createNativeQuery($sql, $rsm);
+            $resultado = $query->getResult();
+            
+            $response = new JsonResponse();
+            $response->setData(array(
+                                'query' => $resultado
+                                ));
+            
+            return $response; 
+            
+        }else
+        {   
+            return new Response('0');              
+        } 
+    }
+    
+    /**
+    * Ajax utilizado para obtener el numero de solicitudes proximas a vencer
+    *  
+    * @Route("/numeroSolicitudesVencer", name="sifda_numero_solicitudes_vencer")
+    */
+    public function obtenerNumeroSolicitudesVencerAction()
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+            $establecimiento = $this->get('request')->request->get('establecimiento');
+            $dependencia = $this->get('request')->request->get('dependencia');
+//            $fechaInicio = $this->get('request')->request->get('fechaInicio');
+//            $fechaFin = $this->get('request')->request->get('fechaFin');
+            $em = $this->getDoctrine()->getEntityManager();
+
+            $rsm = new ResultSetMapping();
+//            $rsm->addScalarResult('corr','corr');
+//            $rsm->addScalarResult('dependencia','dependencia');
+//            $rsm->addScalarResult('establecimiento','establecimiento');
+//            $rsm->addScalarResult('descripcion','descripcion');
+//            $rsm->addScalarResult('fecha_requiere','fecha_requiere');
+            $rsm->addScalarResult('cant_dias','cant_dias');
+            
+            $sql = "select count(EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) >= 0 "
+                              . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15) as cant_dias "
+                . "from sifda_solicitud_servicio ss "
+                    . "inner join fos_user_user us on ss.user_id = us.id "
+                    . "inner join ctl_dependencia_establecimiento depest on us.id_dependencia_establecimiento = depest.id "
+                    . "inner join ctl_establecimiento est on depest.id_establecimiento = est.id "
+                    . "inner join ctl_dependencia de on depest.id_dependencia = de.id "
+                . "where EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) >= 0 "
+                    . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15 "
+                    . "ss.id_estado NOT IN (3, 4)";
+            
+//            if ($establecimiento != 0){
+                $sql.= " and depest.id_establecimiento = '$establecimiento'";
+//            }            
+//            if ($dependencia != 0){
+                $sql.= " and depest.id_dependencia = '$dependencia'";
+//            }                        
+//            $sql.= " order by ss.fecha_requiere";
+            
+            $query = $em->createNativeQuery($sql, $rsm);
+            $resultado = $query->getResult();
+            
+            $response = new JsonResponse();
+            $response->setData(array(
+                                'query' => $resultado
+                              ));
+            
+            return $response; 
+            
+        }else
+        {   
+            return new Response('0');              
+        } 
+    }
 }

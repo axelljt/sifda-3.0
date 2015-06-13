@@ -1,9 +1,17 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block javascripts_step %}
+    
+        {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/indexResponsable.js')}}"></script>   
+{% endblock %}
+
 {% block contenido_in %}
-    
-    
+   
 {% block encabezado %}
+    <input type="hidden" id="txt_dependencia" style="width: 5px; height: 8px;" value="{{dependencias}}"/> 
     Fecha del sistema: {{ "now"|date("d/m/Y") }}<center><h3>Bienvenido Responsable</h3></center>
+    <input type="hidden" id="txt_fecha" style="width: 5px; height: 8px;" value="{{ "now"|date("d/m/Y") }}"/> 
+    
 {% endblock %}
     
     {#{%set count=0%}  
@@ -16,11 +24,24 @@
     {% endfor %}    
     
     {%if count>0 %}#}
-        
-        <div id="dialog">
-        
+    
+    
+    <div id="dialog" >
+       
+            {#
+                <table id="tbl_ventana">
+                    <tr>
+                        <td>
+                            <img height="10%" width="10%" src="{{ asset('bundles/minsalsifda/images/ventana/warning.png') }}"/>
+                            
+                        </td>
+                    </tr>
+                </table>#}
+                   
+                 
         </div>
-        
+       
+                          
    {# {% endif %}#}
     
 
@@ -28,15 +49,5 @@
 {#{{ entity.idDependenciaEstablecimiento == usuario.idDependenciaEstablecimiento ? "No tiene fecha asignada." : solicitud.fechaRequiere|date("Y-m-d H:i:s") }}#}
 
 {% endblock %}
-{% block javascripts_step %}
-    <script>
-        $(document).ready(function(){
-             var estado= {{dependencias}};
-                
-             if(estado!=0)
-                $('#dialog').attr('title','saved').text('Hay {{dependencias}} solicitudes Nuevas').dialog(); 
-         
-        });
-    </script>
-{% endblock %} 
+
 

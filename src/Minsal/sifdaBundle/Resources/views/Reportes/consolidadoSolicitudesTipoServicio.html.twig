@@ -8,32 +8,25 @@
         <tr></tr>
     </table>
     <div class="page-header">
-        <center><h3>Gesti&oacute;n de solicitudes de servicio</h3></center>
+        <center><h3>Consolidado de solicitudes de servicio por tipo de servicio</h3></center>
     </div>     
     <div class="row-fluid">
         <div class="span11 offset1">
             <div class="row-fluid">
                 <div class="span2">
-                    <table class="table table-bordered table-hover table-condensed">
+                    <table>
                         <tr>
-                            <th><center>Prioridad</center></th>                           
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="pdf" value="1">pdf</td>
                         </tr>
-                        <tr class="error">
-                            <td><center>Urgente</center></td>
+                        <tr>
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="excel" value="2">excel</td>
                         </tr>
-                        <tr class="warning">
-                            <td><center>Alta</center></td>
-                        </tr>
-                        <tr class="success">
-                            <td><center>Media</center></td>
-                        </tr>
-                        <tr class="info">
-                            <td><center>Baja</center></td>
-                        </tr> 
+                        <tr>
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td>
+                        </tr>    
                     </table>    
                 </div> 
                 <div class="span4" >
-                    <br><br>
                     <table>
                         <tr>
                             <td><label>Establecimiento:</label></td>
@@ -61,8 +54,7 @@
                     </table> 
                     <br>                
                 </div>
-                <div class="span4" > 
-                    <br><br>
+                <div class="span3" > 
                     <table>
                         <tr>
                             <td><label>Fecha de inicio:</label></td>
@@ -71,15 +63,14 @@
                         <tr>
                             <td><label>Fecha de fin:</label></td>
                             <td><input type="text" id="txt_fechaFin" class="input-small" ></td>
-                            <td style="width: 8px; height: 16px;"></td>
-                            <td><input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar"></td>
                         </tr>
                     </table> 
                     <br>
                 </div> 
                 <div class="span2 ">
-
-                    
+                    <br><br>
+                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+                    <br><br>
                 </div>    
             </div>        
         </div>
@@ -100,8 +91,6 @@
 
 {% block javascripts_step %}
     {{ parent() }}
-    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/gestionSolicitudes.js')}}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/consolidadoTipoServicio.js')}}"></script>
     
-    {% endblock%}
-    
-   
+{% endblock%}   
