@@ -309,8 +309,9 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
         if($isAjax){
             $establecimiento = $this->get('request')->request->get('establecimiento');
             $dependencia = $this->get('request')->request->get('dependencia');
-//            $fechaInicio = $this->get('request')->request->get('fechaInicio');
-//            $fechaFin = $this->get('request')->request->get('fechaFin');
+            $fechaInicio = $this->get('request')->request->get('fechaInicio');
+            $fechaFin = $this->get('request')->request->get('fechaFin');
+//            $fecha = $this->get('request')->request->get('fechaSistema');
             $em = $this->getDoctrine()->getEntityManager();
 
             $rsm = new ResultSetMapping();
@@ -333,14 +334,17 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
                     . "inner join ctl_dependencia de on depest.id_dependencia = de.id "
                 . "where EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) >= 0 "
                     . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15 "
-                    . "ss.id_estado NOT IN (3, 4)";
+                    . "and ss.id_estado NOT IN (3, 4)";
 
-//            if ($establecimiento != 0){
+            if ($establecimiento != 0){
                 $sql.= " and depest.id_establecimiento = '$establecimiento'";
-//            }
-//            if ($dependencia != 0){
+            }
+            if ($dependencia != 0){
                 $sql.= " and depest.id_dependencia = '$dependencia'";
-//            }                        
+            }              
+            if ( $fechaInicio != null && $fechaFin != null){
+                $sql.=" and ss.fecha_recepcion >= '$fechaInicio' and ss.fecha_recepcion <= '$fechaFin'";
+            }
             $sql.= " order by ss.fecha_requiere";
             
             $query = $em->createNativeQuery($sql, $rsm);
@@ -368,12 +372,14 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
     {
         $isAjax = $this->get('Request')->isXMLhttpRequest();
         if($isAjax){
-            $establecimiento = $this->get('request')->request->get('establecimiento');
-            $dependencia = $this->get('request')->request->get('dependencia');
+//            $establecimiento = $this->get('request')->request->get('establecimiento');
+//            $dependencia = $this->get('request')->request->get('dependencia');
 //            $fechaInicio = $this->get('request')->request->get('fechaInicio');
 //            $fechaFin = $this->get('request')->request->get('fechaFin');
+             $fecha = $this->get('request')->request->get('fechaSistema');
             $em = $this->getDoctrine()->getEntityManager();
 
+            
             $rsm = new ResultSetMapping();
 //            $rsm->addScalarResult('corr','corr');
 //            $rsm->addScalarResult('dependencia','dependencia');
@@ -391,13 +397,13 @@ vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
                     . "inner join ctl_dependencia de on depest.id_dependencia = de.id "
                 . "where EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) >= 0 "
                     . "and EXTRACT(DAY FROM (date(ss.fecha_requiere) - timestamp 'now()' ) ) <= 15 "
-                    . "ss.id_estado NOT IN (3, 4)";
+                    . "and ss.id_estado NOT IN (3, 4)";
             
 //            if ($establecimiento != 0){
-                $sql.= " and depest.id_establecimiento = '$establecimiento'";
+//                $sql.= " and depest.id_establecimiento = '$establecimiento'";
 //            }            
 //            if ($dependencia != 0){
-                $sql.= " and depest.id_dependencia = '$dependencia'";
+//                $sql.= " and depest.id_dependencia = '$dependencia'";
 //            }                        
 //            $sql.= " order by ss.fecha_requiere";
             
