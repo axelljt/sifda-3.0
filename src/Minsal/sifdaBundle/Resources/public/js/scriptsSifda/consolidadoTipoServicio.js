@@ -7,15 +7,21 @@
     $("#msjnodata").hide("slow");
     
     $("#buscar").click(function(){
+        $("#tablahead").hide("slow");
+        $("#msjnodata").hide("slow");
+        var establecimiento = $("#cmb1").val();
+        var dependencia = $("#cmb2").val();
+        var fechaInicio = $("#txt_fechaInicio").val();
+        var fechaFin = $("#txt_fechaFin").val();
+        var pdf=document.getElementById('pdf').checked;
+        var excel=document.getElementById('excel').checked;
+        var graf=document.getElementById('grafico').checked;
+
+        if(pdf !==false || excel !== false || graf!== false)
+        {
             $.blockUI({ message: "Espere un instante" });
-            $("#tablahead").hide("slow");
-            $("#msjnodata").hide("slow");
-            var establecimiento = $("#cmb1").val();
-            var dependencia = $("#cmb2").val();
-            var fechaInicio = $("#txt_fechaInicio").val();
-            var fechaFin = $("#txt_fechaFin").val();            
             $.post(
-                    '../solicitudservicio/buscarSolicitudFiltro', 
+                    '../reportes/consolidadoSolicitudesTipo', 
                   { 
                     establecimiento:establecimiento,
                     dependencia:dependencia,
@@ -33,9 +39,14 @@
                     else{
                         $("#msjnodata").show("slow");
                     }   
-                   
-                }, "json");
-        });
+
+                }, "json"
+            );
+        }
+        else {
+            alert('Debe seleccionar modo de exportar');
+        }
+    });
 
 }); // Fin de JQuery
 
