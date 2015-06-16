@@ -265,10 +265,10 @@ class ConsultasController extends Controller
         $rsm->addScalarResult('indicador','indicador');
         $rsm->addScalarResult('generado','generado');        
         $rsm->addScalarResult('finalizadas','finalizadas');
-        $sql = "select a.id as id,a.descripcion as descripcion,a.meta_anual as meta_anual,a.indicador as indicador,a.generado as generado,count(ss.id) as finalizadas
+        $sql = "select a.id as id,a.descripcion as descripcion,a.meta_anual as meta_anual,a.indicador as indicador,CASE WHEN a.generado = 't' THEN 'Si' ELSE 'No' END as generado,count(ss.id) as finalizadas
                 from sidpla_actividad a 
                 left outer join sifda_tipo_servicio s on a.id = s.id_actividad
-                left outer join sifda_solicitud_servicio ss on ss.id_tipo_servicio = s.id and ss.id_estado = 4 ";
+                left outer join sifda_solicitud_servicio ss on ss.id_tipo_servicio = s.id and ss.id_estado = 4";
         if ( $temp_fi != null && $temp_ff != null){
         $sql.=" and fecha_finaliza between ? and ?";
         }

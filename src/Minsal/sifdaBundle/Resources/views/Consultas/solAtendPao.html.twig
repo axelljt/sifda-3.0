@@ -237,5 +237,40 @@ $.datepicker.regional['es'] = {
                                 
                                 
 				});
+function exportfile(){
+    
+    var pdf=document.getElementById('pdf').checked;
+    var excel=document.getElementById('excel').checked;
+    var graf=document.getElementById('grafico').checked;
+       
+    if(pdf !==false)
+    {
+      alert('llamada pdf');
+      window.open('/reports/rptActAtendPao.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());  
+    }
+       
+    
+    if(excel !== false)
+        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user);
+//       alert('excel:'+excel);
+    
+    if(graf!== false)   
+       alert('graf:'+graf);
+}
+
+function mostrarfi(){ 
+            return $("#txt_fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#txt_fechaFin").val();
+      }
+      
+      function mostrarLinEst(){ 
+            return $("#cmb1").val();
+      } 
+      function mostrarAct(){ 
+            return $("#cmb2").val();
+      } 
     </script>
 {% endblock %}
