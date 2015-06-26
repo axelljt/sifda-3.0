@@ -26,7 +26,7 @@ $datos = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
 inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = 23)
-where id_estado=4 
+where id_estado=2 
 and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'
 group by (sts.nombre)");
 
@@ -110,7 +110,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 
 $fila=6;
-$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Finalizadas");
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Asignadas");
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:I$fila"); //unir celdas
 $objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:I$fila"); //establecer estilo
 

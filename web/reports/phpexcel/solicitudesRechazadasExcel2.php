@@ -20,15 +20,6 @@ $temp_tipo = $_REQUEST['tp'];
 $dep = $_REQUEST['dep'];
 
 
-$datos = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
-  FROM public.sifda_solicitud_servicio ss
-    inner join public.fos_user_user us on (us.id = ss.user_id)
-inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
-inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
-inner join public.ctl_dependencia de on (de.id = 23)
-where id_estado=4 
-and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'
-group by (sts.nombre)");
 
 //inicio estilos
 $titulo = new PHPExcel_Style(); //nuevo estilo
@@ -73,7 +64,7 @@ $bordes->applyFromArray(
 
 $objPHPExcel->createSheet(0); //crear hoja
 $objPHPExcel->setActiveSheetIndex(0); //seleccionar hora
-$objPHPExcel->getActiveSheet()->setTitle("Solicitudes Asignadas"); //establecer titulo de hoja
+$objPHPExcel->getActiveSheet()->setTitle("Solicitudes Rechazadas"); //establecer titulo de hoja
 
 //orientacion hoja
 $objPHPExcel->getActiveSheet()->getPageSetup()->setOrientation(PHPExcel_Worksheet_PageSetup::ORIENTATION_LANDSCAPE);
@@ -110,38 +101,88 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 
 $fila=6;
-$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Finalizadas");
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Rechazadas");
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:I$fila"); //unir celdas
 $objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:I$fila"); //establecer estilo
 
 //titulos de columnas
 $fila+=1;
 
-$objPHPExcel->getActiveSheet()->SetCellValue("C$fila", 'Num');
-$objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Tipo de Servicio');
-$objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Total');
-$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila:D$fila"); //establecer estilo
-$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "E$fila");
-$objPHPExcel->getActiveSheet()->getStyle("C$fila:D$fila:E$fila")->getFont()->setBold(true); //negrita
-$objPHPExcel->getActiveSheet()->getStyle("E$fila")->getFont()->setBold(true);
-
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", 'Num');
+$objPHPExcel->getActiveSheet()->SetCellValue("B$fila", 'Razón de rechazo');
+$objPHPExcel->getActiveSheet()->SetCellValue("C$fila", 'Total');
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "A$fila:B$fila"); //establecer estilo
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila"); 
+$objPHPExcel->getActiveSheet()->getStyle("A$fila:B$fila:C$fila")->getFont()->setBold(true); //negrita
+$objPHPExcel->getActiveSheet()->getStyle("C$fila")->getFont()->setBold(true);
  $fila1 = $fila1 +7;
  $total1 = 0;
- foreach ($datos as $value1) {
-  $item = $item +1;
+ ////////////////
+$temp_fi = $_REQUEST['fi'];
+$temp_ff = $_REQUEST['ff'];
+$temp_tipo = $_REQUEST['tp'];
+$dep = $_REQUEST['dep'];
+
+
+$datos0 = $conexion->get_results("SELECT DISTINCT(sts.id),sts.nombre 
+  FROM public.sifda_solicitud_servicio ss
+    inner join public.fos_user_user us on (us.id = ss.user_id)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
+inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+inner join public.ctl_dependencia de on (de.id = 23)
+inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
+inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
+where id_estado=3 
+and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
+");
+
+
+ $suma = 0;
+foreach ($datos0 as $value1) {
+  $datos = $conexion->get_results("SELECT sts.nombre,cd.descripcion,count(*) as cuenta 
+  FROM public.sifda_solicitud_servicio ss
+    inner join public.fos_user_user us on (us.id = ss.user_id)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
+inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+inner join public.ctl_dependencia de on (de.id = 23)
+inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
+inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
+where id_estado=3 
+and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
+"." and sts.id=".$value1->id.
+"group by sts.nombre,cd.descripcion
+");
+ $dsc = "                  Tipo de servicio:            ".$value1->nombre;
+  $item = 0;
+  $suma2 = 0;
+ 
+ 
+//$fila=fila1;
   $fila1 = $fila1 +1;
-    $objPHPExcel->getActiveSheet()->SetCellValue("C$fila1","$item");
-    $objPHPExcel->getActiveSheet()->SetCellValue("D$fila1", "$value1->nombre");
-    $objPHPExcel->getActiveSheet()->SetCellValue("E$fila1", "$value1->cuenta");
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila1", "$dsc");
+$objPHPExcel->getActiveSheet()->mergeCells("A$fila1:B$fila1"); //unir celdas
+ /////////////////////
+ 
+ 
+ foreach ($datos as $value1) {
+ 
+    $item = $item +1;
+    $fila1 = $fila1 +1;
+    $suma2 = $suma2 + $value1->cuenta;
+    $objPHPExcel->getActiveSheet()->SetCellValue("A$fila1","$item");
+    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila1", "$value1->descripcion");
+    $objPHPExcel->getActiveSheet()->SetCellValue("C$fila1", "$value1->cuenta");
     $total1 = $total1 + $value1->cuenta;
     //$pdf->Ln(7);
  }
+}
  $fila1 = $fila1 +1;
- $objPHPExcel->getActiveSheet()->SetCellValue("D$fila1", "TOTAL");
- $objPHPExcel->getActiveSheet()->SetCellValue("E$fila1", "$total1");
+ $objPHPExcel->getActiveSheet()->getStyle("B$fila1:C$fila1")->getFont()->setBold(true);
+ $objPHPExcel->getActiveSheet()->SetCellValue("B$fila1", "TOTAL");
+ $objPHPExcel->getActiveSheet()->SetCellValue("C$fila1", "$total1");
   
 //recorrer las columnas
-foreach (range('C', 'D', 'E') as $columnID) {
+foreach (range('A', 'B', 'C') as $columnID) {
   //autodimensionar las columnas
   $objPHPExcel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);  
 }
@@ -157,7 +198,8 @@ $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); //Escribir archivo
 header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
 // nombre del archivo
-header('Content-Disposition: attachment; filename="Solicitudes asignadas.xlsx"');
+header('Content-Disposition: attachment; filename="Solicitudes Rechazadas.xlsx"');
 
 //forzar a descarga por el navegador
 $objWriter->save('php://output');
+

@@ -2,7 +2,7 @@
 
 {% block contenido_in -%}
     <div class="page-header">
-        <center><h4>Consolidado de solicitudes de servicio por tipo de servicio</h4></center>
+        <center><h4>Consolidado de solicitudes de servicio por Unidad solicitante</h4></center>
     </div>     
     <table style="margin-left: 70%;" border="0">
         <tr>
@@ -16,14 +16,14 @@
                 <div class="span2">
                     <table>
                         <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="mostrar" value="3">Mostrar</td>
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="pdf" value="1">pdf</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="excel" value="2">excel</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td>
                         </tr>    
-                        <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="pdf" value="1">Pdf</td>
-                        </tr>
-                        <tr>
-                            <td style="width: 30px;"></td><td><input type="radio" name="consulta" id="excel" value="2">Excel</td>
-                        </tr>
                     </table>    
                 </div> 
                 <div class="span4" >
@@ -86,14 +86,11 @@
     <div id="msjnodata">
             <center><h4>No se encontraron solicitudes de servicio</h4></center>
     </div>
-{#    <div class="divpdf">
-        <iframe id="frame" name="cons_tiposervicio" src="tipoServicio   " width="100%" height="500" frameborder="0"></iframe>
-    </div>#}
     <br>
 {% endblock %}
 
 {% block javascripts_step %}
     {{ parent() }}
-    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/consolidadoTipoServicio.js')}}"></script>
+    <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/consolidadoDependencia.js')}}"></script>
     
 {% endblock%}   

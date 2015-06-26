@@ -26,8 +26,8 @@ $datos = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
 inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = 23)
-where id_estado=4 
-and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'
+where id_estado=1 
+and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
 group by (sts.nombre)");
 
 //inicio estilos
@@ -110,7 +110,7 @@ $objPHPExcel->getActiveSheet()->getPageSetup()->setRowsToRepeatAtTopByStartAndEn
 
 
 $fila=6;
-$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Finalizadas");
+$objPHPExcel->getActiveSheet()->SetCellValue("A$fila", "Reporte de Solicitudes Ingresadas");
 $objPHPExcel->getActiveSheet()->mergeCells("A$fila:I$fila"); //unir celdas
 $objPHPExcel->getActiveSheet()->setSharedStyle($titulo, "A$fila:I$fila"); //establecer estilo
 
@@ -120,10 +120,8 @@ $fila+=1;
 $objPHPExcel->getActiveSheet()->SetCellValue("C$fila", 'Num');
 $objPHPExcel->getActiveSheet()->SetCellValue("D$fila", 'Tipo de Servicio');
 $objPHPExcel->getActiveSheet()->SetCellValue("E$fila", 'Total');
-$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila:D$fila"); //establecer estilo
-$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "E$fila");
+$objPHPExcel->getActiveSheet()->setSharedStyle($subtitulo, "C$fila:D$fila:E$fila"); //establecer estilo
 $objPHPExcel->getActiveSheet()->getStyle("C$fila:D$fila:E$fila")->getFont()->setBold(true); //negrita
-$objPHPExcel->getActiveSheet()->getStyle("E$fila")->getFont()->setBold(true);
 
  $fila1 = $fila1 +7;
  $total1 = 0;
@@ -157,7 +155,7 @@ $objWriter = new PHPExcel_Writer_Excel2007($objPHPExcel); //Escribir archivo
 header('Content-type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 
 // nombre del archivo
-header('Content-Disposition: attachment; filename="Solicitudes asignadas.xlsx"');
+header('Content-Disposition: attachment; filename="Solicitudes Ingresadas.xlsx"');
 
 //forzar a descarga por el navegador
 $objWriter->save('php://output');

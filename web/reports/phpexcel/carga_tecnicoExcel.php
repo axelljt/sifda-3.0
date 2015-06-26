@@ -12,7 +12,7 @@ $objPHPExcel = new PHPExcel(); //nueva instancia
 $objPHPExcel->getProperties()->setCreator("SIFDA"); //autor
 $objPHPExcel->getProperties()->setTitle("Prueba para generar excel"); //titulo
 
-$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda12022015', 'localhost');
+$conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];
@@ -21,7 +21,7 @@ if ($temp_ff ==0 and $temp_fi ==0)
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
 from ctl_empleado e left outer join vwetapassolicitud vw on e.id = vw.id_empleado
-where e.id_dependencia_establecimiento = $temp_tdest
+where e.id_dependencia_establecimiento = $dep
 group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado)
 order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc");
@@ -32,8 +32,8 @@ else
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
 from ctl_empleado e left outer join vwetapassolicitud vw on e.id = vw.id_empleado
-where fchcrea_orden >= $temp_fi and fchcrea_orden <= $temp_ff
-and e.id_dependencia_establecimiento = $temp_tdest
+where fchcrea_orden >= '$temp_fi' and fchcrea_orden <= '$temp_ff'
+and e.id_dependencia_establecimiento = $dep
 group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
 (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado)
 order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc");

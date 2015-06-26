@@ -27,8 +27,11 @@ class ConsultasController extends Controller
      */
     public function cargaLaboralAction()
     {
-        return $this->render('MinsalsifdaBundle:Consultas:cargaLaboral.html.twig');
+        $em = $this->getDoctrine()->getEntityManager();
+        $user = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($this->getUser()->getId());
+        return $this->render('MinsalsifdaBundle:Consultas:cargaLaboral.html.twig',array('user' => $user));
     }
+    
 /**
      * Lists all Vwetapassolicitud entities.
      *

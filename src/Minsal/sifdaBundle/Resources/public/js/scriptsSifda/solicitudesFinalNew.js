@@ -40,43 +40,46 @@ function buscarDependencia(ruta){
         }      
 }//Fin de buscarDependencia
 
-
-function exportfile(user){
-    
+function exportfile(){    
     var pdf=document.getElementById('pdf').checked;
     var excel=document.getElementById('excel').checked;
     var graf=document.getElementById('grafico').checked;
-    var user=document.getElementById('txtuser').value;
-    var iduser=document.getElementById('txtiduser').value;
-    var idestab=document.getElementById('cmb1').value;
-    var iddep=document.getElementById('cmb2').value;
-       
-    if(pdf !==false)
-    {
-     //alert('llamada pdf');  
-      
-      window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user+'&estab='+idestab+'&dep='+iddep);  
+    
+    var pos1=document.getElementById('cmb1').options.selectedIndex;
+    var estn=document.getElementById('cmb1').options[pos1].text;
+    
+    var pos2=document.getElementById('cmb2').options.selectedIndex;
+    var depn=document.getElementById('cmb2').options[pos2].text;
+    
+    if(pdf !==false || excel !== false || graf!== false)
+    {    
+        if(pdf !==false)
+        {
+            window.open('/reports/solicitudes_Finalizadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&est='+mostrarEst()+'&dep='+mostrarDep()+'&estn='+estn+'&depn='+depn);  
+        }
+
+        if(excel !== false)
+            window.open('/reports/phpexcel/solAtendPaoXls.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());
+    //       alert('excel:'+excel);
+
+        if(graf!== false)   
+           alert('graf:'+graf);
     }
-       
-    
-    if(excel !== false)
-        window.open('/reports/phpexcel/solicitudesFinalizadasExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+iduser+'&user='+user+'&dep='+mostrarDependencia());
-//       alert('excel:'+excel);
-    
-    if(graf!== false)   
-       alert('graf:'+graf);
+    else {
+        alert('Debe seleccionar modo de exportar');
+    }
 }
 
 //Funcion que busca las solicitudes de servicio
 
 function buscarSolicitudesFinal(ruta){
-    
+    var establecimiento=$("#cmb1").val();
     var dependencia=$("#cmb2").val();
     var fechaInicio=$("#txt_fechaInicio").val();
     var fechaFin=$("#txt_fechaFin").val();
     
        
-    if(fechaFin !=="" && fechaInicio!=="" && dependencia!=="0"){
+    //if(fechaFin !=="" && fechaInicio!=="" && dependencia!=="0"){
                
                $.post(
                     ruta,    
@@ -84,7 +87,8 @@ function buscarSolicitudesFinal(ruta){
                     { 
                       fechaInicio: fechaInicio,
                       fechaFin   : fechaFin,
-                      dependencia: dependencia
+                      dependencia: dependencia,
+                      establecimiento: establecimiento
                     }
                         , function( data ) {
                            console.log( data );
@@ -105,7 +109,7 @@ function buscarSolicitudesFinal(ruta){
                          
                 
                     }, "json"); 
-    }
+    //}
 }
 
 
@@ -123,7 +127,7 @@ function buscarSolicitudesFinal(ruta){
           
           var posicion=document.getElementById('cmb2').options.selectedIndex;
           var valor=document.getElementById('cmb2').options[posicion].text;
-          alert(valor); 
+          //alert(valor); 
           return valor.val();
       } 
       
@@ -134,4 +138,10 @@ function buscarSolicitudesFinal(ruta){
             return "{{usuario.username}}";
       }
       
+      function mostrarEst(){ 
+            return $("#cmb1").val();
+      } 
+      function mostrarDep(){ 
+            return $("#cmb2").val();
+      }
 

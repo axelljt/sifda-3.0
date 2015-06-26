@@ -1,26 +1,60 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 {% block contenido_in -%}
-
-                    <table id="fechas" >
-                                    <tr>
-                                        <td><label>FechaInicio: </label></td>
-                                        <td>
-                                            <input type="text" id="fechaInicio" class="input-small" >
-                                        </td>  
-                                    
-                                        <td><label>FechaFin: </label></td>
-                                        <td>
-                                            <input type="text" id="fechaFin" class="input-small" >
-                                        </td>
-                                        <td></td><td></td>
-                                        <td>
-                                            <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
-                                        </td>
-                                    </tr>
-                                    
-                    </table>     
+    <div class="page-header">
+        <center><h4>Consulta de carga laboral </h4></center>
+    </div>
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>usuario:</td><td style="width: 120px;height:14px;">{{ user.IdEmpleado  }}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{user.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{user.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+    <br>
+    <div class="row-fluid">
+         <div class="span9 offset3">  
+            <div class="span2">
+                 <br>
+                 <table style="margin-left: 50%;">
+                     <tr><td><input type="radio" name="consulta" id="pdf" value="1">Pdf</td></tr>
+                     <tr><td><input type="radio" name="consulta" id="excel" value="2">Excel</td></tr>
+                     {#<tr><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td></tr>#}                           
+                 </table>
+                 <br>
+            </div>
+            <div class="span4" style="text-align:center;">     
+                <br>
+                <table id="fechas" style="margin: 0 auto;">
+                     <tr>
+                        <td><label>Fecha de inicio:</label></td>
+                        <td><input type="text" id="fechaInicio" class="input-small" ></td>
+                     </tr>
+                     <tr>    
+                        <td><label>Fecha de fin:</label></td>
+                        <td><input type="text" id="fechaFin" class="input-small" ></td>
+                     </tr>                                                        
+                </table> 
+            </div>
+            <div class="span2">  
+                <br>
+                <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+                <br><br>
+                <input type="submit" class="btn btn-primary" id="buscar" value="Exportar" name="Exportar" onclick="exportfile()">
+            </div>             
+        </div>
+    </div>
     <div id="divtabla"></div>
-                    <table  class="table table-bordered table-hover table-condensed">
+    <div id="tablahead">
+        <br/>           
+        <table class="table table-bordered table-hover table-condensed">
+            <thead id="head"></thead>
+            <tbody id="tabla"></tbody>
+        </table>        
+    </div>
+    <div id="msjnodata">
+            <center><h4>No se encontraron tecnicos registrados</h4></center>
+    </div>
+    <br>
+{#                    <table  class="table table-bordered table-hover table-condensed">
                        <thead>
             <tr>
                 <th><center>Id</center></th>
@@ -34,14 +68,17 @@
             </tbody>    
         </thead>             
                                     
-                    </table>
+                    </table>#}
     
     <script>
    $(document).ready(function(){
-         
+        $("#tablahead").hide("slow");
+        $("#msjnodata").hide("slow");
         $("#buscar").click(function(){
+            $("#tablahead").hide("slow");
+            $("#msjnodata").hide("slow");
             var fechaInicio=$("#fechaInicio").val();
-              var fechaFin=$("#fechaFin").val();
+            var fechaFin=$("#fechaFin").val();
             $.post(
                 '{{path('buscar_carga_laboral')}}', 
                   { 
@@ -50,7 +87,15 @@
                   }
                   , function( data ) {
                     console.log( data );
-                    drawTable(data.query);
+                    var sol = new Array();
+                    sol = data.query;
+                    if(sol.length !== 0){
+                        $("#tablahead").show("slow");
+                        drawTable(data.query);
+                    }
+                    else{
+                        $("#msjnodata").show("slow");
+                    }
                          
                  }, "json");
          
@@ -59,9 +104,21 @@
 
 function drawTable(data) {
 var rows = '';
+    var row = '';
+    
+    row+= '<tr>';
+    row+='<th><center>Correlativo</center></th>';
+    row+='<th><center>T&eacute;cnico</center></th>';
+    row+='<th><center>Asignadas</center></th>';
+    row+='<th><center>Terminadas</center></th>';
+    row+='<th><center>Atendidas</center></th>';
+    row+='</tr>';
+    
     for (var i = 0; i < data.length; i++) {
         rows+=drawRow(data[i],i+1);
     }
+    
+    document.getElementById('head').innerHTML = row;
     document.getElementById('tabla').innerHTML = rows;
     
 }
@@ -79,48 +136,72 @@ function drawRow(rowData,id) {
 }
 
 $.datepicker.regional['es'] = {
-			 closeText: 'Cerrar',
-			 prevText: '<Ant',
-			 nextText: 'Sig>',
-			 currentText: 'Hoy',
-			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
-			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
-			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
-			 weekHeader: 'Sm',
-			 showButtonPanel:false,
-			 showAnim:'show',
-                         changeMonth: true,
-			 changeYear: true,
-                         {#minDate: new Date(2014, 1, 1), 
-                         maxDate: "1D",#}
-                         dateFormat: 'yy-mm-dd',
-			 firstDay: 1,
-			 isRTL: false,
-			 showMonthAfterYear: false,
+             closeText: 'Cerrar',
+             prevText: '<Ant',
+             nextText: 'Sig>',
+             currentText: 'Hoy',
+             monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+             monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+             dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+             dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+             dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+             weekHeader: 'Sm',
+             showButtonPanel:false,
+             showAnim:'show',
+             changeMonth: true,
+             changeYear: true,
+             {#minDate: new Date(2014, 1, 1), 
+             maxDate: "1D",#}
+             dateFormat: 'yy-mm-dd',
+             firstDay: 1,
+             isRTL: false,
+             showMonthAfterYear: false,
+             beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
 			 			                         
-                         onClose: function (selectedDate) {
-                         
-                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
-                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
-                          
-                         },
-                         
-                         yearSuffix: ''
-                         
-			 };
-			$.datepicker.setDefaults($.datepicker.regional['es']);
-			$(function() {
-				$( "#fechaInicio" ).datepicker(
-					
-					);
-                                
-                                $( "#fechaFin" ).datepicker(
-					
-					);
-                                
-                                
-				});
+             onClose: function (selectedDate) {
+
+              $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+              $("#fechaFin").datepicker("option", "minDate", selectedDate);
+
+             },
+
+             yearSuffix: ''
+
+             };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            $(function() {
+                    $( "#fechaInicio" ).datepicker();
+
+                    $( "#fechaFin" ).datepicker();
+            });
+    
+function exportfile(){
+    
+    var pdf=document.getElementById('pdf').checked;
+    var excel=document.getElementById('excel').checked;
+//    var graf=document.getElementById('grafico').checked;
+       
+    if(pdf !==false)
+    {
+      alert(mostrarfi());
+      window.open('/reports/carga_tecnico.php?fi='+mostrarfi()+'&ff='+mostrarff());  
+    }
+       
+    
+    if(excel !== false)
+        window.open('/reports/phpexcel/solAtendPaoXls.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());
+//       alert('excel:'+excel);
+    
+{#    if(graf!== false)   
+       alert('graf:'+graf);#}
+}
+      function mostrarfi(){ 
+            return $( "#fechaInicio" ).val();
+      }
+    
+      function mostrarff(){ 
+            return $( "#fechaFin" ).val();
+      }
+      
     </script>
 {% endblock %}

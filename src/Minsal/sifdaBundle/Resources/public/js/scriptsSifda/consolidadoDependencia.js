@@ -13,52 +13,35 @@
         var dependencia = $("#cmb2").val();
         var fechaInicio = $("#txt_fechaInicio").val();
         var fechaFin = $("#txt_fechaFin").val();
-        var mostrar=document.getElementById('mostrar').checked;
         var pdf=document.getElementById('pdf').checked;
         var excel=document.getElementById('excel').checked;
-        
-        if(pdf !==false || excel !== false || mostrar!== false)
+        var graf=document.getElementById('grafico').checked;
+
+        if(pdf !==false || excel !== false || graf!== false)
         {
-            if(mostrar!== false){
             $.blockUI({ message: "Espere un instante" });
             $.post(
-                    '../consolidadoSolicitudesTipo', 
+                    '../consolidadoSolicitudesDependencia', 
                   { 
                     establecimiento:establecimiento,
                     dependencia:dependencia,
                     fechaInicio:fechaInicio,
                     fechaFin:fechaFin,
-                    mostrar:mostrar,
-                    pdf:pdf,
-                    excel:excel,
                   }
                   , function( data ) {
                     console.log( data );
                     var sol = new Array();
                     sol = data.query;
-                    var flag = data.flag;
-                    alert(data.flag);
-                    //if(mostrar!== false){
-                    //if(sol !== "1"){
-                        if(sol.length !== 0){
-                            $("#tablahead").show("slow");
-                            drawTable(data.query);
-                        }
-                        else{
-                            $("#msjnodata").show("slow");
-                        } 
-//                    }
-//                    else if(pdf!== false){
-//                        if(sol.length !== 0){
-//                            
-//                        }
-//                    }
+                    if(sol.length !== 0){
+                        $("#tablahead").show("slow");
+                        drawTable(data.query);
+                    }
+                    else{
+                        $("#msjnodata").show("slow");
+                    }   
+
                 }, "json"
             );
-            }
-            if(pdf!== false){
-                 window.open('/reports/ConsolidadoPorTipo.php?fi='+fechaInicio+'&ff='+fechaFin)
-            }
         }
         else {
             alert('Debe seleccionar modo de exportar');
