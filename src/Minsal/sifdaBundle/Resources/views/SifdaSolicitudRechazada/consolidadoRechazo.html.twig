@@ -35,9 +35,9 @@
             <div class="span8 offset2">
                 <table>
                     <tr>
-                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF rechazadas" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Rechazadas3.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruseridDepEst()+'&depn='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF rechazadas" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Rechazadas3.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
                         <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel rechazadas " name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
-                        <td><input type="submit" class="btn btn-primary" id="btnr2" value="Grafico" name="Grafico " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="Gráfico rechazo" name="GenerarPDF" onclick="window.open('/reports/graficoPastel_rechazada.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
                     </tr>
                 </table>
                 <table id="RechTabla" class="table table-bordered table-hover table-condensed">
@@ -232,10 +232,10 @@
       function mostrarusername(){ 
             return "{{usuario.username}}";
       }
-      function mostraruserdep(){
+      function mostraruserdep(){ 
             return "{{usuario.idDependenciaEstablecimiento.idDependencia.nombre}}";
       }
-     
+      
       function mostraruseridDepEst(){
             return "{{usuario.idDependenciaEstablecimiento.id}}";
       }

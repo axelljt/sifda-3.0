@@ -13,6 +13,27 @@ $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];
 $temp_udep = $_REQUEST['dep'];
+
+$unidad = $conexion->get_results("SELECT dep.nombre FROM ctl_dependencia_establecimiento det 
+  join ctl_dependencia dep on (dep.id = det.id_dependencia) where det.id = $temp_tdest");
+
+foreach ($unidad as $value2) {
+    $nombre1=$value2->nombre;
+
+}
+
+$depest = $conexion->get_results("SELECT est.nombre
+  FROM ctl_dependencia_establecimiento det 
+  join ctl_dependencia dep on (dep.id = det.id_dependencia)
+  join ctl_establecimiento est on (det.id_establecimiento = est.id)
+  where det.id = $temp_tdest");
+
+foreach ($depest as $value3) {
+    $nombre2=$value3->nombre;
+
+}
+
+
 if ($temp_ff ==0 and $temp_fi ==0)
     {$ing = $conexion->get_results("SELECT count(id) as cing FROM public.sifda_solicitud_servicio where id_estado = 1 and id_dependencia_establecimiento = $temp_tdest");
      $asig = $conexion->get_results("SELECT count(id) as casig FROM public.sifda_solicitud_servicio where id_estado = 2 and id_dependencia_establecimiento = $temp_tdest");
@@ -74,7 +95,9 @@ $graph->SetMarginColor('white');
 // Setup margin and titles
 
 //$graph->title->Set('Estados de solicitudes',$temp_udep);
-$graph->title->Set($temp_udep);
+$graph->title->Set($nombre1);
+$graph->subtitle->Set('Periodo del ' .$temp_fi .' al ' .$temp_ff);
+$graph->subsubtitle->Set($nombre2);
 $p1 = new PiePlot3D($data);
 
 $p1->SetSize(0.35);

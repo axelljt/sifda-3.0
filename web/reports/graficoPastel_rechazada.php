@@ -33,23 +33,25 @@ foreach ($depest as $value3) {
 
 }
 
-$ingresadas = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
+$rechazo = $conexion->get_results("SELECT cd.descripcion,count(*) as cuenta 
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
 inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = 23)
-where id_estado=1 
-and fecha_recepcion >= '2015-02-01' and fecha_recepcion <='2015-05-01'
-group by (sts.nombre)");
+inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
+inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
+where id_estado=3 
+and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
+group by cd.descripcion");
 
-$nombre =array();
+$descripcion =array();
 $cuenta =array();
 
 //$ing = $conexion->get_results("SELECT count(id) as cing FROM public.sifda_solicitud_servicio where id_estado = 1");
 //$ingval= array_pop($ing);
-foreach ($ingresadas as $value1) {
-    $nombre[]=$value1->nombre;
+foreach ($rechazo as $value1) {
+    $descripcion[]=$value1->descripcion;
     $cuenta[]=$value1->cuenta;
 }
 
@@ -68,31 +70,12 @@ $graph->SetMarginColor('white');
 $graph->title->Set($nombre1);
 $graph->subtitle->Set('Periodo del ' .$temp_fi .' al ' .$temp_ff);
 $graph->subsubtitle->Set($nombre2);
+
 $p1 = new PiePlot3D($cuenta);
 
 $p1->SetSize(0.35);
 
 $p1->SetCenter(0.5);
-
-// Setup slice labels and move them into the plot
-/*
-//$p1->SetSliceColors(array('red','green','blue','pink')); 
-$max = max($data);
-//if($value1->cing == $max){
-if($value1->cing == $max){
-    $p1->SetSliceColors(array('red','green','blue','pink'));
-}
-else if($value2->casig == $max){
-    $p1->SetSliceColors(array('green','red','blue','pink'));
-}
-else if($value3->crecha == $max){
-    $p1->SetSliceColors(array('green','blue','red','pink'));
-}
-else {
-    $p1->SetSliceColors(array('green','blue','pink','red'));
-}
- * */
- 
 
 $p1->value->SetFont(FF_FONT1,FS_BOLD);
 
@@ -102,7 +85,7 @@ $p1->SetLabelPos(0.2);
 
 //$nombres=array('Ingresados','Asignado','Rechazado','Finalizado');
 
-$p1->SetLegends($nombre);
+$p1->SetLegends($descripcion);
 
 // Explode all slices
 
