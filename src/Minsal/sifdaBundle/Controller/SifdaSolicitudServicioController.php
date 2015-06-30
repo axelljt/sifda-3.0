@@ -436,38 +436,37 @@ class SifdaSolicitudServicioController extends Controller
 //        $estado=4;
         
         if($isAjax){
-            $temp_fi = $this->get('request')->request->get('fechaInicio');
-            $temp_ff = $this->get('request')->request->get('fechaFin');
-            $temp_est=$this->get('request')->request->get('establecimiento');
-            $temp_dep=$this->get('request')->request->get('dependencia');
-
-            $em = $this->getDoctrine()->getEntityManager();             
-            $idusuario=  $this->getUser()->getId();
-            $rsm = new ResultSetMapping();
-            $rsm->addScalarResult('cuenta','cuenta');
-            $rsm->addScalarResult('nombre','nombre');                  
-//            $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
-            $sql = "SELECT sts.nombre nombre, count(sts.nombre) as cuenta
+             $fechaInicio = $this->get('request')->request->get('fechaInicio');
+             $fechaFin = $this->get('request')->request->get('fechaFin');
+             $dependencia=$this->get('request')->request->get('dependencia');
+//             $em = $this->getDoctrine()->getManager();
+             
+             $idusuario=  $this->getUser()->getId();
+//             $username=  $this->getUser()->getNombre();
+             $rsm = new ResultSetMapping();
+             
+//             $solicitudes = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->buscarFechasSolicitudGenerico($fechaInicio, $fechaFin,$tipoServicio,$estado);
+             $sql = "SELECT sts.nombre nombre, count(sts.nombre) as cuenta
                         FROM sifda_solicitud_servicio ss
                         inner join fos_user_user us on (us.id = ss.user_id)
                         inner join ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
-                        left outer join sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+                        inner join sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
                         inner join ctl_dependencia de on (de.id = dep.id_dependencia)
-                        where id_estado=4";
-            if ($temp_est != 0){
-                $sql.=" and dep.id_establecimiento = '$temp_est'";
-            }
-            if ($temp_dep != 0){
-                $sql.=" and dep.id_dependencia = '$temp_dep'";
-            }
-
-            if ( $temp_fi != null && $temp_ff != null){
-                $sql.=" and fecha_recepcion >= '$temp_fi' and fecha_recepcion <= '$temp_ff.'";
-            }
-            $sql.="GROUP BY (sts.nombre);";
+                        where id_estado=4
+                        and de.id=?
+                        and to_char(ss.fecha_recepcion, 'YYYY-MM-DD') >= ? and to_char(ss.fecha_recepcion, 'YYYY-MM-DD') <= ?
+                        group by (sts.nombre)";
         
-            $query = $em->createNativeQuery($sql, $rsm);
-            $solicitudes = $query->getResult();
+                        $rsm->addScalarResult('cuenta','cuenta');
+                        $rsm->addScalarResult('nombre','nombre');
+                        $query = $this->getDoctrine()->getEntityManager();
+                        
+                        $solicitudes = $query->createNativeQuery($sql, $rsm)
+                
+                                    ->setParameter(1,$dependencia)
+                                    ->setParameter(2,$fechaInicio)
+                                    ->setParameter(3,$fechaFin)
+                                    ->getResult();
                         
               $tam= Count($solicitudes);
              if($tam>0)
@@ -489,7 +488,10 @@ class SifdaSolicitudServicioController extends Controller
             }  
     }
     
-        
+    
+    
+    
+    
     /**
     * Ajax utilizado para buscar rango de fechas
     *  
@@ -894,6 +896,8 @@ class SifdaSolicitudServicioController extends Controller
 
                           elseif($estado == "Finalizado")
                               return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado5.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
+                                    elseif($estado == "Detenido")
+                                           return $this->render('MinsalsifdaBundle:SifdaSolicitudServicio:showEstado7.html.twig' , array('entity' =>$entity, 'dependencia'=>$dependencia));
     }
        
     /**
