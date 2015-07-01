@@ -1,8 +1,3 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 $(document).ready(function (){
     $("#equipoTrabajo").hide("slow");
@@ -11,23 +6,27 @@ $(document).ready(function (){
 function buscarEquipoTrabajo() {
     
     var responsable = $("#minsal_sifdabundle_sifdaequipotrabajo_idEmpleado").val();
-    var ruta = "../buscarequipoTrabajo";  
-    alert(responsable);
+
     if(responsable !="")
     {
-        $.post(
-        ruta,
-          { 
-            responsable:responsable,
-          }
-          , function( data ) {
-            console.log( data );
-            $("#minsal_sifdabundle_sifdaequipotrabajo_equipoTrabajo").html(data.query);
-            $("#equipoTrabajo").show("slow");
+// $(function(){ 
+        $("#minsal_sifdabundle_sifdaequipotrabajo_equipoTrabajo input[type=checkbox]").each(function(){
+            $(this).removeAttr('disabled');
+        });
+//  });
 
-         }, "json");
+        var update_empleado = function () {
+            if ($("#minsal_sifdabundle_sifdaequipotrabajo_idEmpleado_"+responsable).is(":checked")) {
+                $('#minsal_sifdabundle_sifdaequipotrabajo_equipoTrabajo_'+responsable).prop('disabled', false);
+            }
+            else {
+                $('#minsal_sifdabundle_sifdaequipotrabajo_equipoTrabajo_'+responsable).prop('disabled', 'disabled');
+            }
+        };
         
-        
+        $(update_empleado);
+        $("#minsal_sifdabundle_sifdaequipotrabajo_idEmpleado_"+responsable).change(update_empleado);        
+        $("#equipoTrabajo").show("slow");
     }
     else{
         $("#equipoTrabajo").hide("slow");
