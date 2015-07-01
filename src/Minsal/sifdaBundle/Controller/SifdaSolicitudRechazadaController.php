@@ -52,6 +52,10 @@ class SifdaSolicitudRechazadaController extends Controller
 
 //        $entities = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudRechazada')->findAll();
         
+        $userId = $this->getUser()->getId();
+        //$em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
+        
         $rsm = new ResultSetMapping();
         $sql = "select cd.descripcion descripcion, count(sr.id_razon_rechazo) total
                 from sifda_solicitud_rechazada sr
@@ -69,6 +73,7 @@ class SifdaSolicitudRechazadaController extends Controller
         
         return array(
             'entities' => $solicitudes,
+            'usuario' => $usuario,
         );
     }
     

@@ -98,7 +98,15 @@ class SifdaSolicitudServicioRepository extends EntityRepository
        return $repositorio->getResult();	
     }
     
-    
+    public function getNotId($id)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.id != :identifier')
+           ->setParameter('identifier', $id);
+
+        return $qb->getQuery()
+              ->getResult();
+    }
     
 }
 

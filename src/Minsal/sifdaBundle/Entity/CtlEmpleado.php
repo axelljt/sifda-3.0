@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * CtlEmpleado
  *
  * @ORM\Table(name="ctl_empleado", uniqueConstraints={@ORM\UniqueConstraint(name="idx_empleado", columns={"id"})}, indexes={@ORM\Index(name="idx_id_cargo", columns={"id_cargo"}), @ORM\Index(name="idx_depen_estab", columns={"id_dependencia_establecimiento"})})
- * @ORM\Entity
+   * @ORM\Entity(repositoryClass="Minsal\sifdaBundle\Repository\SifdaSolicitudServicioRepository")
  */
 class CtlEmpleado
 {

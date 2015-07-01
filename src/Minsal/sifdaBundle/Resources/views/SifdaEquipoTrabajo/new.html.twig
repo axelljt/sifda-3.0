@@ -1,5 +1,11 @@
 {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
 
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/equipoTrabajoNew.js')}}"></script>
+
+    {% endblock %}   
+
 {% block contenido_in -%}
     {{form_start(form)}}
     {{form_errors(form)}}     
@@ -71,10 +77,10 @@
             </div>                        
             <br><br>
             <div class="row-fluid">
-                <div class="span4 offset2">
-                    {{form_row(form.idEmpleado)}}
+                <div class="span4 offset2" id="responsable">
+                    {{form_row(form.idEmpleado, {'attr': {'onchange':'buscarEquipoTrabajo()'} })}}
                 </div>
-                <div class="span5 offset1"> 
+                <div class="span5 offset1" id="equipoTrabajo"> 
                     {{form_row(form.equipoTrabajo, {'attr': {'class':'checkbox'} })}}
                 </div>
             </div> 

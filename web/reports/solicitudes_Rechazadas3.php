@@ -42,7 +42,7 @@ $this->SetFont('Arial','B',11);
 //$this->Cell(0,25,utf8_decode('Reporte de Solicitudes Ingresadas'), 0, 0, 'C', false);
 $this->Cell(0,-7,utf8_decode($temp_dep), 0, 0, 'C', false);
 $this->Ln(2);
-$this->Cell(0,5,utf8_decode('Reporte de Solicitudes Ingresadas'), 0, 0, 'C', false);
+$this->Cell(0,5,utf8_decode('Reporte de Solicitudes Rechazadas'), 0, 0, 'C', false);
 
   $this->SetFont('Arial','',11);
   $this->Cell(-229,15,utf8_decode(' Período del'), 0, 0, 'C', false);
@@ -52,9 +52,9 @@ $this->Cell(0,5,utf8_decode('Reporte de Solicitudes Ingresadas'), 0, 0, 'C', fal
   
   $this->Ln(20);
   $this->SetFont('Arial','B',11);
-  $this->SetWidths(array(5, 140, 25));
+  $this->SetWidths(array(8, 135, 25));
   $this->SetAligns(array('L','L','C'));
-  $this->Row(array('N',utf8_decode('TIPOS DE SERVICIO'),utf8_decode('TOTAL')));
+  $this->Row(array('N',utf8_decode('RAZON DE RECHAZO'),utf8_decode('TOTAL')));
 
 
 
@@ -111,6 +111,32 @@ function Row($data)
     }
     //Go to the next line
     $this->Ln($h);
+}
+function Row2($data)
+{
+    //Calculate the height of the row
+    $nb=0;
+    for($i=0;$i<count($data);$i++)
+        $nb=max($nb,$this->NbLines($this->widths[$i],$data[$i]));
+    $h=5*$nb;
+    //Issue a page break first if needed
+    $this->CheckPageBreak(5);
+    //Draw the cells of the row
+    
+            $w=168;
+        $a=isset($this->aligns[0]) ? $this->aligns[0] : 'L';
+        //Save the current position
+        $x=$this->GetX();
+        $y=$this->GetY();
+        //Draw the border
+        $this->Rect($x,$y,$w,5);
+        //Print the text
+        $this->MultiCell($w,5,$data[0],0,'L');
+        //Put the position to the right of the cell
+        $this->SetXY($x+$w,$y);
+    
+    //Go to the next line
+    $this->Ln(5);
 }
 
 function CheckPageBreak($h)
@@ -187,35 +213,65 @@ $pdf->SetFont('Arial','',11);
 $conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost');
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
-$temp_tipo = $_REQUEST['tp'];
+$dep = $_REQUEST['dep'];
 
-
-$datos = $conexion->get_results("SELECT sts.nombre,count(sts.nombre) as cuenta
+$datos0 = $conexion->get_results("SELECT DISTINCT(sts.id),sts.nombre 
   FROM public.sifda_solicitud_servicio ss
     inner join public.fos_user_user us on (us.id = ss.user_id)
 inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
 inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
 inner join public.ctl_dependencia de on (de.id = 23)
-where id_estado=1 
+inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
+inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
+where id_estado=3 
 and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'
-group by (sts.nombre)");
+");
 
-    $suma = 0;
-        
+
+ $suma = 0;
+foreach ($datos0 as $value1) {
+  $datos = $conexion->get_results("SELECT sts.nombre,cd.descripcion,count(*) as cuenta 
+  FROM public.sifda_solicitud_servicio ss
+    inner join public.fos_user_user us on (us.id = ss.user_id)
+inner join public.ctl_dependencia_establecimiento dep on (dep.id = us.id_dependencia_establecimiento)
+inner join public.sifda_tipo_servicio sts on (sts.id = ss.id_tipo_servicio)
+inner join public.ctl_dependencia de on (de.id = 23)
+inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
+inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
+where id_estado=3 
+and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
+"." and sts.id=".$value1->id.
+"group by sts.nombre,cd.descripcion
+");
+ $dsc = "                  Tipo de servicio:            ".$value1->nombre;
+  $item = 0;
+  $suma2 = 0;
+
+  $pdf->Row2(array(utf8_decode($dsc)));
+  
     foreach ($datos as $value) {
     $item = $item +1;
+    $suma2 = $suma2 + $value->cuenta;
     $pdf->SetAligns(array('L','L','C'));
     $pdf->Row(array($item,
-			utf8_decode($value->nombre),utf8_decode($value->cuenta)
+			utf8_decode($value->descripcion),utf8_decode($value->cuenta)
                         ));
+    //$pdf->Row(array("","Total por servicio","",$suma2));
     
     $suma = $suma + ($value->cuenta);
     }//fin del foreach
+    
+    
+  
+}
+
     $pdf->SetFont('Arial','B',11);
-    $pdf->Cell(145,7,utf8_decode('TOTAL DE SOLICITUDES'),1,0,'C');
+    $pdf->Cell(143,7,utf8_decode('TOTAL DE SOLICITUDES'),1,0,'C');
     $pdf->SetFillColor(255,0,0);
     $pdf->SetTextColor(255,0,0);
     $pdf->Cell(25,7,utf8_decode($suma),1,0,'C');
+    $pdf->SetFillColor(0,0,0);
+    $pdf->SetTextColor(0,0,0);
 
 $pdf->Output();
 ?>

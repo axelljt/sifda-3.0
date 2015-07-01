@@ -12,6 +12,8 @@ use Doctrine\ORM\Query\ResultSetMapping;
 use Minsal\sifdaBundle\Entity\SifdaEquipoTrabajo;
 use Minsal\sifdaBundle\Entity\SifdaOrdenTrabajo;
 use Minsal\sifdaBundle\Form\SifdaEquipoTrabajoType;
+use Symfony\Component\HttpFoundation\JsonResponse;
+//use Doctrine\ORM\EntityRepository;
 
 /**
  * SifdaEquipoTrabajo controller.
@@ -118,8 +120,9 @@ class SifdaEquipoTrabajoController extends Controller
         $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
         
         $form->add('idEmpleado', 'entity', array(
-                'label'     => 'Responsable',
-                'class'     => 'MinsalsifdaBundle:CtlEmpleado',
+                'label'      => 'Responsable',
+                'empty_value'=>'Seleccione...',
+                'class'      => 'MinsalsifdaBundle:CtlEmpleado',
                 'query_builder' =>  function(EntityRepository $repositorio) use ($usuario) {
                     return $repositorio
                         ->createQueryBuilder('emp')
@@ -529,5 +532,45 @@ class SifdaEquipoTrabajoController extends Controller
             $em->merge($entity);
             $em->flush();
         }    
-    }    
+    }
+    
+    
+    /**
+    * Ajax utilizado para obtener al empleado que se ha asignado como responsable
+    *  
+    * @Route("/buscarequipoTrabajo", name="sifda_buscar_equipo_trabajo")
+    */
+    public function buscarequipoTrabajoAction()
+    {
+        $isAjax = $this->get('Request')->isXMLhttpRequest();
+        if($isAjax){
+             $responsable = $this->get('request')->request->get('responsable');
+            $em = $this->getDoctrine()->getEntityManager();
+            
+            $userId = $this->getUser()->getId();
+            $em = $this->getDoctrine()->getManager();
+            $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
+            
+            $resultado = $this->getDoctrine()->getRepository('MinsalsifdaBundle:CtlEmpleado')->getNotId($responsable);
+            
+            $empleados=array();   
+             
+             foreach($resultado as $res)
+             {
+                 $empleados[] = $res->getNombre()." ".$res->getApellido();
+                  
+             }
+            
+            $response = new JsonResponse();
+            $response->setData(array(
+                                'query' => $empleados
+                              ));
+            
+            return $response; 
+            
+        }else
+        {   
+            return new Response('0');              
+        } 
+    }
 }

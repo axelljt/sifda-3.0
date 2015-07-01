@@ -4,14 +4,42 @@
     
     
     <div>
-        {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
+        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
         <center><h3>Consolidado de solicitudes rechazadas por raz&oacute;n de rechazo </h3></center>
     
     </div>
-    
+    <div class="row-fluid">    
+    <div class="span4">
+                     <table id="fechas">
+                           <tr>
+                              <td><label>Fecha de inicio: </label></td>
+                               <td>
+                                   <input type="text" id="fechaInicio" class="input-small" readonly="true">
+                               </td>  
+                           </tr>
+                            <tr>
+                                <td><label>Fecha de fin: </label></td>
+                                <td>
+                                    <input type="text" id="fechaFin" class="input-small" readonly="true" >
+                                </td>
+                                <td></td><td></td>
+                              {#  <td>
+                                    <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">    
+                                </td>#}
+                            </tr>        
+                    </table>               
+                </div> 
+    </div> 
     {% if entities %}  
         <div class="row-fluid">
             <div class="span8 offset2">
+                <table>
+                    <tr>
+                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF rechazadas" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Rechazadas3.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruseridDepEst()+'&depn='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel rechazadas " name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr2" value="Grafico" name="Grafico " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
+                    </tr>
+                </table>
                 <table id="RechTabla" class="table table-bordered table-hover table-condensed">
                  <thead>
                      <tr>
@@ -51,3 +79,166 @@
    {% endif%}
         
     {% endblock %}
+{% block javascripts_step %}
+    {{ parent() }}
+    <script>
+        
+        $(document).ready(function (){
+            
+           {# document.getElementById("cmb1").value="0";
+            document.getElementById('Todos').checked=true; 
+            
+            document.getElementById('fechaInicio').value="";
+            document.getElementById('fechaFin').value="";
+            
+            $('#fechas').hide("slow");
+            $('#combos').hide("slow");
+            $('#msgIngresados2').hide("slow");#}
+            
+            $('#Todos').click(function(){
+            
+           {# $("#btn1").show("slow");#}
+            $("#fechas").hide("slow");
+            $("#combos").hide("slow");
+            $('#tabla').show("slow");
+            $('#rangoTabla').hide("slow");
+            $('#msgIngresados').show("slow");
+            $('#msgIngresados2').hide("slow");
+            
+          });
+          
+           $('#especifico').click(function(){
+
+                {#$("#btn1").hide("slow");#}
+                $("#tabla").hide("slow");
+                $("#fechas").show("slow");
+                $("#combos").show("slow");
+                $('#rangoTabla').show("slow");
+                $('#msgIngresados').hide("slow");
+                {#$('#msgIngresados2').show("slow");#}
+                {#$('#msgIngresados').hide("slow");
+                $('#msgRechazados').hide("slow");
+                $('#msgAsignados').hide("slow");#}
+              }); 
+        
+        }); //Fin del Jquery
+        
+        
+        
+      
+         $.datepicker.regional['es'] = {
+			 closeText: 'Cerrar',
+			 prevText: '<Ant',
+			 nextText: 'Sig>',
+			 currentText: 'Hoy',
+			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+			 weekHeader: 'Sm',
+			 showButtonPanel:false,
+			 showAnim:'show',
+                         changeMonth: true,
+			 changeYear: true,
+                         {#minDate: new Date(2014, 1, 1), 
+                         maxDate: "1D",#}
+                         dateFormat: 'yy-mm-dd',
+			 firstDay: 1,
+			 isRTL: false,
+			 showMonthAfterYear: false,
+			 			                         
+                         onClose: function (selectedDate) {
+                         
+                          $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+                          $("#fechaFin").datepicker("option", "minDate", selectedDate);
+                          
+                         },
+                         
+                         yearSuffix: ''
+                         
+			 };
+			$.datepicker.setDefaults($.datepicker.regional['es']);
+			$(function() {
+				$( "#fechaInicio" ).datepicker(
+					
+					);
+                                
+                                $( "#fechaFin" ).datepicker(
+					
+					);
+                                
+                                
+				}); 
+         
+     //Funcion de Busqueda de Solicitudes
+     
+       $("#buscar").click(function(){
+           
+           var tipoServicio=$("#cmb1").val();
+           var fechaInicio=$("#fechaInicio").val();
+           var fechaFin=$("#fechaFin").val();
+           var res="";
+           
+           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
+                $.post(
+                    '{{path('sifda_solicitudservicio_buscar_solicitudes_ingresadas')}}',    
+                    
+                    { 
+                      fechaInicio: fechaInicio,
+                      fechaFin   : fechaFin,
+                      tipoServicio: tipoServicio
+                    }
+                        , function( data ) {
+                           console.log( data );
+                           
+                            res=data.val;
+                           
+                           if(res=="0"){
+                               
+                               $("#msgIngresados2").show("slow");
+                               $("#rangoTabla").hide("slow");
+                           }              
+                                
+                           else
+                           {
+                              $("#rangoTabla").html(data);
+                           }
+                           
+                    }, "json");
+                    
+                    
+                }
+           
+       }); 
+       
+         //Funciones para reporteria
+     
+      function mostrarfi(){ 
+            return $("#fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#fechaFin").val();
+      }
+      
+      function mostrartipo(){ 
+            return $("#cmb1").val();
+      } 
+      
+      function mostraruserid(){ 
+            return "{{usuario.id}}";
+      }
+      function mostrarusername(){ 
+            return "{{usuario.username}}";
+      }
+      function mostraruserdep(){
+            return "{{usuario.idDependenciaEstablecimiento.idDependencia.nombre}}";
+      }
+     
+      function mostraruseridDepEst(){
+            return "{{usuario.idDependenciaEstablecimiento.id}}";
+      }
+        
+    </script>
+{% endblock %}
