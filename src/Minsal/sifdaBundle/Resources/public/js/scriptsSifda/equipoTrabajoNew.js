@@ -12,6 +12,7 @@ function buscarEquipoTrabajo() {
 // $(function(){ 
         $("#minsal_sifdabundle_sifdaequipotrabajo_equipoTrabajo input[type=checkbox]").each(function(){
             $(this).removeAttr('disabled');
+            $(this).prop('checked', false);
         });
 //  });
 
