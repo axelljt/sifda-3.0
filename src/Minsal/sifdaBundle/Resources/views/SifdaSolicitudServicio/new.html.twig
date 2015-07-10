@@ -17,6 +17,10 @@
 <div class="row-fluid">
     <div class="page-header">
         <center><h3>Registrar una solicitud de servicio</h3></center>
+        
+{#        {% set anioRequiere = solicitud.fechaRequiere|date('Y') %}  
+                {% set mesRequiere = solicitud.fechaRequiere|date('m') %}
+                {% set diaRequiere = solicitud.fechaRequiere|date('d') %}#}
     </div>
     <div class="span12">
         <div class="row-fluid">
@@ -27,7 +31,8 @@
             </div>          
             <div class="span5 offset1">
                  {{form_row(form.descripcion)}}
-                 {{form_row(form.fechaRequiere, {'attr':{'readonly':'yes','class':'input-small'}} )}}
+                 {#{{form_row(form.fechaRequiere, {'attr':{'readonly':'yes','onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario",' ~  anioRequiere ~ ',' ~  mesRequiere ~ ',' ~  diaRequiere ~ ') ' }} ) }}#}
+                 {{form_row(form.fechaRequiere,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../ctlferiado/llenarCalendario") '} })}}
             </div>
         </div>
         <br>
@@ -48,9 +53,16 @@
 {% endblock %}
 
 {% block javascripts_step %}
-    {{ parent() }}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/Calendar.js')}}"></script>
     <script>
     $(document).ready(function(){
+        
+        
+  
+        
+        
+        
         
         document.getElementById("minsal_sifdabundle_sifdasolicitudservicio_establecimiento").value="";
                 
@@ -121,8 +133,24 @@
         });
         
     });    
+   function buscarFechasFeriado(ruta){
+    var fecha = new Date();
+    var anio = fecha.getFullYear();
     
-        $.datepicker.regional['es'] = {
+//    alert(anio);
+//    alert(mes);
+//    alert(dia);
+    $.post(ruta,
+        {
+            anio: anio
+            },function(data){
+                console.log( data );
+                calendarAsuetoSolicitud('minsal_sifdabundle_sifdasolicitudservicio_fechaRequiere', data.query)
+            }, "json"
+        );
+                
+}     
+        {#$.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
 			 prevText: '<Ant',
 			 nextText: 'Sig>',
@@ -139,7 +167,7 @@
 			 changeYear: true,
                         minDate: 'today',
                          {#maxDate: "+0D",#}
-                         dateFormat: 'yy-mm-dd',
+                         {#dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,
 			 showMonthAfterYear: false,
@@ -156,7 +184,7 @@
                                             firstDay: 1,
                                             defaultDate: "today"
                                 });
-				});
+				});#}
      
     </script>
     {% endblock%}

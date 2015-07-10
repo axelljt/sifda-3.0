@@ -177,7 +177,7 @@ $conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost')
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 //$temp_tipo = $_REQUEST['tp'];
-//$dep = $_REQUEST['dep'];
+$temp_tdest = $_REQUEST['tdest'];
 
 
 //$datos = $conexion->get_row("SELECT descripcion FROM public.sifda_solicitud_servicio where descripcion = 'test1'");
@@ -185,17 +185,18 @@ $temp_ff = $_REQUEST['ff'];
 //$datos = $conexion->get_results("SELECT id,descripcion, fecha_recepcion, fecha_requiere FROM public.sifda_solicitud_servicio where id_estado =2 and fecha_recepcion between '$temp_fi' and '$temp_ff'");                
 
     $sql = "select distinct(e.id),e.nombre|| ' ' ||e.apellido as tecnico,count(distinct id_orden) as atendidas,
-            (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
-            (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
-            from ctl_empleado e left outer join
-            vwetapassolicitud vw on e.id = vw.id_empleado where 1=1";
-    if ( $temp_fi != null && $temp_ff != null){
-        $sql.=" and fchcrea_orden >= '".$temp_fi."' and fchcrea_orden <= '".$temp_ff."'";
-    }
-    $sql.=" group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from 
-            vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
-            (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 
-            4 and v.id_empleado = vw.id_empleado) order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc";
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
+                from ctl_empleado e left outer join
+                vwetapassolicitud vw on e.id = vw.id_empleado where 1=1";
+        if($temp_fi!="" && $temp_ff!=""){
+            $sql.=" and fchcrea_orden >= '$temp_fi' and fchcrea_orden <= '$temp_ff'";
+        }
+        $sql.=" and e.id_dependencia_establecimiento = $temp_tdest
+                group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from 
+                vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 
+                4 and v.id_empleado = vw.id_empleado) order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc";
 
     $datos = $conexion->get_results($sql);
     

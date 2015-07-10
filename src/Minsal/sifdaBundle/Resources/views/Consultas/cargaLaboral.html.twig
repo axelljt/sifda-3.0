@@ -184,12 +184,12 @@ function exportfile(){
     if(pdf !==false)
     {
       alert(mostrarfi());
-      window.open('/reports/carga_tecnico.php?fi='+mostrarfi()+'&ff='+mostrarff());  
+      window.open('/reports/carga_tecnico.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst());  
     }
        
     
     if(excel !== false)
-        window.open('/reports/phpexcel/solAtendPaoXls.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());
+        window.open('/reports/phpexcel/carga_tecnicoExcel.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst());
 //       alert('excel:'+excel);
     
 {#    if(graf!== false)   
@@ -201,6 +201,9 @@ function exportfile(){
     
       function mostrarff(){ 
             return $( "#fechaFin" ).val();
+      }
+      function mostraruseridDepEst(){
+            return "{{user.idDependenciaEstablecimiento.id}}";
       }
       
     </script>

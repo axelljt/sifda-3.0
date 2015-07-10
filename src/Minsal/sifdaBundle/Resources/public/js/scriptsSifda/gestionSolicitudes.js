@@ -1,4 +1,6 @@
     $(document).ready(function(){
+        
+    calendarEnlazado('txt_fechaInicio','txt_fechaFin');    
 //    Condiciones Iniciales de la Pantalla
     document.getElementById("cmb1").value="0";
     document.getElementById("txt_fechaInicio").value=null;
@@ -125,50 +127,50 @@ function drawRow(rowData,id) {
     
 }
 
-    $.datepicker.regional['es'] = {
-			 closeText: 'Cerrar',
-			 prevText: '<Ant',
-			 nextText: 'Sig>',
-			 currentText: 'Hoy',
-			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
-			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
-			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
-			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
-			 weekHeader: 'Sm',
-			 showButtonPanel:false,
-			 showAnim:'show',
-                         changeMonth: true,
-			 changeYear: true,
-//                         minDate: new Date(2014, 1, 1), 
-//                         maxDate: "1D",
-                         dateFormat: 'yy-mm-dd',
-			 firstDay: 1,
-			 isRTL: false,
-			 showMonthAfterYear: false,
-			 			                         
-                         onClose: function (selectedDate) {
-                         
-                          $("#txt_fechaInicio").datepicker("option", "maxDate", selectedDate);
-                          $("#txt_fechaFin").datepicker("option", "minDate", selectedDate);
-                          
-                         },
-                         
-                         yearSuffix: ''
-                         
-			 };
-			$.datepicker.setDefaults($.datepicker.regional['es']);
-			$(function() {
-				$( "#txt_fechaInicio" ).datepicker(
-					
-					);
-                                
-                                $( "#txt_fechaFin" ).datepicker(
-					
-					);
-                                
-                                
-				}); 
+//    $.datepicker.regional['es'] = {
+//			 closeText: 'Cerrar',
+//			 prevText: '<Ant',
+//			 nextText: 'Sig>',
+//			 currentText: 'Hoy',
+//			 monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+//			 monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+//			 dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+//			 dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+//			 dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+//			 weekHeader: 'Sm',
+//			 showButtonPanel:false,
+//			 showAnim:'show',
+//                         changeMonth: true,
+//			 changeYear: true,
+////                         minDate: new Date(2014, 1, 1), 
+////                         maxDate: "1D",
+//                         dateFormat: 'yy-mm-dd',
+//			 firstDay: 1,
+//			 isRTL: false,
+//			 showMonthAfterYear: false,
+//			 			                         
+//                         onClose: function (selectedDate) {
+//                         
+//                          $("#txt_fechaInicio").datepicker("option", "maxDate", selectedDate);
+//                          $("#txt_fechaFin").datepicker("option", "minDate", selectedDate);
+//                          
+//                         },
+//                         
+//                         yearSuffix: ''
+//                         
+//			 };
+//			$.datepicker.setDefaults($.datepicker.regional['es']);
+//			$(function() {
+//				$( "#txt_fechaInicio" ).datepicker(
+//					
+//					);
+//                                
+//                                $( "#txt_fechaFin" ).datepicker(
+//					
+//					);
+//                                
+//                                
+//				}); 
                                        
        
     function confirmar(valor){         

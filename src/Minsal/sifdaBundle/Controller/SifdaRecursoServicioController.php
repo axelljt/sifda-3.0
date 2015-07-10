@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Minsal\sifdaBundle\Entity\SifdaRecursoServicio;
 use Minsal\sifdaBundle\Form\SifdaRecursoServicioType;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * SifdaRecursoServicio controller.
@@ -91,6 +92,21 @@ class SifdaRecursoServicioController extends Controller
             'method' => 'POST',
         ));
 
+        $userId = $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario = $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($userId);
+        
+        $form->add('idTipoRecursoDependencia', 'entity', array(
+                    'required'      =>  true,
+                    'label'         =>  'Recurso utilizado',    
+                    'class'         =>  'MinsalsifdaBundle:SifdaTipoRecursoDependencia',
+                            'query_builder' =>  function(EntityRepository $repositorio) use ( $usuario ){
+                    return $repositorio
+                            ->createQueryBuilder('rcv')
+                            ->where('rcv.idDependenciaEstablecimiento = :depest')
+                            ->setParameter(':depest', $usuario->getIdDependenciaEstablecimiento());
+                    }));
+        
         $form->add('submit', 'submit', array('label' => 'Registrar recurso'));
 
         return $form;

@@ -16,29 +16,22 @@ $conexion = new ezSQL_postgresql('sifda', 'sifda', 'sifda24022015', 'localhost')
 $temp_fi = $_REQUEST['fi'];
 $temp_ff = $_REQUEST['ff'];
 $temp_tdest = $_REQUEST['tdest'];
-if ($temp_ff ==0 and $temp_fi ==0)
-    {$datos = $conexion->get_results("select distinct(e.id),e.nombre|| ' ' ||e.apellido as nombre,count(distinct id_orden) as atendidas,
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
-from ctl_empleado e left outer join vwetapassolicitud vw on e.id = vw.id_empleado
-where e.id_dependencia_establecimiento = $dep
-group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado)
-order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc");
-        
-    }
-else
-    {$datos = $conexion->get_results("select distinct(e.id),e.nombre|| ' ' ||e.apellido as nombre,count(distinct id_orden) as atendidas,
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
-from ctl_empleado e left outer join vwetapassolicitud vw on e.id = vw.id_empleado
-where fchcrea_orden >= '$temp_fi' and fchcrea_orden <= '$temp_ff'
-and e.id_dependencia_establecimiento = $dep
-group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
-(select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado)
-order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc");
-   
-    }
+
+    $sql = "select distinct(e.id),e.nombre|| ' ' ||e.apellido as tecnico,count(distinct id_orden) as atendidas,
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) as pendientes,
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 4 and v.id_empleado = vw.id_empleado) as finalizadas
+                from ctl_empleado e left outer join
+                vwetapassolicitud vw on e.id = vw.id_empleado where 1=1";
+        if($temp_fi!="" && $temp_ff!=""){
+            $sql.=" and fchcrea_orden >= '$temp_fi' and fchcrea_orden <= '$temp_ff'";
+        }
+        $sql.=" and e.id_dependencia_establecimiento = $temp_tdest
+                group by e.id,e.nombre|| ' ' ||e.apellido,(select count(distinct v.id_orden) from 
+                vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado),
+                (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 
+                4 and v.id_empleado = vw.id_empleado) order by (select count(distinct v.id_orden) from vwetapassolicitud v where v.id_estado = 2 and v.id_empleado = vw.id_empleado) desc";
+
+    $datos = $conexion->get_results($sql);
 
 //inicio estilos
 $titulo = new PHPExcel_Style(); //nuevo estilo
@@ -155,7 +148,7 @@ foreach ($datos as $value) {
     //$pdf->Cell(15,7,utf8_decode($item),1);
     //$pdf->Cell(15,7,utf8_decode($value->id),1,0,'C');
     $objPHPExcel->getActiveSheet()->SetCellValue("A$fila","$item");
-    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->nombre");
+    $objPHPExcel->getActiveSheet()->SetCellValue("B$fila","$value->tecnico");
     $objPHPExcel->getActiveSheet()->SetCellValue("C$fila","$value->pendientes");
     $objPHPExcel->getActiveSheet()->SetCellValue("D$fila","$value->finalizadas");
     $objPHPExcel->getActiveSheet()->SetCellValue("E$fila","$value->atendidas");

@@ -127,7 +127,9 @@ class SifdaEquipoTrabajoController extends Controller
                     return $repositorio
                         ->createQueryBuilder('emp')
                         ->where('emp.idDependenciaEstablecimiento = :de')
-                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
+                        ->andWhere('emp.id != :user')    
+                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId())
+                        ->setParameter(':user', $usuario->getIdEmpleado()->getId());
             }
                 ));
         
@@ -142,7 +144,9 @@ class SifdaEquipoTrabajoController extends Controller
                     return $repositorio
                         ->createQueryBuilder('emp')
                         ->where('emp.idDependenciaEstablecimiento = :de')
-                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId());
+                        ->andWhere('emp.id != :user')        
+                        ->setParameter(':de', $usuario->getIdDependenciaEstablecimiento()->getId())
+                        ->setParameter(':user', $usuario->getIdEmpleado()->getId());
             }
                 ))    
                 ;
@@ -188,6 +192,7 @@ class SifdaEquipoTrabajoController extends Controller
                 from sifda_equipo_trabajo eq 
                 full outer join ctl_empleado e on e.id = eq.id_empleado
                 where e.id_dependencia_establecimiento = ?
+                and e.id not in (?)
                 group by eq.id_empleado, e.nombre|| ' ' ||e.apellido
                 order by count(distinct eq.id_orden_trabajo) desc,
                 (select count(distinct eqp.id_orden_trabajo) 
@@ -207,12 +212,14 @@ class SifdaEquipoTrabajoController extends Controller
         
         $empleados = $em->createNativeQuery($sql, $rsm)
                     ->setParameter(1, $usuario->getIdDependenciaEstablecimiento()->getId())
+                    ->setParameter(2, $usuario->getIdEmpleado()->getId())
                     ->getResult();
         
         $form   = $this->createCreateForm($entity, $id);
 
         return array(
             'entity' => $entity,
+            'usuario' => $usuario,
             'orden' => $orden,
             'empleados' => $empleados,
             'form'   => $form->createView(),

@@ -2,17 +2,24 @@
 {% block contenido_in %}
  
     <div>
-        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
+        {#Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
         <center><h3>Listado de solicitudes ingresadas</h3></center>
     
     </div>
-      <br/>  
+        <br>
+        <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>Usuario:</td><td style="width: 120px;height:14px;">{{usuario.IdEmpleado}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+       
     <div id="seleccion">
         <div class="row-fluid">
-            <div class="span11 offset1">
+           {# <div class="span11 offset1">#}
                 
-                <div class="span3">
-                    <table>
+                <div class="span4">
+                    <table border="0">
                             <tr>
                                 <td>
                                 <input type="radio" name="consulta" id="Todos" value="Todos">Todos</td>
@@ -26,7 +33,7 @@
                                 {#<td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF " name="GenerarPDF " onclick="window.open('/reports/solicitudes_Ingresadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>#}
                                 <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Ingresadas2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
                                 <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel" name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesIngresadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
-                                <td><input type="submit" class="btn btn-primary" id="btnr1" value="Gráfico" name="GenerarPDF" onclick="window.open('/reports/graficoPastel_ingresadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
+                                <td><input type="submit" class="btn btn-primary" id="btnr3" value="Gráfico" name="GenerarPDF" onclick="window.open('/reports/graficoPastel_ingresadas.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
                                 {#<td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel " name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesIngresadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>#}
                                 
                             </tr>
@@ -40,7 +47,7 @@
                 <div class="span4">
                     
                     
-                  <table id="combos">
+                  <table id="combos" border="0">
                       <tr>
                           <td>
                               <label>Servicio:</label>
@@ -86,9 +93,9 @@
                             </tr>        
                     </table>                     
                 </div> 
-            </div>    
+            {#</div> #}   
         </div> 
-        
+        <br>
        {% if entities %} 
                  <table id="tabla" class="table table-bordered table-hover table-condensed">
                     <thead>
@@ -157,6 +164,11 @@
             document.getElementById('fechaInicio').value="";
             document.getElementById('fechaFin').value="";
             
+            calendarEnlazado('fechaInicio','fechaFin');
+            $('#btnr1').attr("disabled", true); 
+            $('#btnr2').attr("disabled", true); 
+            $('#btnr3').attr("disabled", true); 
+            
             $('#fechas').hide("slow");
             $('#combos').hide("slow");
             $('#msgIngresados2').hide("slow");
@@ -170,6 +182,7 @@
             $('#rangoTabla').hide("slow");
             $('#msgIngresados').show("slow");
             $('#msgIngresados2').hide("slow");
+            
             
           });
           
@@ -192,7 +205,7 @@
         
         
       
-         $.datepicker.regional['es'] = {
+         {#$.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
 			 prevText: '<Ant',
 			 nextText: 'Sig>',
@@ -206,9 +219,9 @@
 			 showButtonPanel:false,
 			 showAnim:'show',
                          changeMonth: true,
-			 changeYear: true,
+			 changeYear: true,#}
                          {#minDate: new Date(2014, 1, 1), 
-                         maxDate: "1D",#}
+                         maxDate: "1D",
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,
@@ -236,7 +249,7 @@
                                 
                                 
 				}); 
-         
+         #}
      //Funcion de Busqueda de Solicitudes
      
        $("#buscar").click(function(){
@@ -244,9 +257,22 @@
            var tipoServicio=$("#cmb1").val();
            var fechaInicio=$("#fechaInicio").val();
            var fechaFin=$("#fechaFin").val();
-           var res="";
            
-           if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
+           if(fechaInicio==='' || fechaFin==='')
+            {
+               $('#btnr1').attr("disabled", true); 
+               $('#btnr2').attr("disabled", true); 
+               $('#btnr3').attr("disabled", true); 
+            }
+           
+        else{
+               $('#btnr1').attr("disabled", false); 
+               $('#btnr2').attr("disabled", false); 
+               $('#btnr3').attr("disabled", false);     
+            
+                var res="";
+           
+                if(fechaFin !="" && fechaInicio!="" && tipoServicio!="0"){
                 $.post(
                     '{{path('sifda_solicitudservicio_buscar_solicitudes_ingresadas')}}',    
                     
@@ -275,7 +301,7 @@
                     
                     
                 }
-           
+           }
        }); 
        
          //Funciones para reporteria

@@ -3,6 +3,7 @@
  {% block jsDefault %}
      {{parent()}}
      <script src="{{ asset('bundles/minsalsifda/js/bootstrap-modal.js') }}"></script>
+     <script src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}"></script>
      
      
    {% endblock %}
@@ -120,7 +121,7 @@
         
     $(document).ready(function(){
          
-         
+        calendarEnlazado('fechaInicio','fechaFin'); 
         var estado= {{dependencias}};
        {# if(estado!=0)
                 $('#dialog').attr('title','Solicitudes Rechazadas').text('Hay {{dependencias}}').dialog();#}

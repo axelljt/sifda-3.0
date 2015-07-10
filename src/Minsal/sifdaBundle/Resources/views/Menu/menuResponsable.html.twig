@@ -8,7 +8,7 @@
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">SOLICITUDES <span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a tabindex="-1" href="{{path('sifda_solicitudes_ingresadas2')}}">Ingresadas</a></li>
-                                <li><a tabindex="-2" href="{{path('sifda_solicitud_rechazada')}}">Rechazadas</a></li>
+                                <li><a tabindex="-2" href="{{ path('sifda_consolidado_razon_rechazo') }}">Rechazadas</a></li>
                                 <li><a tabindex="-3" href="{{path('sifda_reprogramacion_servicio')}}">Reprogramadas</a></li>
                                 <li><a tabindex="-4" href="{{path('sifda_solicitudes_fializadas2')}}">Finalizadas</a></li>
                                 <li><a tabindex="-5" href="{{path('sifda_solicitudservicio_vencimiento')}}">A vencer</a></li>
@@ -18,7 +18,7 @@
                                     <ul class="dropdown-menu">
                                         <li><a tabindex="-5" href="{{path('sifda_solicitudes_consolidadas')}}">Por estados</a></li>
                                         <li><a tabindex="-5" href="{{path('sifda_reporte_solicitudes_tiposervicio')}}">Por tipo de servicio</a></li>
-                                        <li><a tabindex="-5" href="">Por unidad solicitante</a></li>
+                                        {#<li><a tabindex="-5" href="">Por unidad solicitante</a></li>#}
                                     </ul>
                                 </li>
                             </ul>

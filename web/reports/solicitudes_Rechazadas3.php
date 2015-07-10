@@ -239,7 +239,7 @@ inner join public.ctl_dependencia de on (de.id = 23)
 inner join sifda_solicitud_rechazada sr on (ss.id = sr.id_solicitud_servicio)
 inner join catalogo_detalle cd on (sr.id_razon_rechazo = cd.id)
 where id_estado=3 
-and fecha_recepcion >= '2015-01-01' and fecha_recepcion <='2015-12-12'
+and fecha_recepcion >= '$temp_fi' and fecha_recepcion <='$temp_ff'
 "." and sts.id=".$value1->id.
 "group by sts.nombre,cd.descripcion
 ");

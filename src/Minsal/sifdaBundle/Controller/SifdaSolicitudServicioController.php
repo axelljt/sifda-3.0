@@ -87,7 +87,7 @@ class SifdaSolicitudServicioController extends Controller
         
         $entities = $em->getRepository('MinsalsifdaBundle:SifdaSolicitudServicio')->findBy(array('idMedioSolicita' =>  array(5, 7, 8)),
                                                                                        array(
-                                                                                'fechaRecepcion' =>  'DESC',
+                                                                                'fechaRecepcion' =>  'ASC',
                                                                                 'fechaRequiere' => 'ASC'
                                                                                             ));
 

@@ -19,7 +19,8 @@
                 </div>                   
                 <div class="span5 offset1">
                     {{form_row(edit_form.descripcion)}}
-                    {{form_row(edit_form.fechaRequiere, {'attr':{'readonly':'yes'}} )}}
+                    {#{{form_row(edit_form.fechaRequiere, {'attr':{'readonly':'yes'}} )}}#}
+                    {{form_row(edit_form.fechaRequiere,{'attr': {'readonly':'yes', 'onclick':'buscarFechasFeriado("../../ctlferiado/llenarCalendario") '} })}}
                 </div>
             </div>
             <br><br>
@@ -93,9 +94,10 @@
 
 {% block javascripts_step %}
     {{ parent() }}
+    <script src="{{ asset('bundles/minsalsifda/js/Calendar.js') }}"></script>
     <script>
    
-        $.datepicker.regional['es'] = {
+        {#$.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
 			 prevText: '<Ant',
 			 nextText: 'Sig>',
@@ -129,6 +131,24 @@
 					
 					);
 				});
-     
+#}     
+       function buscarFechasFeriado(ruta){
+    var fecha = new Date();
+    var anio = fecha.getFullYear();
+    
+//    alert(anio);
+//    alert(mes);
+//    alert(dia);
+    $.post(ruta,
+        {
+            anio: anio
+            },function(data){
+                console.log( data );
+                calendarAsuetoSolicitud('minsal_sifdabundle_sifdasolicitudservicio_fechaRequiere', data.query)
+            }, "json"
+        );
+                
+} 
+    
     </script>
     {% endblock%}

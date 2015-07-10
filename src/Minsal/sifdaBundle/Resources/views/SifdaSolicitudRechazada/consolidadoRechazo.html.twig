@@ -4,12 +4,19 @@
     
     
     <div>
-        Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} 
-        <center><h3>Consolidado de solicitudes rechazadas por raz&oacute;n de rechazo </h3></center>
+       {# Fecha del sistema: {{ "now"|date("d/m/Y") }} usuario:{{usuario.username}} #}
+        <center><h4>Consolidado de solicitudes rechazadas por raz&oacute;n de rechazo </h4></center>
     
     </div>
+        <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>usuario:</td><td style="width: 60px;height:14px;">{{usuario.username}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+        <br><br>
     <div class="row-fluid">    
-    <div class="span4">
+    <div class="span3 offset3">
                      <table id="fechas">
                            <tr>
                               <td><label>Fecha de inicio: </label></td>
@@ -29,17 +36,22 @@
                             </tr>        
                     </table>               
                 </div> 
+                            <div class="span6">
+                                <br>
+                                <table>
+                    <tr>
+                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Rechazadas3.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel" name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
+                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="Gráfico" name="GenerarPDF" onclick="window.open('/reports/graficoPastel_rechazada.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
+                    </tr>
+                </table>
+                            </div>                        
     </div> 
+            <br>
     {% if entities %}  
         <div class="row-fluid">
             <div class="span8 offset2">
-                <table>
-                    <tr>
-                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="PDF rechazadas" name="GenerarPDF " onclick="window.open('/reports/solicitudes_Rechazadas3.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tp='+mostrartipo()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
-                        <td><input type="submit" class="btn btn-primary" id="btnr2" value="Excel rechazadas " name="GenerarExcel " onclick="window.open('/reports/phpexcel/solicitudesRechazadasExcel2.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&un='+mostrarusername()+'&dep='+mostraruserdep())"></td>
-                        <td><input type="submit" class="btn btn-primary" id="btnr1" value="Gráfico rechazo" name="GenerarPDF" onclick="window.open('/reports/graficoPastel_rechazada.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&tdest='+mostraruseridDepEst())"></td>
-                    </tr>
-                </table>
+                
                 <table id="RechTabla" class="table table-bordered table-hover table-condensed">
                  <thead>
                      <tr>
@@ -95,6 +107,7 @@
             $('#combos').hide("slow");
             $('#msgIngresados2').hide("slow");#}
             
+            calendarEnlazado('fechaInicio','fechaFin');
             $('#Todos').click(function(){
             
            {# $("#btn1").show("slow");#}
@@ -126,7 +139,7 @@
         
         
       
-         $.datepicker.regional['es'] = {
+        {# $.datepicker.regional['es'] = {
 			 closeText: 'Cerrar',
 			 prevText: '<Ant',
 			 nextText: 'Sig>',
@@ -140,9 +153,9 @@
 			 showButtonPanel:false,
 			 showAnim:'show',
                          changeMonth: true,
-			 changeYear: true,
+			 changeYear: true,#}
                          {#minDate: new Date(2014, 1, 1), 
-                         maxDate: "1D",#}
+                         maxDate: "1D",
                          dateFormat: 'yy-mm-dd',
 			 firstDay: 1,
 			 isRTL: false,
@@ -169,7 +182,7 @@
 					);
                                 
                                 
-				}); 
+				}); #}
          
      //Funcion de Busqueda de Solicitudes
      
