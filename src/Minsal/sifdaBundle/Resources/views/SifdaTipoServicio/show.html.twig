@@ -7,22 +7,24 @@
     <div class="row-fluid">
         <div class="span12">
             <div class="row-fluid">
-                <table id="tabla" class="table table-bordered table-hover table-condensed">
-                    <tbody>
-                        <!--<tr>
-                            <th>Correlativo</th>
-                            <td>{#{ entity.id }#}</td>
-                        </tr>-->
-                        <tr>
-                            <th>Nombre</th>
-                            <td>{{ entity.nombre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Descripci&oacute;n</th>
-                            <td>{{ entity.descripcion }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="span10 offset1">
+                    <table id="tabla" class="table table-bordered table-hover table-condensed">
+                        <tbody>
+                            <!--<tr>
+                                <th>Correlativo</th>
+                                <td>{#{ entity.id }#}</td>
+                            </tr>-->
+                            <tr>
+                                <th>Nombre</th>
+                                <td>{{ entity.nombre }}</td>
+                            </tr>
+                            <tr>
+                                <th>Descripci&oacute;n</th>
+                                <td>{{ entity.descripcion }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <br>
             <div class="row-fluid">    
@@ -35,7 +37,7 @@
                            <a href="{{ path('sifdatiposervicio_edit', { 'id': entity.id }) }}" class = "btn btn-primary">Editar tipo de servicio</a>
                        </td>
                        <td>
-                           <a href="{{ path('sifda_rutaciclovida_new', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar una etapa</a>
+                           <a href="{{ path('sifda_rutaciclovida_new', { 'id': entity.id }) }}" class = "btn btn-inverse">Registrar etapas</a>
                        </td>
                         <td>
                             <a href="{{ path('sifdatiposervicio')}}" class="btn">Regresar</a>
@@ -69,18 +71,14 @@
                                     <td>
                                     <ul>
                                         <li>
+                                            <a href="{{ path('sifda_rutaciclovida_new_subetapa', { 'id': etapa.id }) }}">Registrar subetapas</a>
+                                        </li>
+                                        <li>
                                             <a href="{{ path('sifda_rutaciclovida_show', { 'id': etapa.id }) }}">Mostrar detalle</a>
                                         </li>
-                                        {#{% if etapa.jerarquia > 1 %}
-                                            <li>
-                                                <a href="{{ path('sifdaetapa_subir', { 'id': etapa.id }) }}">Subir un nivel</a>
-                                            </li>
-                                        {% endif %}
-                                        {% if etapa.ignorarSig == FALSE %}
-                                            <li>
-                                                <a href="{{ path('sifdaetapa_bajar', { 'id': etapa.id }) }}">Bajar un nivel</a>
-                                            </li>
-                                        {% endif %}#}
+                                        <li>
+                                            <a href="{{ path('sifda_rutaciclovida_edit', { 'id': etapa.id }) }}">Editar</a>
+                                        </li>
                                     </ul>
                                     </td>
                                 </tr>

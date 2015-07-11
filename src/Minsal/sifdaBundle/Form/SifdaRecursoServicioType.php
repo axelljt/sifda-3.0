@@ -17,10 +17,10 @@ class SifdaRecursoServicioType extends AbstractType
         $builder
             ->add('cantidad')
 //            ->add('costoTotal')
-            ->add('idInformeOrdenTrabajo', 'entity', array(
-                    'required'      =>  true,
-                    'label'         =>  'Informe asociado',    
-                    'class'         =>  'MinsalsifdaBundle:SifdaInformeOrdenTrabajo'))
+//            ->add('idInformeOrdenTrabajo', 'entity', array(
+//                    'required'      =>  true,
+//                    'label'         =>  'Informe asociado',    
+//                    'class'         =>  'MinsalsifdaBundle:SifdaInformeOrdenTrabajo'))
             ->add('idTipoRecursoDependencia', 'entity', array(
                     'required'      =>  true,
                     'label'         =>  'Recurso utilizado',    

@@ -15,11 +15,29 @@ class SifdaRutaCicloVidaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('descripcion')
-            ->add('referencia')
+            ->add('descripcion', 'text', array(
+                    'label'         =>  'Nombre',
+                ))
+            ->add('referencia', 'text', array(
+                    'label'         =>  'Referencia (Opcional)',
+                    'required'      =>  false,
+                ))
             ->add('jerarquia')
             //->add('ignorarSig')
-            ->add('peso')
+            ->add('peso', 'integer', array(
+                    'label'         =>  'Porcentaje (%)',
+                ))
+//            ->add('etapaServicio', 'choice', array(
+//                    'label'         =>  'Etapas del tipo de servicio (Jerarquia - Etapa - Porcentaje)',
+//                    'multiple'  => true,
+//                    'expanded'  => false,
+//                    'attr' => array('style' => 'height:185px'),
+//                    'mapped'    => false
+//                ))
+//            ->add('numEtapas', 'text', array(
+//                    'label'         =>  'Numero de etapas',
+//                    'mapped'    => false
+//                ))    
             //->add('idTipoServicio')
             //->add('idEtapa')
         ;

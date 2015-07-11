@@ -43,14 +43,14 @@ class SifdaRecursoServicioController extends Controller
     /**
      * Creates a new SifdaRecursoServicio entity.
      *
-     * @Route("/", name="sifdarecursoservicio_create")
+     * @Route("/create/{id}", name="sifdarecursoservicio_create")
      * @Method("POST")
      * @Template("MinsalsifdaBundle:SifdaRecursoServicio:new.html.twig")
      */
-    public function createAction(Request $request)
+    public function createAction(Request $request, $id)
     {
         $entity = new SifdaRecursoServicio();
-        $form = $this->createCreateForm($entity);
+        $form = $this->createCreateForm($entity, $id);
         $form->handleRequest($request);
         $parameters = $request->request->all();
         foreach($parameters as $p){
@@ -63,13 +63,22 @@ class SifdaRecursoServicioController extends Controller
         $costoUnitario = $idTipoRecursoDependencia->getCostoUnitario();
         $costoTotal = $cantidad * $costoUnitario;
 
+        $informe = $em->getRepository('MinsalsifdaBundle:SifdaInformeOrdenTrabajo')->find($id);
+        $entity->setIdInformeOrdenTrabajo($informe);
+
         if ($form->isValid()) {
             $entity->setCostoTotal($costoTotal);
             $em = $this->getDoctrine()->getManager();
             $em->persist($entity);
             $em->flush();
-
-            return $this->redirect($this->generateUrl('sifdarecursoservicio_show', array('id' => $entity->getId())));
+            // si se ha hecho click al boton save_and_add 
+            if ($form->get('save_and_add')->isClicked()) {
+                return $this->redirect($this->generateUrl('sifdarecursoservicio_new', array('id' => $id)));
+            }
+            // si se ha hecho click al boton save
+            else {
+                return $this->redirect($this->generateUrl('sifdarecursoservicio', array('idInf' => $id)));
+            }
         }
 
         return array(
@@ -82,13 +91,14 @@ class SifdaRecursoServicioController extends Controller
      * Creates a form to create a SifdaRecursoServicio entity.
      *
      * @param SifdaRecursoServicio $entity The entity
+     *  @param mixed $id The entity id
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(SifdaRecursoServicio $entity)
+    private function createCreateForm(SifdaRecursoServicio $entity, $id)
     {
         $form = $this->createForm(new SifdaRecursoServicioType(), $entity, array(
-            'action' => $this->generateUrl('sifdarecursoservicio_create'),
+            'action' => $this->generateUrl('sifdarecursoservicio_create', array('id' => $id)),
             'method' => 'POST',
         ));
 
@@ -107,7 +117,8 @@ class SifdaRecursoServicioController extends Controller
                             ->setParameter(':depest', $usuario->getIdDependenciaEstablecimiento());
                     }));
         
-        $form->add('submit', 'submit', array('label' => 'Registrar recurso'));
+        $form->add('save_and_add', 'submit', array('label' => 'Guardar y registrar nuevo recurso'));
+        $form->add('save', 'submit', array('label' => 'Guardar y terminar'));
 
         return $form;
     }
@@ -126,12 +137,14 @@ class SifdaRecursoServicioController extends Controller
         if ($id != 0) {
             $em = $this->getDoctrine()->getManager();
             $informe = $em->getRepository('MinsalsifdaBundle:SifdaInformeOrdenTrabajo')->find($id);
+            
             if (!$informe) {
-                throw $this->createNotFoundException('Unable to find SifdaRecursoServicio entity.');
+                throw $this->createNotFoundException('Unable to find SifdaInformeOrdenTrabajo entity.');
             }
+
             $entity->setIdInformeOrdenTrabajo($informe);
-            }
-        $form   = $this->createCreateForm($entity);
+            $form   = $this->createCreateForm($entity, $id);
+        }
 
         return array(
             'entity' => $entity,    

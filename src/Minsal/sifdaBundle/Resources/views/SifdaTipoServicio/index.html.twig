@@ -28,11 +28,14 @@
                 <td>
                 <ul>
                     <li>
+                        <a href="{{ path('sifda_rutaciclovida_new', { 'id': entity.id }) }}">Registrar etapas</a>
+                    </li>
+                    <li>
                         <a href="{{ path('sifdatiposervicio_show', { 'id': entity.id }) }}">Mostrar detalle</a>
                     </li>
-<!--                    <li>
+                    <li>
                         <a href="{{ path('sifdatiposervicio_edit', { 'id': entity.id }) }}">Editar</a>
-                    </li>-->
+                    </li>                    
                 </ul>
                 </td>
             </tr>

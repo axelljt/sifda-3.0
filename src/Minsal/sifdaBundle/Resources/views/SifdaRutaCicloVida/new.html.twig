@@ -2,28 +2,53 @@
 {% block contenido_in -%}
     
         <div class="page-header">
-            <center><h3>Registro de la etapa del tipo de servicio</h3></center>
+            <center><h3>Registro de las etapas del tipo de servicio</h3></center>
             <center><h4>{{tipo.nombre}}</h4></center>
+            <table style="margin-left: 70%;" border="0">
+                <tr>
+                    <td>Usuario:</td><td style="width: 120px;height:14px;">{{usuario.IdEmpleado}}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{usuario.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{usuario.id}}" style="width:10px; height:10px"></td>    
+                </tr>
+                <tr></tr>
+            </table>
         </div>
-        
-        <div class="row-fluid">
-            <div class="span12">
-                {#{{ cantidad }}#}
-                {% if cantidad < 100 %}
-                        {{form_start(form)}}
-                {{form_errors(form)}}
-                <div class="row-fluid">
-                    <div class="span4 offset2">
-                        {{form_row(form.descripcion, {'attr': {'class':'input-xlarge', 'placeholder': 'Descripcion de la etapa'} })}}
-                        {#{{form_row(form.ignorarSig)}}#}
-                        {{form_row(form.jerarquia)}}
 
+        <br>
+        <div class="row-fluid">
+            <div class="span10 offset2">
+                {% if cantidad < 100 %}
+                    {{form_start(form)}}
+                    {{form_errors(form)}}
+                <div class="row-fluid">   
+                    <div class="span6 offset3">
+                        {{form_row(form.numEtapas, {'attr': {'class':'span7', 'placeholder': 'Introduzca el numero de etapas', 'onblur':'verificarNumEtapas()'} })}}
                     </div>
-                    <div class="span5 offset1">
-                        {{form_row(form.referencia, {'attr': {'class':'input-xlarge', 'placeholder': 'Referencia de la etapa'} })}}
-                        {{form_row(form.peso)}}
-                        {#{{form_row(form.idTipoServicio)}}
-                        {{form_row(form.idEtapa)}}#}
+                </div>
+                <br>
+                <div class="row-fluid">
+                    <div class="span4">
+                        {{form_row(form.jerarquia)}}
+                        {{form_row(form.descripcion, {'attr': {'class':'span12', 'placeholder': 'Nombre de la etapa'} })}}
+                        {{form_row(form.referencia, {'attr': {'class':'span12', 'placeholder': 'Referencia de la etapa'} })}}
+                        {{form_row(form.peso, {'attr': {'class':'span8', 'placeholder': 'Porcentaje de la etapa'} })}} 
+                    </div>
+                    <div class="span1">
+                        <br><br><br><br>
+                        <table class="record_properties">
+                            <tr>
+                                <td>
+                                      <center><img height="30px" width="30px" src="{{ asset('bundles/minsalsifda/images/Flecha5.png') }}" onclick="setEtapaServicio()"/></center>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                     <center><img height="40px" width="40px" src="{{ asset('bundles/minsalsifda/images/deleteTodos.png') }}" onclick=" limpiarListbox()"/></center>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="span6">
+                        <br>
+                        {{form_row(form.etapaServicio, {'attr': {'class':'span11'} })}}
                     </div>
                 </div>
                 <br><br>
@@ -31,8 +56,8 @@
                     <table id="botones">
                     <tr> 
 
-                        <td>{{form_row(form.submit_and_add,{'attr':{'class':'btn btn-primary'}})}}</td> 
-                        <td>{{form_row(form.submit,{'attr':{'class':'btn btn-inverse'}})}}</td> 
+                        {#<td>{{form_row(form.submit_and_add,{'attr':{'class':'btn btn-primary'}})}}</td> #}
+                        <td>{{form_row(form.submit,{'attr':{'class':'btn btn-primary', 'onclick':'getEtapasServicioIngresados()'} })}}</td>
                         <td><a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Regresar</a></td>
                     </tr>    
                     </table>
@@ -40,19 +65,21 @@
                     {{form_end(form)}}
                 {% else %}
                     <center><h4>El tipo de servicio ya tiene configurado el 100% de sus etapas</h4></center>
+                    <br>
                     <center>
                         <table id="botones">
                         <tr> 
-
-                            {#<td>{{form_row(form.submit_and_add,{'attr':{'class':'btn btn-primary'}})}}</td> 
-                            <td>{{form_row(form.submit,{'attr':{'class':'btn btn-inverse'}})}}</td> #}
-                            <td><a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Regresar</a></td>
+                            <td><a href="{{ path('sifdatiposervicio_show', { 'id': tipo.id })}}" class="btn">Ir al detalle del tipo de servicio</a></td>
                         </tr>    
                         </table>
                     </center> 
-                    {% endif %}
+                        <br>
+                {% endif %}
             </div>
         </div>    
         
-    
+{% endblock %}
+{% block javascripts_step %}
+    {{parent()}}
+        <script src="{{ asset('bundles/minsalsifda/js/scriptsSifda/etapaServicioNew.js')}}"></script>
 {% endblock %}

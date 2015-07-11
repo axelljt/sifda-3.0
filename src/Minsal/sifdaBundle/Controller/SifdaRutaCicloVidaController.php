@@ -46,46 +46,47 @@ class SifdaRutaCicloVidaController extends Controller
     public function createAction(Request $request, $id)
     {
         $entity = new SifdaRutaCicloVida();
+        $idEtapa = NULL;
         $form = $this->createCreateForm($entity, $id);
         $form->handleRequest($request);
+        
+        $data = array(); 
+        $parameters = $request->request->all();
+        foreach($parameters as $p){
+            $data = $p['etapaServicio'];
+        } 
+
+        $idusuario=  $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
+        
         if ($id != 0) {
            $em = $this->getDoctrine()->getManager();
            $idTipoServicio = $em->getRepository('MinsalsifdaBundle:SifdaTipoServicio')->find($id);
         }
-        $entity->setIdEtapa(NULL);
-        $entity->setIdTipoServicio($idTipoServicio);
         
-        $dql = "SELECT SUM(e.peso) AS porcentaje"
+        $dql = "SELECT SUM(e.peso) AS porcentaje "
                . "FROM MinsalsifdaBundle:SifdaRutaCicloVida e "
                . "WHERE e.idTipoServicio = :tiposervicio "
                . "AND e.idEtapa IS NULL ";
-    
-        if ($form->isValid()) {
-            // si se ha hecho click al boton submit_and_add 
-            if ($form->get('submit_and_add')->isClicked()) {
-                $entity->setIgnorarSig(FALSE);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
-                return $this->redirect($this->generateUrl('sifda_rutaciclovida_new', 
-                                                           array('id' => $id)));
-            }
-            // si se ha hecho click al boton submit
-            else {
-                $entity->setIgnorarSig(TRUE);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
-                return $this->redirect($this->generateUrl('sifdatiposervicio_show', 
-                                                       array('id' => $entity->getIdTipoServicio()
-                                                                            ->getId()))); 
-            }
-            
-        }
+                
+        $porcentaje= $em->createQuery($dql)
+                             ->setParameter(':tiposervicio', $idTipoServicio)
+                             ->getResult();
+        $cantidad = $porcentaje[0]['porcentaje'];
 
+        if($data){
+            $this->establecerEtapasServicio($data, $idTipoServicio, $idEtapa);
+            return $this->redirect($this->generateUrl('sifdatiposervicio_show', 
+                                                       array('id' => $id))); 
+        }
+        
         return array(
-            'entity' => $entity,
-            'form'   => $form->createView(),
+            'entity'   => $entity,
+            'tipo'     => $idTipoServicio,
+            'usuario'  => $usuario,
+            'cantidad' => $cantidad,
+            'form'     => $form->createView(),
         );
     }
 
@@ -101,43 +102,33 @@ class SifdaRutaCicloVidaController extends Controller
         $entity = new SifdaRutaCicloVida();
         $form = $this->createCreateFormSubetapa($entity, $id);
         $form->handleRequest($request);
+        
+        $data = array(); 
+        $parameters = $request->request->all();
+        foreach($parameters as $p){
+            $data = $p['etapaServicio'];
+        } 
+
+        $idusuario=  $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
+        
         if ($id != 0) {
            $em = $this->getDoctrine()->getManager();
            $idEtapa = $em->getRepository('MinsalsifdaBundle:SifdaRutaCicloVida')->find($id);
         }
-        $entity->setIdEtapa($idEtapa);
-        $entity->setIdTipoServicio($idEtapa->getIdTipoServicio());
-        
-        if ($form->isValid()) {
-            // si se ha hecho click al boton save_and_add 
-            if ($form->get('save_and_add')->isClicked()) {
-                $entity->setIgnorarSig(FALSE);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
-                return $this->redirect($this->generateUrl('sifda_rutaciclovida_new_subetapa', 
-                                                           array('id' => $id)));
-            }
-            // si se ha hecho click al boton save
-            else {
-                $entity->setIgnorarSig(TRUE);
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($entity);
-                $em->flush();
-                return $this->redirect($this->generateUrl('sifda_rutaciclovida_show', 
-                                                           array('id' => $id)));
-        }
-           
+        $idTipoServicio = $idEtapa->getIdTipoServicio();
 
-            return $this->redirect($this->generateUrl('sifda_rutaciclovida_show', 
-                                                       array('id' => $entity->getIdEtapa()->getId())));
+        if($data){
+            $this->establecerEtapasServicio($data, $idTipoServicio, $idEtapa);
+            return $this->redirect($this->generateUrl('sifda_rutaciclovida_show',
+                                                       array('id' => $id)));
         }
-
-           
-        
         
         return array(
             'entity' => $entity,
+            'usuario'  => $usuario,
+            'etapa' => $idEtapa,
             'form'   => $form->createView(),
         );
     }
@@ -156,9 +147,20 @@ class SifdaRutaCicloVidaController extends Controller
             'action' => $this->generateUrl('sifda_rutaciclovida_create', array('id' => $id)),
             'method' => 'POST',
         ));
+        
+        $form->add('etapaServicio', 'choice', array(
+                    'label'         =>  'Etapas del tipo de servicio (Jerarquia - Etapa - Porcentaje)',
+                    'multiple'  => true,
+                    'expanded'  => false,
+                    'attr' => array('style' => 'height:185px'),
+                    'mapped'    => false
+                ));
+        $form->add('numEtapas', 'text', array(
+                    'label'         =>  'Numero de etapas',
+                    'mapped'    => false
+                ));
 
-        $form->add('submit_and_add', 'submit', array('label' => 'Guardar y registrar nueva etapa'));
-        $form->add('submit', 'submit', array('label' => 'Guardar y terminar'));
+        $form->add('submit', 'submit', array('label' => 'Registrar etapas'));
         return $form;
     }
 
@@ -176,8 +178,18 @@ class SifdaRutaCicloVidaController extends Controller
             'method' => 'POST',
         ));
 
-        $form->add('save_and_add', 'submit', array('label' => 'Guardar y registrar nueva etapa'));
-        $form->add('save', 'submit', array('label' => 'Guardar y terminar'));
+        $form->add('etapaServicio', 'choice', array(
+                    'label'         =>  'Subetapas del tipo de servicio (Jerarquia - Subetapa - Porcentaje)',
+                    'multiple'  => true,
+                    'expanded'  => false,
+                    'attr' => array('style' => 'height:185px'),
+                    'mapped'    => false
+                ));
+        $form->add('numEtapas', 'text', array(
+                    'label'         =>  'Numero de subetapas',
+                    'mapped'    => false
+                ));    
+        $form->add('submit', 'submit', array('label' => 'Registrar subetapas'));
         
         
         return $form;
@@ -209,13 +221,17 @@ class SifdaRutaCicloVidaController extends Controller
                              ->getResult();
                      //ladybug_dump($porcentaje);
         $cantidad = $porcentaje[0]['porcentaje'];
-        //ladybug_dump($cantidad);
+        
+        $idusuario=  $this->getUser()->getId();
+        $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
+        
         $form   = $this->createCreateForm($entity, $id);
         
         return array(
             'entity' => $entity,
             'tipo' => $tipo,
             'cantidad' => $cantidad,
+            'usuario' => $usuario,
             'form'   => $form->createView(),
         );
     }
@@ -233,12 +249,28 @@ class SifdaRutaCicloVidaController extends Controller
         if ($id != 0) {
            $em = $this->getDoctrine()->getManager();
            $etapa = $em->getRepository('MinsalsifdaBundle:SifdaRutaCicloVida')->find($id);
-        }    
+        }
+        
+        $dql = "SELECT SUM(e.peso) AS porcentaje "
+               . "FROM MinsalsifdaBundle:SifdaRutaCicloVida e "
+               . "WHERE e.idEtapa = :etapa ";
+                
+        $porcentaje= $em->createQuery($dql)
+                             ->setParameter(':etapa', $etapa)
+                             ->getResult();
+        $cantidad = $porcentaje[0]['porcentaje'];
+    
+        $idusuario=  $this->getUser()->getId();
+        $em = $this->getDoctrine()->getManager();
+        $usuario= $em->getRepository('MinsalsifdaBundle:FosUserUser')->find($idusuario);
+        
         $form   = $this->createCreateFormSubetapa($entity, $id);
         
         return array(
             'entity' => $entity,
             'etapa' => $etapa,
+            'cantidad' => $cantidad,
+            'usuario' => $usuario,
             'form'   => $form->createView(),
         );
     }
@@ -451,6 +483,53 @@ class SifdaRutaCicloVidaController extends Controller
         return $this->redirect($this->generateUrl('sifdatiposervicio_show', 
                                                        array('id' => $etapaActual->getIdTipoServicio()
                                                                             ->getId()))); 
+    }
+    
+
+            /**
+     * Metodo que sirve para establecer las fechas festivas del anio.
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $data
+     *
+     */
+    private function establecerEtapasServicio(array $data, 
+                                                 \Minsal\sifdaBundle\Entity\SifdaTipoServicio $idTipoServicio,
+                                                 SifdaRutaCicloVida $idEtapa)
+    {
+        $cant = count($data);
+        $i = 0;
+        foreach ($data as $etapaServicio)
+        {
+            $entity = new SifdaRutaCicloVida();
+            $em = $this->getDoctrine()->getManager();
+            $entity->setIdTipoServicio($idTipoServicio);
+            
+            $elem = explode(" - ", $etapaServicio);
+            $jerarquia = $elem[0];
+            $descripcion = $elem[1];
+            $peso = $elem[2];
+            
+            if(count($elem) == 4){
+                $referencia = $elem[3];
+                $entity->setReferencia($referencia);
+            }
+            
+            $entity->setDescripcion($descripcion);
+            $entity->setJerarquia($jerarquia);
+            $entity->setPeso($peso);
+            $entity->setIdEtapa($idEtapa);
+            
+            if($i == $cant - 1) {
+                $entity->setIgnorarSig(TRUE);
+            } else {
+                $entity->setIgnorarSig(FALSE);
+            }
+
+            $em->persist($entity);
+            $em->flush();
+            
+            $i++;
+        }    
     }
     
 }

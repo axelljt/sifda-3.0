@@ -1,55 +1,87 @@
 {% extends 'MinsalsifdaBundle::layoutTecnico.html.twig' %}
 {% block contenido_in -%}
-    
-<center><h3>Recursos de Orden de Trabajo</h3></center>
-<table id="tabla" class="table table-bordered table-hover table-condensed">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ informe.id }}</td>
-            </tr>
-            <tr>
-                <th>Detalle</th>
-                <td>{{ informe.detalle }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <table id="tabla" class="table table-bordered table-hover table-condensed">
-        <thead>
-            <tr>
-                {#<th>Id</th>#}
-                <th><center>Cantidad</center></th>
-                <th><center>Costo total ($)</center></th>
-                <th><center>Descripcion</center></th>
-                <th><center>Acciones</center></th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                {#<td><a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
-                <td>{{ entity.cantidad }}</td>
-                <td>{{ entity.costoTotal }}</td>
-                <td>{{ entity.idTipoRecursoDependencia.idTipoRecurso.nombre }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">Mostrar recurso</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('sifdarecursoservicio_edit', { 'id': entity.id }) }}">Editar recurso</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-<center>
-            <table id="botones">
-            <tr>
-                <td><a href="{{path('sifdainformeordentrabajo', { 'idOrd': informe.idOrdenTrabajo.id }) }}" class="btn">Regresar</a></td>
-            </tr>    
+    <div class="page-header">
+        <center><h3>Listado de recursos del informe</h3></center>
+    </div>
+
+    <div class="row-fluid">
+        <div class="span10 offset1"> 
+            <table id="tabla" class="table table-bordered table-hover table-condensed">
+                <tbody>
+
+                    <tr>
+                        <th>Tipo de servicio</th>
+                        <td>{{ informe.idOrdenTrabajo.idSolicitudServicio.idTipoServicio }}</td>
+                    </tr>
+                    <tr>
+                        <th>Descripci&oacute;n de solicitud de servicio</th>
+                        <td>{{ informe.idOrdenTrabajo.idSolicitudServicio.descripcion }}</td>
+                    </tr>
+                    <tr>
+                        <th>C&oacute;digo de orden de trabajo</th>
+                        <td>{{ informe.idOrdenTrabajo.codigo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Descripci&oacute;n de orden de trabajo</th>
+                        <td>{{ informe.idOrdenTrabajo.descripcion }}</td>
+                    </tr>
+                    <tr>
+                        <th>Detalle del informe</th>
+                        <td>{{ informe.detalle }}</td>
+                    </tr>
+                </tbody>
             </table>
-        </center>
+        </div>
+    </div>
+    <br>
+    <div class="row-fluid">
+        <div class="span8 offset2"> 
+            <table id="tabla" class="table table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        {#<th>Id</th>#}
+                        <th><center>Nombre de recurso</center></th>
+                        <th><center>Cantidad</center></th>
+                        <th><center>Costo unitario ($)</center></th>
+                        <th><center>Costo total ($)</center></th>
+                        <th><center>Acciones</center></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        {#<td><a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>#}
+                        <td>{{ entity.idTipoRecursoDependencia.idTipoRecurso.nombre }}</td>
+                        <td><center>{{ entity.cantidad }}</center></td>
+                        <td><center>{{ entity.idTipoRecursoDependencia.costoUnitario }}</center></td>
+                        <td><center>{{ entity.costoTotal }}</center></td>
+                        <td>
+                        <ul>
+                            <li>
+                                <a href="{{ path('sifdarecursoservicio_show', { 'id': entity.id }) }}">Mostrar recurso</a>
+                            </li>
+                            <li>
+                                <a href="{{ path('sifdarecursoservicio_edit', { 'id': entity.id }) }}">Editar recurso</a>
+                            </li>
+                        </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <br>
+    <div class="row-fluid">
+        <div class="span12 ">     
+            <center>
+                <table id="botones">
+                    <tr>
+                        <td><a href="{{path('sifdainformeordentrabajo', { 'idOrd': informe.idOrdenTrabajo.id }) }}" class="btn">Ir al listado de informes</a></td>
+                    </tr>    
+                </table>
+            </center>
+        </div>
+    </div>  
+    <br>           
     {% endblock %}
