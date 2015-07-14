@@ -1,0 +1,320 @@
+    {% extends 'MinsalsifdaBundle::layoutResponsable.html.twig' %}
+{% block contenido_in -%}
+    <div class="page-header">
+        <center><h4>Consulta de solicitudes atendidas por PAO </h4></center>
+    </div> 
+
+    <table style="margin-left: 70%;" border="0">
+        <tr>
+            <td>usuario:</td><td style="width: 120px;height:14px;">{{ user.IdEmpleado  }}</td><td>Fecha:</td><td>{{ "now"|date("d/m/Y") }}</td><td><input type="hidden" id="txtuser"  value="{{user.username}}" style="width:10px; height:10px"></td><td><input type="hidden" id="txtiduser"  value="{{user.id}}" style="width:10px; height:10px"></td>    
+        </tr>
+        <tr></tr>
+    </table>
+     <br>
+     <div id="seleccion">
+         <div class="row-fluid">
+             <div class="span11 offset1">
+                 <div class="span2">
+                     <br>
+                     <table style="margin-left: 50%;">
+                         <tr><td><input type="radio" name="consulta" id="pdf" value="1">Pdf</td></tr>
+                         <tr><td><input type="radio" name="consulta" id="excel" value="2">Excel</td></tr>
+                         {#<tr><td><input type="radio" name="consulta" id="grafico" value="3">grafico</td></tr>#}                           
+                     </table>
+                 </div>
+                 
+                 <div class="span5"style="text-align:center;"> 
+                     <table id="combos" border="0" style="margin: 0 auto;">
+                         <tr>
+                             <td><label>Linea Estrategica:</label></td>
+                             <td>
+                                 <div class="btn-group">
+                                     <select id="cmb1" name="comboEstablecimiento"  class="selectpicker" style="width: 200px" onchange="buscarActividad('{{path('sifda_consulta_find_acividad')}}')">
+                                       <option value="0">Seleccione...</option>
+                                       
+                                        {% for e in lineas%}
+                                            <option value="{{e.id}}">{{e.descripcion}}</option>
+                                        {% endfor %}    
+                                     </select>
+                                 </div>
+                             </td>
+                         </tr>    
+                         <tr>
+                             <td ><label>Seleccione Actividad:</label></td>
+                             <td colspan="3">
+                                 <div class="btn-group">
+                                     <select id="cmb2" name="comboDependencia" class="selectpicker" style="width: 200px">
+                                         <option value="0">Seleccione...</option>
+                                     </select>
+                                 </div>
+                             </td>    
+                         </tr>    
+                     </table>    
+                 </div>      
+                 <div class="span3" style="text-align:center;"> 
+                     <table style="margin: 0 auto;">
+                         <tr>
+                             <td><label>Fecha de inicio:</label></td>
+                        <td><input type="text" id="txt_fechaInicio" class="input-small" ></td>
+                         </tr>
+                         <tr>    
+                             <td><label>Fecha de fin:</label></td>
+                        <td><input type="text" id="txt_fechaFin" class="input-small" ></td>
+                         </tr>
+                     </table>
+                 </div>
+                 <div class="span2">                    
+                         <input type="submit" class="btn btn-primary" id="buscar" value="Buscar" name="Buscar">
+                         <br><br>
+                         <input type="submit" class="btn btn-primary" id="buscar" value="Exportar" name="Exportar" onclick="exportfile()">
+                         
+                    
+                 </div>           
+             </div>
+         </div>
+     </div>
+     <br>
+    <div id="divtabla"></div>
+    <div id="tablahead">
+        <br/>           
+        <table class="table table-bordered table-hover table-condensed"  id="tablita">
+            <thead id="head"></thead>
+            <tbody id="tabla"></tbody>
+        </table>        
+    </div>
+    <div id="msjnodata">
+            <center><h4>No se encontraron solicitudes de servicio</h4></center>
+    </div>
+    <br>
+{#                    <table  class="table table-bordered table-hover table-condensed" id="tablita">
+                       <thead>
+            <tr class="info">
+                <th><center>Descripcion</center></th>
+                <th><center>Meta</center></th>
+                <th><center>Realizadas</center></th>
+                <th><center>Indicador</center></th>
+                <th><center>Generado</center></th>
+            </tr>
+            </thead>
+            <tbody id="tabla">
+                
+            
+            </tbody>    
+        </thead>             
+                                    
+                    </table>#}
+    
+    <script>
+    function buscarActividad(ruta){
+        var IdLinea = $("#cmb1").val();
+        if(IdLinea !==""){
+             $.post(
+                ruta, 
+                  { 
+                    idLinea:IdLinea
+                  }
+                  , function( data ) {
+                    console.log( data );
+                        $("#cmb2").html(data);
+         }, "json");
+        }      
+}//Fin de buscarDependencia    
+        
+   $(document).ready(function(){
+         document.getElementById("cmb1").value="0";
+         document.getElementById("txt_fechaInicio").value=null;
+         document.getElementById("txt_fechaFin").value=null;
+         $("#tablahead").hide("slow");
+         $("#msjnodata").hide("slow");
+         $("#buscar").click(function(){
+            $.blockUI({ message: "Espere un instante" });
+            $("#tablahead").hide("slow");
+            $("#msjnodata").hide("slow");
+            var valor = $("#cmb1").val();
+            var valor2 = $("#cmb2").val();
+            $.post(
+                    '{{path('buscar_solicitudes_actividad_tot')}}', 
+                  { 
+                    linea:valor,
+                    actividad:valor2,
+                  }
+                  , function( data ) {
+                    console.log( data );
+                    var sol = new Array();
+                    sol = data.query;
+                    if(sol.length !== 0){
+                        $("#tablahead").show("slow");
+                        drawTable(data.query);
+                    }
+                    else{
+                        $("#msjnodata").show("slow");
+                    }
+                   //drawTable(data.query);
+                }, "json");
+            });
+});
+
+$(document).ajaxStop(function(){
+$.unblockUI();
+});
+
+
+function drawTable(data) {
+    var rows = '';
+    var row = '';
+    
+    row+= '<tr class="info">';
+    row+='<th><center>Descripci&oacute;n</center></th>';
+    row+='<th><center>Meta</center></th>';
+    row+='<th><center>Realizadas</center></th>';
+    row+='<th><center>Porcentaje(%)</center></th>';
+    row+='<th><center>Costo Total($)</center></th>';
+    row+='<th><center>Indicador</center></th>';
+    row+='<th><center>Generado</center></th>';
+    row+='</tr>';
+    
+    document.getElementById('head').innerHTML = row;
+    document.getElementById('tabla').innerHTML = '' ;
+    
+    for (var i = 0; i < data.length; i++) {
+        rows=drawRow(data[i]);
+    }
+    
+    
+    
+    return rows;
+}
+function drawSubTable(data) {
+var rows2 = '';
+    for (var i = 0; i < data.length; i++) {
+        rows2=drawRowA(data[i]);
+    }
+    return rows2;
+}
+
+function drawRow(rowData) {
+    var row = '<tr class="info">';
+    row+='<td colspan="7"><strong> Linea Estrategica: </strong>' + rowData.descripcion  ;
+    row+='<strong> Codigo:</strong>' + rowData.codigo  ;
+    row+= rowData.activo ? '<strong> Estado: </strong>' +' Activo ':' <strong>Estado:</strong>' +' Inactivo ' ;
+    row+='</td></tr>';
+    $(row).appendTo("#tablita tbody");
+    var valor2 = $("#cmb2").val();
+    var valor3 = $("#txt_fechaInicio").val();
+    var valor4 = $("#txt_fechaFin").val();
+    {#$.post(
+                '{{path('buscar_actividades')}}', 
+                  { 
+                    idln:rowData.id
+                  }
+                  , function( data ) {
+                    console.log( data );
+                    row=drawSubTable(data.query);
+                    
+                }, "json");#}
+     $.ajax({
+         type: "POST", 
+         dataType: "json",
+         async:false,
+         data: { idln:rowData.id,actividad:valor2,
+                    fechaIni:valor3,
+                    fechaFin:valor4 },
+         url: '{{path('buscar_actividades_tot')}}',
+       success:  function( data ) {
+                    console.log( data );
+                    drawSubTable(data.query);
+                }
+});                   
+                        
+    return row;
+}
+function drawRowA(rowData2) {
+    var row2 = '<tr>';
+    row2+='<td><center>' + rowData2.descripcion + '</center></td>';
+    row2+='<td><center>' + rowData2.meta_anual + '</center></td>';
+    row2+='<td><center>' + rowData2.finalizadas + '</center></td>';
+    row2+='<td><center>' + rowData2.porcentaje + '</center></td>';
+    row2+='<td><center>' + rowData2.costo + '</center></td>';
+    row2+='<td><center>' + rowData2.indicador + '</center></td>';
+    row2+='<td><center>' + rowData2.generado + '</center></td>';
+    row2+='</tr>';
+    $(row2).appendTo("#tablita tbody");
+    return row2;
+    }
+
+
+$.datepicker.regional['es'] = {
+             closeText: 'Cerrar',
+             prevText: '<Ant',
+             nextText: 'Sig>',
+             currentText: 'Hoy',
+             monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+             monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+             dayNames: ['Domingo', 'Lunes', 'Martes', 'Mi�rcoles', 'Jueves', 'Viernes', 'S�bado'],
+             dayNamesShort: ['Dom','Lun','Mar','Mi�','Juv','Vie','S�b'],
+             dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','S�'],
+             weekHeader: 'Sm',
+             showButtonPanel:false,
+             showAnim:'show',
+             changeMonth: true,
+             changeYear: true,
+             {#minDate: new Date(2014, 1, 1), 
+             maxDate: "1D",#}
+             dateFormat: 'yy-mm-dd',
+             firstDay: 1,
+             isRTL: false,
+             showMonthAfterYear: false,
+             beforeShow: function(){ $(".ui-datepicker").css('font-size', 11.5) },
+
+             onClose: function (selectedDate) {
+
+              $("#fechaInicio").datepicker("option", "maxDate", selectedDate);
+              $("#fechaFin").datepicker("option", "minDate", selectedDate);
+
+             },                         
+             yearSuffix: ''
+
+             };
+            $.datepicker.setDefaults($.datepicker.regional['es']);
+            $(function() {
+                $( "#txt_fechaInicio" ).datepicker();
+                $( "#txt_fechaFin" ).datepicker();
+
+            });
+                        
+function exportfile(){
+    
+    var pdf=document.getElementById('pdf').checked;
+    var excel=document.getElementById('excel').checked;
+//    var graf=document.getElementById('grafico').checked;
+       
+    if(pdf !==false)
+        {
+            window.open('/reports/rptActAtendPaoTot.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());  
+        }
+       
+    
+    if(excel !== false)
+        window.open('/reports/phpexcel/solAtendPaoXlsTot.php?fi='+mostrarfi()+'&ff='+mostrarff()+'&le='+mostrarLinEst()+'&a='+mostrarAct());
+//       alert('excel:'+excel);
+    
+{#    if(graf!== false)   
+       alert('graf:'+graf);#}
+}
+
+function mostrarfi(){ 
+            return $("#txt_fechaInicio").val();
+      }
+    
+      function mostrarff(){ 
+            return $("#txt_fechaFin").val();
+      }
+      
+      function mostrarLinEst(){ 
+            return $("#cmb1").val();
+      } 
+      function mostrarAct(){ 
+            return $("#cmb2").val();
+      } 
+    </script>
+{% endblock %}
